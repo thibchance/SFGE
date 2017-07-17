@@ -23,3 +23,43 @@ SOFTWARE.
 */
 
 #include <graphics/sprite.h>
+
+uint TextureManager::load_texture(std::string filename)
+{
+    if(nameIdsMap.find(filename) != nameIdsMap.end())
+    {
+        return nameIdsMap[filename];
+    }
+    else
+    {
+        increment_id++;
+        sf::Texture texture;
+        if (!texture.loadFromFile(filename))
+            return 0U;
+        nameIdsMap[filename] = increment_id;
+        texturesMap[increment_id] = texture;
+    }
+    return 0U;
+}
+
+
+
+uint TextureManager::get_last_id()
+{
+    return increment_id;
+}
+
+//TODO: unload texture from text_id
+void TextureManager::unload_texture(uint text_id)
+{
+    
+}
+
+sf::Texture* TextureManager::get_texture(uint text_id)
+{
+    if(texturesMap.find(text_id) != texturesMap.end())
+    {
+        return &texturesMap[text_id];
+    }
+    return NULL;
+}

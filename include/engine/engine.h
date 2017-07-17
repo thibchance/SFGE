@@ -25,16 +25,18 @@ SOFTWARE.
 #ifndef SFGE_ENGINE_H
 #define SFGE_ENGINE_H
 
+//Engine includes
 #include <physics/physics.h>
-
+//Dependencies includes
 #include <SFML/Graphics.hpp>
+
 class Engine
 {
 public:
 	Engine();
 	~Engine();
-	virtual void init();
-	virtual void start();
+	void init();
+	void start();
 private:
 	sf::RenderWindow* window;
 };

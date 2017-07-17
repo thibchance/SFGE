@@ -25,6 +25,27 @@ SOFTWARE.
 #ifndef SFGE_SPRITE_H
 #define SFGE_SPRITE_H
 
+//STL
+#include <map>
+#include <string>
+//Engine
+#include <engine/globals.h>
+//Dependencies
 #include <SFML/Graphics.hpp>
+
+//Storing all the texture file
+class TextureManager : Singleton
+{
+public:
+    uint load_texture(std::string);
+    uint get_last_id();
+    void unload_texture(uint);
+    
+    sf::Texture* get_texture(uint);
+private:
+    std::map<std::string,uint> nameIdsMap;
+    std::map<uint, sf::Texture> texturesMap;
+    uint increment_id = 0;
+};
 
 #endif // !SFGE_SPRITE
