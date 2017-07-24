@@ -21,3 +21,18 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
+
+#ifndef SFGE_COMPONENT_H
+#define SFGE_COMPONENT_H
+
+#include <engine/game_object.h>
+
+class Component
+{
+
+protected:
+    GameObject& gameObject;
+    
+};
+
+#endif

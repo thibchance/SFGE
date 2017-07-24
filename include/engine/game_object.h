@@ -21,3 +21,21 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
+
+
+#ifndef SFGE_GAMEOBJECT_H
+#define SFGE_GAMEOBJECT_H
+
+#include <list>
+
+class Component;
+
+class GameObject
+{
+    
+    
+protected:
+    std::list<Component> components;
+};
+
+#endif

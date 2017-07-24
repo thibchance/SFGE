@@ -1,5 +1,38 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.3)
 project(SFGE)
+
+include(cmake/IntelCompileFeatures.cmake)
+
+include(cmake/EnumeratedOption.cmake)
+include(cmake/CheckCXXFeature.cmake)
+include(cmake/CheckCXXStandardLibrary.cmake)
+
+message(STATUS "CXX compiler ID: '${CMAKE_CXX_COMPILER_ID}'")
+message(STATUS "CXX compiler Version: '${CMAKE_CXX_COMPILER_VERSION}'")
+
+enum_option(BUILD_CXX_STANDARD
+  DOC "C++ Standard to compile against"
+  VALUES 11 14 17
+  CASE_INSENSITIVE
+  )
+message(STATUS "List of CXX features known to CMake")
+	get_property(_cxx_known_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
+	foreach(_f ${_cxx_known_features})
+	  message("  ${_f}")
+	endforeach()
+
+	message(STATUS "List of supported CXX11 features")
+	foreach(_f ${CMAKE_CXX11_COMPILE_FEATURES})
+	  message("  ${_f}")
+	endforeach()
+	message(STATUS "List of supported CXX14 features")
+	foreach(_f ${CMAKE_CXX14_COMPILE_FEATURES})
+	  message("  ${_f}")
+	endforeach()
+	message(STATUS "List of supported CXX17 features")
+	foreach(_f ${CMAKE_CXX17_COMPILE_FEATURES})
+		message("  ${_f}")
+	endforeach()
 
 set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/externals)
 
@@ -7,7 +40,7 @@ include_directories(include ${CMAKE_SOURCE_DIR}/include)
 
 file(GLOB_RECURSE SFGE_SRC src/*.cpp include/*.h)
 
-#SFML 
+#SFML
 set(SFML_DIR ${EXTERNAL_DIR}/SFML)
 set(SFML_BUILD_EXAMPLES FALSE)
 set(BUILD_SHARED_LIBS FALSE)

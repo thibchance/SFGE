@@ -28,8 +28,9 @@ SOFTWARE.
 //STL
 #include <map>
 #include <string>
+
 //Engine
-#include <engine/globals.h>
+#include <engine/utility.h>
 //Dependencies
 #include <SFML/Graphics.hpp>
 
