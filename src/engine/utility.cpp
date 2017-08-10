@@ -22,12 +22,20 @@
  SOFTWARE.
  */
 
+#include <engine/utility.h>
 
+/* Null, because instance will be initialized on demand. */
+Singleton* Singleton::instance = 0;
 
-#ifndef SFGE_GLOBALS_H
-#define SFGE_GLOBALS_H
+Singleton* Singleton::getInstance()
+{
+    if (instance == 0)
+    {
+        instance = new Singleton();
+    }
+    
+    return instance;
+}
 
-
-#define PATH_LIMIT 4096
-
-#endif //SFGE_GLOBALS_H
+Singleton::Singleton()
+{}

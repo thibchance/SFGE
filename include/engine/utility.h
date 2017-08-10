@@ -22,12 +22,21 @@
  SOFTWARE.
  */
 
+#ifndef SFGE_UTILIY_H
+#define SFGE_UTILIY_H
 
+class Singleton
+{
+private:
+    /* Here will be the instance stored. */
+    static Singleton* instance;
+    
+    /* Private constructor to prevent instancing. */
+    Singleton();
+    
+public:
+    /* Static access method. */
+    static Singleton* getInstance();
+};
 
-#ifndef SFGE_GLOBALS_H
-#define SFGE_GLOBALS_H
-
-
-#define PATH_LIMIT 4096
-
-#endif //SFGE_GLOBALS_H
+#endif /* utility_h */

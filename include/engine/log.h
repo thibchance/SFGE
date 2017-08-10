@@ -22,12 +22,37 @@
  SOFTWARE.
  */
 
+#ifndef SFGE_LOG_H
+#define SFGE_LOG_H
 
+#include <engine/utility.h>
+#include <engine/globals.h>
 
-#ifndef SFGE_GLOBALS_H
-#define SFGE_GLOBALS_H
+#include <stdarg.h>
+#include <stdio.h> // vsnprintf
+#include <string.h>
+#include <time.h>
+#include <list>
+#include <iostream>
 
+#define LOG_BUFSIZE 512
 
-#define PATH_LIMIT 4096
-
-#endif //SFGE_GLOBALS_H
+class Log: public Singleton
+{
+private:
+    std::list<void(*)(int, const char*)>* internal_handlers;
+    FILE* internal_file;
+    
+    void internal_log(int level, const char* message);
+public:
+    int begin();
+    void handler(void(*)(int level, const char* message));
+    void clear(void);
+    
+    void info(const char* format, ...);
+    void error(const char* format, ...);
+    void debug(const char* format, ...);
+    
+    void finish();
+};
+#endif // SFGE_LOG_H

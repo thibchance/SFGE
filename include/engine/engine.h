@@ -27,6 +27,7 @@ SOFTWARE.
 
 //Engine includes
 #include <physics/physics.h>
+#include <engine/game_object.h>
 //Dependencies includes
 #include <SFML/Graphics.hpp>
 

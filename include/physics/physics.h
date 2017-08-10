@@ -25,6 +25,15 @@ SOFTWARE.
 #ifndef SFGE_PHYSICS_H
 #define SFGE_PHYSICS_H
 
+#include <engine/utility.h>
+
 #include <Box2D/Box2D.h>
+
+
+class PhysicManager : public Singleton
+{
+
+};
+
 
 #endif

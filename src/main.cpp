@@ -32,7 +32,8 @@ int main()
 	engine.init();
 
 	engine.start();
-
+#ifdef WIN32
 	system("pause");
+#endif
 	return 0;
 }
