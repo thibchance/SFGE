@@ -37,15 +37,15 @@ SOFTWARE.
 class TextureManager : Singleton
 {
 public:
-    uint load_texture(std::string);
-    uint get_last_id();
-    void unload_texture(uint);
+	unsigned int load_texture(std::string);
+	unsigned int get_last_id();
+    void unload_texture(unsigned int);
     
-    sf::Texture* get_texture(uint);
+    sf::Texture* get_texture(unsigned int);
 private:
-    std::map<std::string,uint> nameIdsMap;
-    std::map<uint, sf::Texture> texturesMap;
-    uint increment_id = 0;
+    std::map<std::string, unsigned int> nameIdsMap;
+    std::map<unsigned int, sf::Texture> texturesMap;
+	unsigned int increment_id = 0;
 };
 
 #endif // !SFGE_SPRITE
