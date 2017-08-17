@@ -25,11 +25,14 @@ SOFTWARE.
 
 #include <engine/engine.h>
 
+
 int main()
 {
 	Engine engine;
 
 	engine.init();
+    
+    
 
 	engine.start();
 #ifdef WIN32

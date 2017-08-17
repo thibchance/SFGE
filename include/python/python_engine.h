@@ -22,23 +22,9 @@
  SOFTWARE.
  */
 
-#include <engine/utility.h>
+#ifndef SFGE_PYENGINE_H
+#define SFGE_PYENGINE_H
 
+void init_python();
 
-
-/* Null, because instance will be initialized on demand. */
-Singleton* Singleton::instance = 0;
-
-Singleton* Singleton::getInstance()
-{
-    if (instance == 0)
-    {
-        instance = new Singleton();
-    }
-    
-    return instance;
-}
-
-Singleton::Singleton()
-{}
-
+#endif /* SFGE_PYENGINE_H */

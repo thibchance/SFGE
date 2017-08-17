@@ -23,10 +23,11 @@ SOFTWARE.
 */
 
 #include <engine/engine.h>
+#include <python/python_engine.h>
 
 Engine::Engine(): window(NULL)
 {
-
+    
 }
 
 Engine::~Engine()
@@ -37,7 +38,9 @@ Engine::~Engine()
 
 void Engine::init()
 {
+    init_python();
 	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
+    
 }
 
 void Engine::start()

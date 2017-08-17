@@ -22,23 +22,13 @@
  SOFTWARE.
  */
 
-#include <engine/utility.h>
+#include <python/python_engine.h>
 
+#include <pybind11/embed.h> // everything needed for embedding
+namespace py = pybind11;
 
-
-/* Null, because instance will be initialized on demand. */
-Singleton* Singleton::instance = 0;
-
-Singleton* Singleton::getInstance()
+void init_python()
 {
-    if (instance == 0)
-    {
-        instance = new Singleton();
-    }
-    
-    return instance;
+    py::scoped_interpreter guard{}; // start the interpreter and keep it alive
+    py::print("Hello Python!"); // use the Python API
 }
-
-Singleton::Singleton()
-{}
-

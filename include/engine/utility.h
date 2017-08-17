@@ -25,6 +25,9 @@
 #ifndef SFGE_UTILIY_H
 #define SFGE_UTILIY_H
 
+#include <stdlib.h> // size_t
+#include <string>
+
 class Singleton
 {
 private:
@@ -38,5 +41,6 @@ public:
     /* Static access method. */
     static Singleton* getInstance();
 };
+
 
 #endif /* utility_h */
