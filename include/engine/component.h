@@ -24,11 +24,11 @@
 
 #ifndef SFGE_COMPONENT_H
 #define SFGE_COMPONENT_H
-
 #include <engine/game_object.h>
 
 class Component
 {
+
 
 protected:
     GameObject& gameObject;

@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include <graphics/sprite.h>
 
-uint TextureManager::load_texture(std::string filename)
+unsigned int TextureManager::load_texture(std::string filename)
 {
     if(nameIdsMap.find(filename) != nameIdsMap.end())
     {
@@ -44,18 +44,18 @@ uint TextureManager::load_texture(std::string filename)
 
 
 
-uint TextureManager::get_last_id()
+unsigned int TextureManager::get_last_id()
 {
     return increment_id;
 }
 
 //TODO: unload texture from text_id
-void TextureManager::unload_texture(uint text_id)
+void TextureManager::unload_texture(unsigned int text_id)
 {
     
 }
 
-sf::Texture* TextureManager::get_texture(uint text_id)
+sf::Texture* TextureManager::get_texture(unsigned int text_id)
 {
     if(texturesMap.find(text_id) != texturesMap.end())
     {
