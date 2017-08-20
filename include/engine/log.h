@@ -26,9 +26,13 @@
 #define SFGE_LOG_H
 
 #include <engine/utility.h>
+#include <iostream>
 
-class Log: public Singleton
+
+class Log : public Singleton<Log>
 {
-    
+public:
+    void msg(const char*);
+    void error(const char*);
 };
 #endif // SFGE_LOG_H

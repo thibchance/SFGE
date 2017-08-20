@@ -28,6 +28,7 @@ SOFTWARE.
 //Engine includes
 #include <physics/physics.h>
 #include <engine/game_object.h>
+#include <engine/log.h>
 //Dependencies includes
 #include <SFML/Graphics.hpp>
 
@@ -40,6 +41,8 @@ public:
 	void start();
 private:
 	sf::RenderWindow* window;
+    
+    void checkVersion();
 };
 
 

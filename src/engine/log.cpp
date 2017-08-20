@@ -23,3 +23,14 @@
  */
 
 #include <engine/log.h>
+
+
+void Log::msg(const char* text)
+{
+    std::cout << text << "\n";
+}
+void Log::error(const char* text)
+{
+    
+    std::cerr << text << "\n";
+}

@@ -28,19 +28,31 @@
 #include <stdlib.h> // size_t
 #include <string>
 
+template<typename T>
 class Singleton
 {
-private:
+protected:
     /* Here will be the instance stored. */
-    static Singleton* instance;
+    static T* instance;
     
     /* Private constructor to prevent instancing. */
-    Singleton();
+    Singleton(){};
     
 public:
     /* Static access method. */
-    static Singleton* getInstance();
+    static T* getInstance()
+    {
+        {
+            if (instance == NULL)
+            {
+                instance = new T();
+            }
+            
+            return instance;
+        }
+    }
 };
 
-
+template<typename T>
+T* Singleton<T>::instance = NULL;
 #endif /* utility_h */

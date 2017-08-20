@@ -24,3 +24,22 @@ SOFTWARE.
 
 #include <physics/physics.h>
 
+
+
+void PhysicManager::init_physics()
+{
+    world = new b2World(b2Vec2(0.0f,0.0f));
+}
+
+
+void PhysicManager::destroy_world()
+{
+    if(world != NULL)
+        delete world;
+
+}
+
+PhysicManager::~PhysicManager()
+{
+    destroy_world();
+}

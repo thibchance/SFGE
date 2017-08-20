@@ -35,7 +35,7 @@ SOFTWARE.
 #include <SFML/Graphics.hpp>
 
 //Storing all the texture file
-class TextureManager : Singleton
+class TextureManager : Singleton<TextureManager>
 {
 public:
 	unsigned int load_texture(std::string);

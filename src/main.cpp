@@ -24,15 +24,16 @@ SOFTWARE.
 #include <iostream>
 
 #include <engine/engine.h>
+#include <engine/log.h>
 
 
 int main()
 {
+    Log::getInstance()->msg("SFGE 0.1 by Elias Farhan");
+    
 	Engine engine;
 
 	engine.init();
-    
-    
 
 	engine.start();
 #ifdef WIN32

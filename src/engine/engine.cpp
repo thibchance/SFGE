@@ -25,6 +25,8 @@ SOFTWARE.
 #include <engine/engine.h>
 #include <python/python_engine.h>
 
+#include <sstream>
+
 Engine::Engine(): window(NULL)
 {
     
@@ -41,10 +43,21 @@ void Engine::init()
     init_python();
 	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
     
+    checkVersion();
 }
 
 void Engine::start()
 {
 
 }
+
+void Engine::checkVersion()
+{
+    
+    sf::ContextSettings settings = window->getSettings();
+    std::stringstream log_message;
+    log_message << "OpenGL version:"<< settings.majorVersion << "." << settings.minorVersion << std::endl;
+    Log::getInstance()->msg(log_message.str().c_str());
+}
+
 

@@ -30,9 +30,14 @@ SOFTWARE.
 #include <Box2D/Box2D.h>
 
 
-class PhysicManager : public Singleton
+class PhysicManager : public Singleton<PhysicManager>
 {
-
+public:
+    void init_physics();
+private:
+    b2World* world;
+    ~PhysicManager();
+    void destroy_world();
 };
 
 
