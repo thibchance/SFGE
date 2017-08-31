@@ -107,10 +107,16 @@ include_directories(${PYBIND11_DIR})
 LIST(APPEND SFGE_LIBRARIES
   pybind11)
 
-add_executable(SFGE ${SFGE_SRC} src/main.cpp)
-add_executable(SFGE_TEST ${SFGE_SRC} src/test.cpp)
+#SFGE_COMMON
+add_library(SFGE_COMMON STATIC ${SFGE_SRC})
+include_directories(include/)
+target_link_libraries(SFGE_COMMON PUBLIC ${SFGE_LIBRARIES})
 
-MESSAGE(${SFGE_LIBRARIES})
+#SFGE
+add_executable(SFGE src/main.cpp)
+add_executable(SFGE_TEST src/test.cpp)
 
-target_link_libraries(SFGE ${SFGE_LIBRARIES})
-target_link_libraries(SFGE_TEST ${SFGE_LIBRARIES})
+MESSAGE("SFGE_COMMON: " ${SFGE_COMMON})
+
+target_link_libraries(SFGE PUBLIC SFGE_COMMON)
+target_link_libraries(SFGE_TEST PUBLIC SFGE_COMMON)
