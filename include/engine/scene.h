@@ -22,26 +22,19 @@
  SOFTWARE.
  */
 
-#include <python/python_engine.h>
 
-#include <pybind11/embed.h> // everything needed for embedding
+#ifndef SFGE_SCENE_H
+#define SFGE_SCENE_H
 
-#include "engine/scene.h"
-#include "engine/game_object.h"
-#include "engine/component.h"
+#include <list>
 
-namespace py = pybind11;
+class GameObject;
 
-PYBIND11_MODULE(SFGE, m) 
+class Scene
 {
-	py::class_<Scene> scene(m, "Scene");
-	py::class_<GameObject> game_object(m, "GameObject");
-	py::class_<Component> component(m, "Component");
+    
+protected:
+    std::list<GameObject> gameObjects;
+};
 
-}
-
-void init_python()
-{
-    py::scoped_interpreter guard{}; // start the interpreter and keep it alive
-    py::print("Hello from Python!"); // use the Python API
-}
+#endif

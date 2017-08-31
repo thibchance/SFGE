@@ -27,10 +27,11 @@ SOFTWARE.
 
 //Engine includes
 #include <physics/physics.h>
-#include <engine/game_object.h>
+#include <engine/scene.h>
 #include <engine/log.h>
 //Dependencies includes
 #include <SFML/Graphics.hpp>
+#include "imgui-SFML.h"
 
 class Engine
 {
@@ -41,8 +42,10 @@ public:
 	void start();
 private:
 	sf::RenderWindow* window;
-    
+	bool running;
     void checkVersion();
+	Scene* currentScene;
+	void init_gui();
 };
 
 

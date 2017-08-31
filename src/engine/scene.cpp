@@ -22,26 +22,4 @@
  SOFTWARE.
  */
 
-#include <python/python_engine.h>
-
-#include <pybind11/embed.h> // everything needed for embedding
-
-#include "engine/scene.h"
 #include "engine/game_object.h"
-#include "engine/component.h"
-
-namespace py = pybind11;
-
-PYBIND11_MODULE(SFGE, m) 
-{
-	py::class_<Scene> scene(m, "Scene");
-	py::class_<GameObject> game_object(m, "GameObject");
-	py::class_<Component> component(m, "Component");
-
-}
-
-void init_python()
-{
-    py::scoped_interpreter guard{}; // start the interpreter and keep it alive
-    py::print("Hello from Python!"); // use the Python API
-}

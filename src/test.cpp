@@ -21,64 +21,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include <iostream>
 
 #include <engine/engine.h>
-#include <python/python_engine.h>
+#include <engine/log.h>
 
-#include <sstream>
 
-Engine::Engine(): window(NULL), running(false)
+int main()
 {
+    Log::getInstance()->msg("SFGE TEST 0.1 by Elias Farhan");
     
-}
+	Engine engine;
 
-Engine::~Engine()
-{
-	delete window;
-	window = NULL;
-}
+	engine.init();
 
-void Engine::init()
-{
-    init_python();
-	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
-    checkVersion();
-	running = true;
+	engine.start();
+#ifdef WIN32
+	system("pause");
+#endif
+	return 0;
 }
-
-void Engine::start()
-{
-	sf::Clock clock;
-	while (running)
-	{
-		sf::Time dt = clock.restart();
-		sf::Event event;
-		while (window->pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				window->close();
-				running = false;
-			}
-		}
-		
-		window->clear();
-		ImGui::SFML::Update(*window, dt);
-		window->display();
-	}
-}
-
-void Engine::checkVersion()
-{
-    
-    sf::ContextSettings settings = window->getSettings();
-    std::stringstream log_message;
-    log_message << "OpenGL version:"<< settings.majorVersion << "." << settings.minorVersion << std::endl;
-    Log::getInstance()->msg(log_message.str().c_str());
-}
-
-void Engine::init_gui()
-{
-	ImGui::SFML::Init(*(sf::RenderTarget*)window);
-}
-

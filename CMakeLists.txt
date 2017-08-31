@@ -17,10 +17,6 @@ enum_option(BUILD_CXX_STANDARD
   )
 message(STATUS "List of CXX features known to CMake")
 	get_property(_cxx_known_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
-	foreach(_f ${_cxx_known_features})
-	  message("  ${_f}")
-	endforeach()
-
 	message(STATUS "List of supported CXX11 features")
 	foreach(_f ${CMAKE_CXX11_COMPILE_FEATURES})
 	  message("  ${_f}")
@@ -38,7 +34,7 @@ set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/externals)
 
 include_directories(include ${CMAKE_SOURCE_DIR}/include)
 
-file(GLOB_RECURSE SFGE_SRC src/*.cpp include/*.h)
+file(GLOB_RECURSE SFGE_SRC src/*/*.cpp include/*.h)
 
 #SFML
 set(SFML_DIR ${EXTERNAL_DIR}/SFML)
@@ -50,8 +46,8 @@ LIST(APPEND SFGE_LIBRARIES
 	sfml-system
 	sfml-window
 	sfml-graphics
-  sfml-audio
-  sfml-network)
+	sfml-audio
+	sfml-network)
 
 #SFML Imgui
 set(SFML_IMGUI ${EXTERNAL_DIR}/imgui-sfml/)
@@ -60,7 +56,7 @@ set(IMGUI_ROOT ${EXTERNAL_DIR}/imgui/)
 set(SFML_ROOT ${EXTERNAL_DIR}/SFML/)
 add_subdirectory(${SFML_IMGUI})
 include_directories(${IMGUI_ROOT} ${SFML_IMGUI})
-LIST(APPEND SFGE_LIBRARIES
+LIST(APPEND SFGE_LIBRARIES 
 	imgui-sfml)
 
 
@@ -72,9 +68,6 @@ SET(BOX2D_BUILD_STATIC ON  CACHE INTERNAL "")
 
 add_subdirectory(${BOX2D_DIR})
 include_directories(${BOX2D_DIR}/Box2D/)
-LIST(APPEND SFGE_LIBRARIES
-	Box2D)
-
 LIST(APPEND SFGE_LIBRARIES
 	Box2D)
 
@@ -114,6 +107,10 @@ include_directories(${PYBIND11_DIR})
 LIST(APPEND SFGE_LIBRARIES
   pybind11)
 
-add_executable(SFGE ${SFGE_SRC})
+add_executable(SFGE ${SFGE_SRC} src/main.cpp)
+add_executable(SFGE_TEST ${SFGE_SRC} src/test.cpp)
+
+MESSAGE(${SFGE_LIBRARIES})
 
 target_link_libraries(SFGE ${SFGE_LIBRARIES})
+target_link_libraries(SFGE_TEST ${SFGE_LIBRARIES})

@@ -2,13 +2,7 @@
 #include <imgui.h>
 
 #include <SFML/OpenGL.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/Window/Window.hpp>
+
 
 #include <cmath> // abs
 #include <cstddef> // offsetof, NULL
