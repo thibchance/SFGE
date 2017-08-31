@@ -42,8 +42,11 @@ void Engine::init()
 {
     init_python();
 	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
-    checkVersion();
+	init_gui();
+	checkVersion();
+	
 	running = true;
+
 }
 
 void Engine::start()

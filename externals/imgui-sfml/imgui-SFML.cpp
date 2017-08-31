@@ -75,6 +75,7 @@ void Init(sf::RenderTarget& target, bool loadDefaultFont)
     if (loadDefaultFont) { 
         // this will load default font automatically
         // No need to call AddDefaultFont
+		
         UpdateFontTexture();
     }
 }
@@ -180,6 +181,7 @@ void UpdateFontTexture()
     sf::Texture& texture = *s_fontTexture;
 
     ImGuiIO& io = ImGui::GetIO();
+
     unsigned char* pixels;
     int width, height;
 
