@@ -23,11 +23,9 @@ SOFTWARE.
 */
 
 #include <engine/engine.h>
-#include <python/python_engine.h>
 
-#include <sstream>
 
-Engine::Engine(): window(NULL), running(false)
+Engine::Engine(): window(NULL), running(false), editor(false), test(false)
 {
     
 }
@@ -42,7 +40,8 @@ void Engine::init()
 {
     init_python();
 	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
-	init_gui();
+	window->setFramerateLimit(60);
+	initGui();
 	checkVersion();
 	
 	running = true;
@@ -55,20 +54,35 @@ void Engine::start()
 	while (running)
 	{
 		sf::Time dt = clock.restart();
+
 		sf::Event event;
 		while (window->pollEvent(event))
 		{
+			ImGui::SFML::ProcessEvent(event);
 			if (event.type == sf::Event::Closed)
 			{
 				window->close();
 				running = false;
 			}
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::E)
+				{
+					editor = !editor;
+				}
+			}
 		}
-		
-		window->clear();
+
 		ImGui::SFML::Update(*window, dt);
+		window->clear();
+		if (editor)
+			showEditor();
+		if (test)
+			showTest();
+		ImGui::SFML::Render(*window);
 		window->display();
 	}
+	ImGui::SFML::Shutdown();
 }
 
 void Engine::checkVersion()
@@ -80,8 +94,29 @@ void Engine::checkVersion()
     Log::getInstance()->msg(log_message.str().c_str());
 }
 
-void Engine::init_gui()
+void Engine::initGui()
 {
 	ImGui::SFML::Init(*(sf::RenderTarget*)window);
 }
 
+void Engine::initTest()
+{
+	test = true;
+}
+
+void Engine::showEditor()
+{
+	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+	
+	ImGui::Begin("Editor", &editor);
+	ImGui::Text("Hello");
+	ImGui::End();
+}
+
+void Engine::showTest()
+{
+	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Testbed", &test);
+	ImGui::Text("Hello");
+	ImGui::End();
+}

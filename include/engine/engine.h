@@ -29,9 +29,14 @@ SOFTWARE.
 #include <physics/physics.h>
 #include <engine/scene.h>
 #include <engine/log.h>
+#include <python/python_engine.h>
+
 //Dependencies includes
 #include <SFML/Graphics.hpp>
 #include "imgui-SFML.h"
+#include "imgui.h"
+
+#include <sstream>
 
 class Engine
 {
@@ -40,12 +45,20 @@ public:
 	~Engine();
 	void init();
 	void start();
+
+	void initTest();
+
 private:
 	sf::RenderWindow* window;
 	bool running;
-    void checkVersion();
+	bool editor;
+	bool test;
 	Scene* currentScene;
-	void init_gui();
+
+    void checkVersion();
+	void initGui();
+	void showEditor();
+	void showTest();
 };
 
 
