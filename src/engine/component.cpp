@@ -22,3 +22,9 @@
  SOFTWARE.
  */
 
+#include <engine/component.h>
+
+Component::Component(GameObject& parentObject):
+	gameObject(parentObject)
+{
+}

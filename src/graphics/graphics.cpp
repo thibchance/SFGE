@@ -22,37 +22,55 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef SFGE_SPRITE_H
-#define SFGE_SPRITE_H
+#include <graphics/graphics.h>
 
-//STL
-#include <map>
-#include <string>
+#include <engine/log.h>
+//Dependencies includes
+#include <SFML/Graphics/RenderWindow.hpp>
+#include "imgui-SFML.h"
+#include "imgui.h"
 
-//Engine
-#include <engine/engine.h>
-#include <engine/component.h>
-//Dependencies
-#include <SFML/Graphics.hpp>
+#include <sstream>
 
-//Storing all the texture file
-class TextureManager : public Module<TextureManager>
+void GraphicsManager::init()
 {
-public:
-	unsigned int load_texture(std::string);
-	unsigned int get_last_id();
-    void unload_texture(unsigned int);
-    
-    sf::Texture* get_texture(unsigned int);
-private:
-    std::map<std::string, unsigned int> nameIdsMap;
-    std::map<unsigned int, sf::Texture> texturesMap;
-	unsigned int increment_id = 0;
-};
+	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
+	window->setFramerateLimit(60);
+	//Init GUI
+	ImGui::SFML::Init(*(sf::RenderTarget*)window);
+}
 
-class Sprite : public Component
+void GraphicsManager::update(sf::Time dt)
+{
+	ImGui::SFML::Update(*window, dt);
+	window->clear();
+	ImGui::SFML::Render(*window);
+	window->display();
+}
+
+sf::RenderWindow * GraphicsManager::getWindow()
+{
+	return window;
+}
+
+void GraphicsManager::checkVersion()
 {
 
-};
+	sf::ContextSettings settings = window->getSettings();
+	std::stringstream log_message;
+	log_message << "OpenGL version:" << settings.majorVersion << "." << settings.minorVersion << std::endl;
+	Log::getInstance()->msg(log_message.str().c_str());
+}
 
-#endif // !SFGE_SPRITE
+void checkVersion()
+{
+
+}
+
+GraphicsManager::~GraphicsManager()
+{
+	ImGui::SFML::Shutdown();
+	if(window != NULL)
+		delete window;
+	window = NULL;
+}

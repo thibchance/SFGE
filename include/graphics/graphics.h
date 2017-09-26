@@ -22,37 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef SFGE_SPRITE_H
-#define SFGE_SPRITE_H
+#ifndef SFGE_GRAPHICS_H
+#define SFGE_GRAPHICS_H
 
-//STL
-#include <map>
-#include <string>
-
-//Engine
 #include <engine/engine.h>
-#include <engine/component.h>
-//Dependencies
-#include <SFML/Graphics.hpp>
 
-//Storing all the texture file
-class TextureManager : public Module<TextureManager>
+//Abstract class for graphics
+class GraphicsManager : public Module<GraphicsManager>
 {
 public:
-	unsigned int load_texture(std::string);
-	unsigned int get_last_id();
-    void unload_texture(unsigned int);
-    
-    sf::Texture* get_texture(unsigned int);
-private:
-    std::map<std::string, unsigned int> nameIdsMap;
-    std::map<unsigned int, sf::Texture> texturesMap;
-	unsigned int increment_id = 0;
+	void init() override;
+	void update(sf::Time) override;
+
+	sf::RenderWindow* getWindow();
+
+protected:
+	~GraphicsManager();
+
+	void checkVersion();
+
+	sf::RenderWindow* window = NULL;
 };
 
-class Sprite : public Component
+class Graphics2d : public GraphicsManager
 {
 
 };
 
-#endif // !SFGE_SPRITE
+class Graphics3d : public GraphicsManager
+{
+
+};
+
+#endif

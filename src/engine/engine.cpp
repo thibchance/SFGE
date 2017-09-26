@@ -24,25 +24,31 @@ SOFTWARE.
 
 #include <engine/engine.h>
 
+#include <graphics/graphics.h>
+#include <input/input.h>
+#include <python/python_engine.h>
 
-Engine::Engine(): window(NULL), running(false), editor(false), test(false)
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Clock.hpp>
+
+
+Engine::Engine(): running(false), editor(false), test(false)
 {
     
 }
 
 Engine::~Engine()
 {
-	delete window;
-	window = NULL;
+	
 }
 
 void Engine::init()
 {
-    init_python();
-	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
-	window->setFramerateLimit(60);
+	GraphicsManager::getInstance()->init();
+	PythonManager::getInstance()->init();
+	InputManager::getInstance()->init();
+	
 	initGui();
-	checkVersion();
 	
 	running = true;
 
@@ -55,48 +61,17 @@ void Engine::start()
 	{
 		sf::Time dt = clock.restart();
 
-		sf::Event event;
-		while (window->pollEvent(event))
-		{
-			ImGui::SFML::ProcessEvent(event);
-			if (event.type == sf::Event::Closed)
-			{
-				window->close();
-				running = false;
-			}
-			if (event.type == sf::Event::KeyPressed)
-			{
-				if (event.key.code == sf::Keyboard::E)
-				{
-					editor = !editor;
-				}
-			}
-		}
-
-		ImGui::SFML::Update(*window, dt);
-		window->clear();
-		if (editor)
-			showEditor();
-		if (test)
-			showTest();
-		ImGui::SFML::Render(*window);
-		window->display();
+		InputManager::getInstance()->update(dt);
+		GraphicsManager::getInstance()->update(dt);
 	}
-	ImGui::SFML::Shutdown();
+	
 }
 
-void Engine::checkVersion()
-{
-    
-    sf::ContextSettings settings = window->getSettings();
-    std::stringstream log_message;
-    log_message << "OpenGL version:"<< settings.majorVersion << "." << settings.minorVersion << std::endl;
-    Log::getInstance()->msg(log_message.str().c_str());
-}
+
 
 void Engine::initGui()
 {
-	ImGui::SFML::Init(*(sf::RenderTarget*)window);
+	
 }
 
 void Engine::initTest()
@@ -104,19 +79,7 @@ void Engine::initTest()
 	test = true;
 }
 
-void Engine::showEditor()
+sf::RenderWindow * Engine::getWindow()
 {
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-	
-	ImGui::Begin("Editor", &editor);
-	ImGui::Text("Hello");
-	ImGui::End();
-}
-
-void Engine::showTest()
-{
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Testbed", &test);
-	ImGui::Text("Hello");
-	ImGui::End();
+	return GraphicsManager::getInstance()->getWindow();
 }

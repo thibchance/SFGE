@@ -25,20 +25,12 @@ SOFTWARE.
 #ifndef SFGE_ENGINE_H
 #define SFGE_ENGINE_H
 
-//Engine includes
-#include <physics/physics.h>
+#include <engine/utility.h>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <engine/scene.h>
-#include <engine/log.h>
-#include <python/python_engine.h>
 
-//Dependencies includes
-#include <SFML/Graphics.hpp>
-#include "imgui-SFML.h"
-#include "imgui.h"
 
-#include <sstream>
-
-class Engine
+class Engine : Singleton<Engine>
 {
 public:
 	Engine();
@@ -48,17 +40,27 @@ public:
 
 	void initTest();
 
+	static sf::RenderWindow* getWindow();
+
 private:
-	sf::RenderWindow* window;
+	
 	bool running;
 	bool editor;
 	bool test;
-	Scene* currentScene;
 
-    void checkVersion();
+	Scene* currentScene;
+    
 	void initGui();
-	void showEditor();
-	void showTest();
+};
+
+template<typename T>
+class Module : public Singleton<T>
+{
+public:
+	virtual void init() = 0;
+	virtual void update(sf::Time dt) = 0;
+protected:
+
 };
 
 

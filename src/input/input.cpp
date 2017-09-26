@@ -22,37 +22,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef SFGE_SPRITE_H
-#define SFGE_SPRITE_H
+#include <input/input.h>
 
-//STL
-#include <map>
-#include <string>
+#include <SFML/Window.hpp>
+#include <imgui-SFML.h>
+#include <imgui.h>
 
-//Engine
-#include <engine/engine.h>
-#include <engine/component.h>
-//Dependencies
-#include <SFML/Graphics.hpp>
-
-//Storing all the texture file
-class TextureManager : public Module<TextureManager>
+void InputManager::init()
 {
-public:
-	unsigned int load_texture(std::string);
-	unsigned int get_last_id();
-    void unload_texture(unsigned int);
-    
-    sf::Texture* get_texture(unsigned int);
-private:
-    std::map<std::string, unsigned int> nameIdsMap;
-    std::map<unsigned int, sf::Texture> texturesMap;
-	unsigned int increment_id = 0;
-};
+	window = Engine::getWindow();
+}
 
-class Sprite : public Component
+void InputManager::update(sf::Time dt)
 {
+	manageEvent();
+}
 
-};
-
-#endif // !SFGE_SPRITE
+void InputManager::manageEvent()
+{
+	sf::Event event;
+	if (window == NULL)
+		return;
+	while (window->pollEvent(event))
+	{
+		ImGui::SFML::ProcessEvent(event);
+		if (event.type == sf::Event::Closed)
+		{
+			window->close();
+		}
+		if (event.type == sf::Event::KeyPressed)
+		{
+			if (event.key.code == sf::Keyboard::E)
+			{
+			}
+		}
+	}
+}

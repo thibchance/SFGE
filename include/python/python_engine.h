@@ -25,6 +25,16 @@
 #ifndef SFGE_PYENGINE_H
 #define SFGE_PYENGINE_H
 
-void init_python();
+#include <engine/engine.h>
+#include <SFML/System/Time.hpp>
+
+class PythonManager : public Module<PythonManager>
+{
+public:
+	void init() override;
+	void update(sf::Time) override;
+private:
+	~PythonManager();
+};
 
 #endif /* SFGE_PYENGINE_H */

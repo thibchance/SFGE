@@ -24,11 +24,12 @@
 
 #include <python/python_engine.h>
 
-#include <pybind11/embed.h> // everything needed for embedding
+#include <pybind11/embed.h>// everything needed for embedding
 
 #include "engine/scene.h"
 #include "engine/game_object.h"
 #include "engine/component.h"
+#include <engine/utility.h>
 
 namespace py = pybind11;
 
@@ -42,6 +43,21 @@ PYBIND11_MODULE(SFGE, m)
 
 void init_python()
 {
-    py::scoped_interpreter guard{}; // start the interpreter and keep it alive
-    py::print("Hello from Python!"); // use the Python API
+     // start the interpreter and keep it alive
+    // use the Python API
+}
+
+void PythonManager::init()
+{
+	py::initialize_interpreter();
+	py::print("Hello from Python!");
+}
+
+void PythonManager::update(sf::Time)
+{
+}
+
+PythonManager::~PythonManager()
+{
+	py::finalize_interpreter();
 }
