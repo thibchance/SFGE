@@ -28,7 +28,23 @@ unsigned int TextureManager::load_texture(std::string filename)
 {
     if(nameIdsMap.find(filename) != nameIdsMap.end())
     {
-        return nameIdsMap[filename];
+		auto text_id = nameIdsMap[filename];
+		//Check if the texture was destroyed
+		auto checkTexture = texturesMap.find(text_id);
+		if (checkTexture != texturesMap.end())
+		{
+			refCountMap[nameIdsMap[filename]]++;
+			return nameIdsMap[filename];
+		}
+		else
+		{
+			sf::Texture texture;
+			if (!texture.loadFromFile(filename))
+				return 0U;
+			refCountMap[increment_id] = 1;
+			nameIdsMap[filename] = increment_id;
+			texturesMap[increment_id] = texture;
+		}
     }
     else
     {
@@ -36,6 +52,7 @@ unsigned int TextureManager::load_texture(std::string filename)
         sf::Texture texture;
         if (!texture.loadFromFile(filename))
             return 0U;
+		refCountMap[increment_id] = 1;
         nameIdsMap[filename] = increment_id;
         texturesMap[increment_id] = texture;
     }
@@ -49,10 +66,20 @@ unsigned int TextureManager::get_last_id()
     return increment_id;
 }
 
-//TODO: unload texture from text_id
+
 void TextureManager::unload_texture(unsigned int text_id)
 {
-    
+	auto checkRefCount = refCountMap.find(text_id);
+	if (checkRefCount != refCountMap.end())
+	{
+		refCountMap[text_id]--;
+		if (refCountMap[text_id] == 0)
+		{
+			//TODO: unload texture from text_id
+			refCountMap.erase(text_id);
+			texturesMap.erase(text_id);
+		}
+	}
 }
 
 sf::Texture* TextureManager::get_texture(unsigned int text_id)

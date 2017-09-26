@@ -35,6 +35,19 @@ SOFTWARE.
 //Dependencies
 #include <SFML/Graphics.hpp>
 
+class Sprite : public Component
+{
+protected:
+	std::string filename;
+	sf::Sprite* sprite;
+};
+
+class SpriteManager : public Module<SpriteManager>
+{
+protected:
+	std::list<sf::Sprite> sprites;
+};
+
 //Storing all the texture file
 class TextureManager : public Module<TextureManager>
 {
@@ -47,12 +60,9 @@ public:
 private:
     std::map<std::string, unsigned int> nameIdsMap;
     std::map<unsigned int, sf::Texture> texturesMap;
+	std::map<unsigned int, unsigned int> refCountMap;
 	unsigned int increment_id = 0;
 };
 
-class Sprite : public Component
-{
-
-};
 
 #endif // !SFGE_SPRITE

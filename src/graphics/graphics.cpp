@@ -43,7 +43,9 @@ void GraphicsManager::init()
 void GraphicsManager::update(sf::Time dt)
 {
 	ImGui::SFML::Update(*window, dt);
+	
 	window->clear();
+	
 	ImGui::SFML::Render(*window);
 	window->display();
 }

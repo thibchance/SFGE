@@ -27,10 +27,9 @@ SOFTWARE.
 
 #include <engine/utility.h>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <engine/scene.h>
 
 
-class Engine : Singleton<Engine>
+class Engine : public Singleton<Engine>
 {
 public:
 	Engine();
@@ -41,16 +40,9 @@ public:
 	void initTest();
 
 	static sf::RenderWindow* getWindow();
-
-private:
-	
 	bool running;
 	bool editor;
 	bool test;
-
-	Scene* currentScene;
-    
-	void initGui();
 };
 
 template<typename T>

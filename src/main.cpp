@@ -31,11 +31,8 @@ int main()
 {
     Log::getInstance()->msg("SFGE 0.1 by Elias Farhan");
     
-	Engine engine;
-
-	engine.init();
-
-	engine.start();
+	Engine::getInstance()->init();
+	Engine::getInstance()->start();
 #ifdef WIN32
 	system("pause");
 #endif

@@ -27,6 +27,7 @@
 #define SFGE_SCENE_H
 
 #include <list>
+#include <engine/engine.h>
 
 class GameObject;
 
@@ -35,6 +36,13 @@ class Scene
     
 protected:
     std::list<GameObject> gameObjects;
+};
+
+class SceneManager : public Module<SceneManager>
+{
+public:
+	void init() override;
+	void update(sf::Time) override;
 };
 
 #endif

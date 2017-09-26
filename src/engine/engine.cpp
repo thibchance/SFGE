@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include <engine/engine.h>
-
+#include <engine/scene.h>
 #include <graphics/graphics.h>
 #include <input/input.h>
 #include <python/python_engine.h>
@@ -47,8 +47,7 @@ void Engine::init()
 	GraphicsManager::getInstance()->init();
 	PythonManager::getInstance()->init();
 	InputManager::getInstance()->init();
-	
-	initGui();
+	SceneManager::getInstance()->init();
 	
 	running = true;
 
@@ -64,13 +63,6 @@ void Engine::start()
 		InputManager::getInstance()->update(dt);
 		GraphicsManager::getInstance()->update(dt);
 	}
-	
-}
-
-
-
-void Engine::initGui()
-{
 	
 }
 

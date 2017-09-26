@@ -29,7 +29,6 @@
 class Component
 {
 	Component(GameObject&);
-
 protected:
     GameObject& gameObject;
     

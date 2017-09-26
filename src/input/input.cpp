@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include <input/input.h>
-
+#include <engine/log.h>
 #include <SFML/Window.hpp>
 #include <imgui-SFML.h>
 #include <imgui.h>
@@ -42,18 +42,23 @@ void InputManager::manageEvent()
 {
 	sf::Event event;
 	if (window == NULL)
+	{
+		Log::getInstance()->error("WINDOW IS NULL IN INPUT MANAGER");
 		return;
+	}
 	while (window->pollEvent(event))
 	{
 		ImGui::SFML::ProcessEvent(event);
 		if (event.type == sf::Event::Closed)
 		{
+			Engine::getInstance()->running = false;
 			window->close();
 		}
 		if (event.type == sf::Event::KeyPressed)
 		{
 			if (event.key.code == sf::Keyboard::E)
 			{
+
 			}
 		}
 	}

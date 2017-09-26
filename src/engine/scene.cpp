@@ -21,5 +21,34 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
+#include <filesystem>
 
 #include "engine/game_object.h"
+#include "engine/scene.h"
+#include <engine/log.h>
+
+namespace fs = std::experimental::filesystem;
+
+void SceneManager::init()
+{
+	fs::path scene_data_dir = "data/scenes/";
+	if (fs::is_directory(scene_data_dir))
+	{
+		for (auto& f : fs::directory_iterator(scene_data_dir))
+		{
+			if (fs::is_regular_file(f))
+			{
+				auto p = f.path();
+				if (p.extension() ==  fs::path(".scene"))
+				{
+					Log::getInstance()->msg("There is a scene");
+				}
+			}
+		}
+	}
+	
+}
+
+void SceneManager::update(sf::Time)
+{
+}

@@ -1,0 +1,10 @@
+{
+	"gameObjects": [
+		{
+			"type": "Sprite",
+			"posX": 12,
+			"posY": 45,
+			"filename": "data/sprites/test.png"
+		}
+	]
+}
