@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include <graphics/sprite.h>
 
-unsigned int TextureManager::load_texture(std::string filename)
+unsigned int TextureManager::LoadTexture(std::string filename)
 {
     if(nameIdsMap.find(filename) != nameIdsMap.end())
     {
@@ -61,13 +61,9 @@ unsigned int TextureManager::load_texture(std::string filename)
 
 
 
-unsigned int TextureManager::get_last_id()
-{
-    return increment_id;
-}
 
 
-void TextureManager::unload_texture(unsigned int text_id)
+void TextureManager::UnloadTexture(unsigned int text_id)
 {
 	auto checkRefCount = refCountMap.find(text_id);
 	if (checkRefCount != refCountMap.end())
@@ -82,11 +78,11 @@ void TextureManager::unload_texture(unsigned int text_id)
 	}
 }
 
-sf::Texture* TextureManager::get_texture(unsigned int text_id)
+sf::Texture* TextureManager::GetTexture(unsigned int text_id)
 {
     if(texturesMap.find(text_id) != texturesMap.end())
     {
         return &texturesMap[text_id];
     }
-    return NULL;
+    return nullptr;
 }

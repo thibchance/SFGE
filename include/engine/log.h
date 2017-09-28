@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,12 +27,12 @@
 
 #include <engine/utility.h>
 #include <iostream>
-
+#include <string>
 
 class Log : public Singleton<Log>
 {
 public:
-    void msg(const char*);
-    void error(const char*);
+    void Msg(const std::string&);
+    void Error(const std::string&);
 };
 #endif // SFGE_LOG_H

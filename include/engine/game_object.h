@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@ class Component;
 
 class GameObject
 {
-    
     
 protected:
     std::list<Component> components;

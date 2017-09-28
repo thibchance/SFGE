@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,17 +26,22 @@ SOFTWARE.
 
 
 
-void PhysicManager::init_physics()
+void PhysicManager::Init()
 {
     world = new b2World(b2Vec2(0.0f,0.0f));
+}
+
+void PhysicManager::Update(sf::Time dt)
+{
 }
 
 
 void PhysicManager::destroy_world()
 {
-    if(world != NULL)
-        delete world;
-
+	if (world != nullptr)
+	{
+		delete world;
+	}
 }
 
 PhysicManager::~PhysicManager()

@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,46 +32,38 @@ SOFTWARE.
 #include <SFML/System/Clock.hpp>
 
 
-Engine::Engine(): running(false), editor(false), test(false)
-{
-    
-}
 
-Engine::~Engine()
-{
-	
-}
 
-void Engine::init()
+void Engine::Init()
 {
-	GraphicsManager::getInstance()->init();
-	PythonManager::getInstance()->init();
-	InputManager::getInstance()->init();
-	SceneManager::getInstance()->init();
+	GraphicsManager::GetInstance()->Init();
+	PythonManager::GetInstance()->Init();
+	InputManager::GetInstance()->Init();
+	SceneManager::GetInstance()->Init();
 	
 	running = true;
 
 }
 
-void Engine::start()
+void Engine::Start()
 {
 	sf::Clock clock;
 	while (running)
 	{
 		sf::Time dt = clock.restart();
 
-		InputManager::getInstance()->update(dt);
-		GraphicsManager::getInstance()->update(dt);
+		InputManager::GetInstance()->Update(dt);
+		GraphicsManager::GetInstance()->Update(dt);
 	}
 	
 }
 
-void Engine::initTest()
+void Engine::InitTest()
 {
 	test = true;
 }
 
-sf::RenderWindow * Engine::getWindow()
+sf::RenderWindow * Engine::GetWindow()
 {
-	return GraphicsManager::getInstance()->getWindow();
+	return GraphicsManager::GetInstance()->GetWindow();
 }

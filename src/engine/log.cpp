@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +25,12 @@
 #include <engine/log.h>
 
 
-void Log::msg(const char* text)
+void Log::Msg(const std::string & text)
 {
-    std::cout << text << "\n";
+	std::cout << text << "\n";
 }
-void Log::error(const char* text)
+
+void Log::Error(const std::string & text)
 {
-    
-    std::cerr << text << "\n";
+	std::cerr << text << "\n";
 }

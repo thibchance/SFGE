@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,15 @@
 #define SFGE_SCENE_H
 
 #include <list>
+
 #include <engine/engine.h>
 
 class GameObject;
 
+/**
+* \brief The Scene includes GameObjects that are loaded from a JSON file
+*
+*/
 class Scene
 {
     
@@ -41,8 +46,8 @@ protected:
 class SceneManager : public Module<SceneManager>
 {
 public:
-	void init() override;
-	void update(sf::Time) override;
+	void Init() override;
+	void Update(sf::Time) override;
 };
 
 #endif

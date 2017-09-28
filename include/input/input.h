@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,9 +30,9 @@ SOFTWARE.
 class InputManager : public Module<InputManager>
 {
 public:
-	void init() override;
-	void update(sf::Time dt) override;
-	void manageEvent();
+	void Init() override;
+	void Update(sf::Time dt) override;
+	void ManageEvent();
 private:
 	sf::RenderWindow* window;
 };

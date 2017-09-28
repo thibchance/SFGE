@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,19 @@ SOFTWARE.
 #ifndef SFGE_PHYSICS_H
 #define SFGE_PHYSICS_H
 
-#include <engine/utility.h>
-
 #include <Box2D/Box2D.h>
+#include <SFML/System/Time.hpp>
+
+#include <engine/engine.h>
 
 
-class PhysicManager : public Singleton<PhysicManager>
+
+
+class PhysicManager : public Module<PhysicManager>
 {
 public:
-    void init_physics();
+    void Init() override;
+	void Update(sf::Time dt) override;
 private:
     b2World* world;
     ~PhysicManager();

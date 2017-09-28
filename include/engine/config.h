@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,5 +24,24 @@ SOFTWARE.
 
 #ifndef SFGE_CONFIG_H
 #define SFGE_CONFIG_H
+
+#include <SFML/System/Vector2.hpp>
+
+#include <engine/utility.h>
+
+struct ConfigEngine
+{
+	sf::Vector2i screenResolution = sf::Vector2i(800,600);
+	unsigned int maxFramerate = 60;
+};
+
+class ConfigManager : public Singleton<ConfigManager>
+{
+	/**
+	* \brief Load the configuration for the Game Engine
+	* \param configFilename by default "data/config.json"
+	*/
+	ConfigEngine* LoadConfig(std::string configFilename = "data/config.json");
+};
 
 #endif // !CONFIG_H

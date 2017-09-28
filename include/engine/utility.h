@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,9 @@
 #include <stdlib.h> // size_t
 #include <string>
 
+/**
+* \brief Singleton template class used by the modules of the Engine
+*/
 template<typename T>
 class Singleton
 {
@@ -40,10 +43,10 @@ protected:
     
 public:
     /* Static access method. */
-    static T* getInstance()
+    static T* GetInstance()
     {
         {
-            if (instance == NULL)
+            if (instance == nullptr)
             {
                 instance = new T();
             }
@@ -54,5 +57,5 @@ public:
 };
 
 template<typename T>
-T* Singleton<T>::instance = NULL;
+T* Singleton<T>::instance = nullptr;
 #endif /* utility_h */

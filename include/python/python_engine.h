@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,8 @@
 class PythonManager : public Module<PythonManager>
 {
 public:
-	void init() override;
-	void update(sf::Time) override;
+	void Init() override;
+	void Update(sf::Time) override;
 private:
 	~PythonManager();
 };

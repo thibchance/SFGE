@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,10 +29,10 @@ SOFTWARE.
 
 int main()
 {
-    Log::getInstance()->msg("SFGE 0.1 by Elias Farhan");
+    Log::GetInstance()->Msg("SFGE 0.1 by SAE Institute Switzerland AG");
     
-	Engine::getInstance()->init();
-	Engine::getInstance()->start();
+	Engine::GetInstance()->Init();
+	Engine::GetInstance()->Start();
 #ifdef WIN32
 	system("pause");
 #endif

@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,15 +32,16 @@ SOFTWARE.
 
 #include <sstream>
 
-void GraphicsManager::init()
+void GraphicsManager::Init()
 {
 	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
 	window->setFramerateLimit(60);
+	CheckVersion();
 	//Init GUI
 	ImGui::SFML::Init(*(sf::RenderTarget*)window);
 }
 
-void GraphicsManager::update(sf::Time dt)
+void GraphicsManager::Update(sf::Time dt)
 {
 	ImGui::SFML::Update(*window, dt);
 	
@@ -50,18 +51,18 @@ void GraphicsManager::update(sf::Time dt)
 	window->display();
 }
 
-sf::RenderWindow * GraphicsManager::getWindow()
+sf::RenderWindow * GraphicsManager::GetWindow()
 {
 	return window;
 }
 
-void GraphicsManager::checkVersion()
+void GraphicsManager::CheckVersion()
 {
-
 	sf::ContextSettings settings = window->getSettings();
 	std::stringstream log_message;
-	log_message << "OpenGL version:" << settings.majorVersion << "." << settings.minorVersion << std::endl;
-	Log::getInstance()->msg(log_message.str().c_str());
+	log_message << "OpenGL version: " << settings.majorVersion << "." << settings.minorVersion << std::endl;
+	
+	Log::GetInstance()->Msg(log_message.str());
 }
 
 void checkVersion()
@@ -72,7 +73,9 @@ void checkVersion()
 GraphicsManager::~GraphicsManager()
 {
 	ImGui::SFML::Shutdown();
-	if(window != NULL)
+	if (window != nullptr)
+	{
 		delete window;
-	window = NULL;
+	}
+	window = nullptr;
 }

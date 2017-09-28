@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,32 +25,49 @@ SOFTWARE.
 #ifndef SFGE_ENGINE_H
 #define SFGE_ENGINE_H
 
-#include <engine/utility.h>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <engine/utility.h>
 
-
+/**
+* \brief The main Engine class to centralise the frame process and the references
+*/
 class Engine : public Singleton<Engine>
 {
 public:
-	Engine();
-	~Engine();
-	void init();
-	void start();
+	/**
+	* \brief Initialize all the modules of the Game Engine, reading the config file too
+	*/
+	void Init();
+	/**
+	* \brief Starting the Game Engine after the Init()
+	*/
+	void Start();
 
-	void initTest();
+	void InitTest();
 
-	static sf::RenderWindow* getWindow();
-	bool running;
-	bool editor;
-	bool test;
+	static sf::RenderWindow* GetWindow();
+	bool running = false;
+	bool editor = false;
+	bool test = false;
+protected:
 };
 
+/**
+* \brief Module are Singleton used by the Engine to init and update features
+*/
 template<typename T>
 class Module : public Singleton<T>
 {
 public:
-	virtual void init() = 0;
-	virtual void update(sf::Time dt) = 0;
+	/**
+	* \brief Called to initialize the module
+	*/
+	virtual void Init() = 0;
+	/**
+	* \brief Called every frame to update the module
+	* \param dt The delta time since last frame
+	*/
+	virtual void Update(sf::Time dt) = 0;
 protected:
 
 };

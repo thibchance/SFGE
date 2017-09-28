@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,13 @@
  */
 #include <filesystem>
 
-#include "engine/game_object.h"
-#include "engine/scene.h"
+#include <engine/game_object.h>
+#include <engine/scene.h>
 #include <engine/log.h>
 
 namespace fs = std::experimental::filesystem;
 
-void SceneManager::init()
+void SceneManager::Init()
 {
 	fs::path scene_data_dir = "data/scenes/";
 	if (fs::is_directory(scene_data_dir))
@@ -41,7 +41,7 @@ void SceneManager::init()
 				auto p = f.path();
 				if (p.extension() ==  fs::path(".scene"))
 				{
-					Log::getInstance()->msg("There is a scene");
+					Log::GetInstance()->Msg("There is a scene");
 				}
 			}
 		}
@@ -49,6 +49,6 @@ void SceneManager::init()
 	
 }
 
-void SceneManager::update(sf::Time)
+void SceneManager::Update(sf::Time)
 {
 }

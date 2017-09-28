@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Elias Farhan
+Copyright (c) 2017 SAE Institute Switzerland AG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,22 +28,22 @@ SOFTWARE.
 #include <imgui-SFML.h>
 #include <imgui.h>
 
-void InputManager::init()
+void InputManager::Init()
 {
-	window = Engine::getWindow();
+	window = Engine::GetWindow();
 }
 
-void InputManager::update(sf::Time dt)
+void InputManager::Update(sf::Time dt)
 {
-	manageEvent();
+	ManageEvent();
 }
 
-void InputManager::manageEvent()
+void InputManager::ManageEvent()
 {
 	sf::Event event;
-	if (window == NULL)
+	if (window == nullptr)
 	{
-		Log::getInstance()->error("WINDOW IS NULL IN INPUT MANAGER");
+		Log::GetInstance()->Error("WINDOW IS NULL IN INPUT MANAGER");
 		return;
 	}
 	while (window->pollEvent(event))
@@ -51,7 +51,7 @@ void InputManager::manageEvent()
 		ImGui::SFML::ProcessEvent(event);
 		if (event.type == sf::Event::Closed)
 		{
-			Engine::getInstance()->running = false;
+			Engine::GetInstance()->running = false;
 			window->close();
 		}
 		if (event.type == sf::Event::KeyPressed)

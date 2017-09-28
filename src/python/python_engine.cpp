@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2017 Elias Farhan
+ Copyright (c) 2017 SAE Institute Switzerland AG
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -47,13 +47,13 @@ void init_python()
     // use the Python API
 }
 
-void PythonManager::init()
+void PythonManager::Init()
 {
 	py::initialize_interpreter();
 	py::print("Hello from Python!");
 }
 
-void PythonManager::update(sf::Time)
+void PythonManager::Update(sf::Time)
 {
 }
 
