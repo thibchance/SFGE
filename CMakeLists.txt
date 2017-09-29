@@ -29,6 +29,8 @@ message(STATUS "List of CXX features known to CMake")
 	foreach(_f ${CMAKE_CXX17_COMPILE_FEATURES})
 		message("  ${_f}")
 	endforeach()
+set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/externals)
 
@@ -108,6 +110,10 @@ LIST(APPEND SFGE_LIBRARIES
   pybind11)
 
 #SFGE_COMMON
+if(NOT WIN32)
+LIST(APPEND SFGE_LIBRARIES
+  stdc++fs)
+ENDIF()
 add_library(SFGE_COMMON STATIC ${SFGE_SRC})
 include_directories(include/)
 target_link_libraries(SFGE_COMMON PUBLIC ${SFGE_LIBRARIES})
