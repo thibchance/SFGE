@@ -27,31 +27,32 @@ SOFTWARE.
 
 #include <engine/engine.h>
 
-//Abstract class for graphics
+/**
+ * \brief The Graphics Manager
+ */
 class GraphicsManager : public Module<GraphicsManager>
 {
 public:
+	/**
+	 * \brief Initialize the Graphics Manager
+	 */
 	void Init() override;
-	void Update(sf::Time) override;
+	/**
+	 * \brief Update the Graphics Manager and prepare for the rendering
+	 * \param dt Delta time since last frame
+	 */
+	void Update(sf::Time dt) override;
 
+
+	void Destroy() override;
 	sf::RenderWindow* GetWindow();
 
 protected:
-	~GraphicsManager();
 
 	void CheckVersion();
 
 	sf::RenderWindow* window = nullptr;
 };
 
-class Graphics2d : public GraphicsManager
-{
-
-};
-
-class Graphics3d : public GraphicsManager
-{
-
-};
 
 #endif

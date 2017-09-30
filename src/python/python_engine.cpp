@@ -30,6 +30,7 @@
 #include "engine/game_object.h"
 #include "engine/component.h"
 #include <engine/utility.h>
+#include <iostream>
 
 namespace py = pybind11;
 
@@ -39,12 +40,6 @@ PYBIND11_MODULE(SFGE, m)
 	py::class_<GameObject> game_object(m, "GameObject");
 	py::class_<Component> component(m, "Component");
 
-}
-
-void init_python()
-{
-     // start the interpreter and keep it alive
-    // use the Python API
 }
 
 void PythonManager::Init()
@@ -57,7 +52,9 @@ void PythonManager::Update(sf::Time)
 {
 }
 
-PythonManager::~PythonManager()
+
+void PythonManager::Destroy()
 {
+	std::cout << "FINALIZING PYTHON!\n";
 	py::finalize_interpreter();
 }

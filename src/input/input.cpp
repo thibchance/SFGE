@@ -30,36 +30,13 @@ SOFTWARE.
 
 void InputManager::Init()
 {
-	window = Engine::GetWindow();
 }
 
 void InputManager::Update(sf::Time dt)
 {
-	ManageEvent();
+
 }
 
-void InputManager::ManageEvent()
+void InputManager::Destroy()
 {
-	sf::Event event;
-	if (window == nullptr)
-	{
-		Log::GetInstance()->Error("WINDOW IS NULL IN INPUT MANAGER");
-		return;
-	}
-	while (window->pollEvent(event))
-	{
-		ImGui::SFML::ProcessEvent(event);
-		if (event.type == sf::Event::Closed)
-		{
-			Engine::GetInstance()->running = false;
-			window->close();
-		}
-		if (event.type == sf::Event::KeyPressed)
-		{
-			if (event.key.code == sf::Keyboard::E)
-			{
-
-			}
-		}
-	}
 }

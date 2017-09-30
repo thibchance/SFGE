@@ -52,3 +52,7 @@ void SceneManager::Init()
 void SceneManager::Update(sf::Time)
 {
 }
+
+void SceneManager::Destroy()
+{
+}

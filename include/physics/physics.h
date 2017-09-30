@@ -29,19 +29,55 @@ SOFTWARE.
 #include <SFML/System/Time.hpp>
 
 #include <engine/engine.h>
+#include <engine/component.h>
 
 
 
-
+/**
+ * \brief The Physics Manager use Box2D to simulate 2D physics
+ */
 class PhysicManager : public Module<PhysicManager>
 {
 public:
+	/**
+	 * \brief Initialize the Physics Manager, but do not create a b2World
+	 */
     void Init() override;
+    /**
+     * \brief Initialize a b2World
+     */
+    void InitWorld();
+    /**
+     * \brief Create Rigidbody
+     * \return A 2D Rigidbody
+     */
+    b2Body* CreateBody();
+    /**
+     * \brief Destroy the body from the b2World
+     * \param body Rigidbody to be destroyed
+     */
+    void DestroyBody(b2Body* body);
+    /**
+     * \brief Destroy the current b2World
+     */
+    void DestroyWorld();
+    /**
+     * \brief Called each frame to update the b2World if not in editor mode
+     * @param dt Delta time since last frame
+     */
 	void Update(sf::Time dt) override;
+
+	void Destroy() override;
 private:
-    b2World* world;
+    b2World* m_World = nullptr;
     ~PhysicManager();
-    void destroy_world();
+
+};
+
+class Rigidbody : public Component
+{
+protected:
+	b2Body* m_Body = nullptr;
 };
 
 

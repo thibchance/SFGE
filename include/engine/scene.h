@@ -40,7 +40,7 @@ class Scene
 {
     
 protected:
-    std::list<GameObject> gameObjects;
+    std::list<GameObject> m_GameObjects;
 };
 
 class SceneManager : public Module<SceneManager>
@@ -48,6 +48,7 @@ class SceneManager : public Module<SceneManager>
 public:
 	void Init() override;
 	void Update(sf::Time) override;
+	void Destroy() override;
 };
 
 #endif

@@ -27,21 +27,30 @@ SOFTWARE.
 #include <graphics/graphics.h>
 #include <input/input.h>
 #include <python/python_engine.h>
+#include <engine/config.h>
 
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/Window/Event.hpp>
+#include <imgui-SFML.h>
+#include <imgui.h>
 
 
 
 
 void Engine::Init()
 {
+
+	m_Config = ConfigManager::GetInstance()->LoadConfig();
+
 	GraphicsManager::GetInstance()->Init();
 	PythonManager::GetInstance()->Init();
 	InputManager::GetInstance()->Init();
 	SceneManager::GetInstance()->Init();
 	
+	m_Window = GraphicsManager::GetInstance()->GetWindow();
 	running = true;
+
 
 }
 
@@ -51,19 +60,42 @@ void Engine::Start()
 	while (running)
 	{
 		sf::Time dt = clock.restart();
+		sf::Event event;
+		while (m_Window->pollEvent(event))
+			{
+				ImGui::SFML::ProcessEvent(event);
+				if (event.type == sf::Event::Closed)
+				{
+					Engine::GetInstance()->running = false;
+					m_Window->close();
+				}
+				if (event.type == sf::Event::KeyPressed)
+				{
+					if (event.key.code == sf::Keyboard::E)
+					{
 
+					}
+				}
+			}
 		InputManager::GetInstance()->Update(dt);
 		GraphicsManager::GetInstance()->Update(dt);
 	}
 	
+	GraphicsManager::GetInstance()->Destroy();
+	PythonManager::GetInstance()->Destroy();
+
 }
 
-void Engine::InitTest()
+Engine::~Engine()
 {
-	test = true;
+	if(m_Config)
+	{
+		delete m_Config;
+		m_Config = nullptr;
+	}
 }
 
-sf::RenderWindow * Engine::GetWindow()
+ConfigEngine* Engine::GetConfig()
 {
-	return GraphicsManager::GetInstance()->GetWindow();
+	return m_Config;
 }

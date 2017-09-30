@@ -40,6 +40,7 @@ protected:
     
     /* Private constructor to prevent instancing. */
     Singleton(){};
+    virtual ~Singleton(){};
     
 public:
     /* Static access method. */

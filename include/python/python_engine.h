@@ -33,8 +33,9 @@ class PythonManager : public Module<PythonManager>
 public:
 	void Init() override;
 	void Update(sf::Time) override;
+	void Destroy() override;
 private:
-	~PythonManager();
+
 };
 
 #endif /* SFGE_PYENGINE_H */

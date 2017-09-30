@@ -28,23 +28,41 @@ SOFTWARE.
 
 void PhysicManager::Init()
 {
-    world = new b2World(b2Vec2(0.0f,0.0f));
+
 }
 
 void PhysicManager::Update(sf::Time dt)
 {
+
 }
 
-
-void PhysicManager::destroy_world()
+void PhysicManager::InitWorld()
 {
-	if (world != nullptr)
+	m_World = new b2World(b2Vec2(0.0f,0.0f));
+}
+
+void PhysicManager::DestroyWorld()
+{
+	if (m_World != nullptr)
 	{
-		delete world;
+		delete m_World;
 	}
+}
+
+b2Body* PhysicManager::CreateBody()
+{
+	return nullptr;
+}
+
+void PhysicManager::DestroyBody(b2Body* body)
+{
+}
+
+void PhysicManager::Destroy()
+{
 }
 
 PhysicManager::~PhysicManager()
 {
-    destroy_world();
+    DestroyWorld();
 }

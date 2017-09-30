@@ -27,6 +27,7 @@ SOFTWARE.
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <engine/utility.h>
+#include <engine/config.h>
 
 /**
 * \brief The main Engine class to centralise the frame process and the references
@@ -43,13 +44,16 @@ public:
 	*/
 	void Start();
 
-	void InitTest();
+	~Engine();
 
-	static sf::RenderWindow* GetWindow();
+	ConfigEngine* GetConfig();
+
+
 	bool running = false;
 	bool editor = false;
-	bool test = false;
 protected:
+	sf::RenderWindow* m_Window = nullptr;
+	ConfigEngine* m_Config = nullptr;
 };
 
 /**
@@ -68,8 +72,10 @@ public:
 	* \param dt The delta time since last frame
 	*/
 	virtual void Update(sf::Time dt) = 0;
-protected:
 
+	virtual void Destroy();
+protected:
+	virtual ~Module(){};
 };
 
 

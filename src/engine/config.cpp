@@ -22,9 +22,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <engine/config.h>
-
 #include "json.hpp"
 
 // for convenience
 using json = nlohmann::json;
+
+#include <fstream>
+
+#include <engine/config.h>
+#include <engine/log.h>
+
+
+
+
+ConfigEngine* ConfigManager::LoadConfig(std::string configFilename)
+{
+	ConfigEngine* newConfig = new ConfigEngine();
+	std::ifstream inputFile(configFilename.c_str());
+	if( inputFile.peek() == std::ifstream::traits_type::eof() )
+	{
+		Log::GetInstance()->Error("EMPTY CONFIG FILE");
+		return newConfig;
+	}
+	json jsonConfig;
+	try
+	{
+	inputFile >> jsonConfig;
+	}
+	catch(json::parse_error& e)
+	{
+		Log::GetInstance()->Error("THE CONFIG FILE IS NOT JSON");
+		return newConfig;
+	}
+
+	newConfig->screenResolution = sf::Vector2i(
+			jsonConfig["screenResolution"]["x"],
+			jsonConfig["screenResolution"]["y"]);
+
+	newConfig->maxFramerate = jsonConfig["maxFramerate"];
+	return newConfig;
+}

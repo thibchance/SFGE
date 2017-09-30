@@ -26,9 +26,16 @@
 #define SFGE_COMPONENT_H
 #include <engine/game_object.h>
 
+/**
+ * \brief A GameObject Component that can be anything
+ */
 class Component
 {
-	Component(GameObject&);
+	/**
+	 * \brief Constructor of Component takes the parent GameObject as reference
+	 * \param parentGameObject
+	 */
+	Component(GameObject& parentGameObject);
 protected:
     GameObject& gameObject;
     

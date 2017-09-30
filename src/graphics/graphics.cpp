@@ -25,6 +25,7 @@ SOFTWARE.
 #include <graphics/graphics.h>
 
 #include <engine/log.h>
+#include <engine/config.h>
 //Dependencies includes
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "imgui-SFML.h"
@@ -34,8 +35,12 @@ SOFTWARE.
 
 void GraphicsManager::Init()
 {
-	window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFGE 0.1");
-	window->setFramerateLimit(60);
+	ConfigEngine* config = Engine::GetInstance()->GetConfig();
+	window = new sf::RenderWindow(sf::VideoMode(config->screenResolution.x, config->screenResolution.y), "SFGE 0.1");
+	if(config->maxFramerate)
+	{
+		window->setFramerateLimit(config->maxFramerate);
+	}
 	CheckVersion();
 	//Init GUI
 	ImGui::SFML::Init(*(sf::RenderTarget*)window);
@@ -70,7 +75,8 @@ void checkVersion()
 
 }
 
-GraphicsManager::~GraphicsManager()
+
+void GraphicsManager::Destroy()
 {
 	ImGui::SFML::Shutdown();
 	if (window != nullptr)

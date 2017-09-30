@@ -46,7 +46,7 @@ protected:
 };
 
 /**
-* \brief Sprite manager caching all the sprites
+* \brief Sprite manager caching all the sprites and rendering them at the end of the frame
 */
 class SpriteManager : public Singleton<SpriteManager>
 {

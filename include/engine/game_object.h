@@ -34,7 +34,7 @@ class GameObject
 {
     
 protected:
-    std::list<Component> components;
+    std::list<Component> m_Components;
 };
 
 #endif

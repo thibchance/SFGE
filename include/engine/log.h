@@ -25,14 +25,16 @@
 #ifndef SFGE_LOG_H
 #define SFGE_LOG_H
 
-#include <engine/utility.h>
 #include <iostream>
 #include <string>
+
+#include <engine/utility.h>
+
 
 class Log : public Singleton<Log>
 {
 public:
-    void Msg(const std::string&);
-    void Error(const std::string&);
+    void Msg(const std::string& msgText);
+    void Error(const std::string& errorText);
 };
 #endif // SFGE_LOG_H

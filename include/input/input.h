@@ -30,11 +30,18 @@ SOFTWARE.
 class InputManager : public Module<InputManager>
 {
 public:
+	/**
+	 * \brief Initialize the Input Manager
+	 */
 	void Init() override;
+	/**
+	 * \brief Update called each frame to report input status
+	 * @param dt Delta time since last frame
+	 */
 	void Update(sf::Time dt) override;
-	void ManageEvent();
+
+	void Destroy() override;
 private:
-	sf::RenderWindow* window;
 };
 
 #endif

@@ -120,9 +120,7 @@ target_link_libraries(SFGE_COMMON PUBLIC ${SFGE_LIBRARIES})
 
 #SFGE
 add_executable(SFGE src/main.cpp)
-add_executable(SFGE_TEST src/test.cpp)
 
 MESSAGE("SFGE_COMMON: " ${SFGE_COMMON})
 
 target_link_libraries(SFGE PUBLIC SFGE_COMMON)
-target_link_libraries(SFGE_TEST PUBLIC SFGE_COMMON)

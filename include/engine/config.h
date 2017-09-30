@@ -37,6 +37,7 @@ struct ConfigEngine
 
 class ConfigManager : public Singleton<ConfigManager>
 {
+public:
 	/**
 	* \brief Load the configuration for the Game Engine
 	* \param configFilename by default "data/config.json"
