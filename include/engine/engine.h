@@ -45,15 +45,18 @@ public:
 	void Start();
 
 	~Engine();
-
-	ConfigEngine* GetConfig();
+	/**
+	* \brief A getter of the Configuration 
+	* \return The Configuration struct got by the Engine
+	*/
+	Configuration* GetConfig();
 
 
 	bool running = false;
 	bool editor = false;
 protected:
 	sf::RenderWindow* m_Window = nullptr;
-	ConfigEngine* m_Config = nullptr;
+	Configuration* m_Config = nullptr;
 };
 
 /**
@@ -72,7 +75,9 @@ public:
 	* \param dt The delta time since last frame
 	*/
 	virtual void Update(sf::Time dt) = 0;
-
+	/**
+	* \brief Used instead of the destructor to delete all heap created structure and finalize 
+	*/
 	virtual void Destroy() = 0;
 protected:
 	virtual ~Module(){};

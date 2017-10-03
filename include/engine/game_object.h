@@ -30,6 +30,9 @@
 
 class Component;
 
+/**
+* \brief The basic Game Object handler containing a list of Components
+*/
 class GameObject
 {
     

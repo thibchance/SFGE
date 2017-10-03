@@ -35,35 +35,35 @@ SOFTWARE.
 
 void GraphicsManager::Init()
 {
-	ConfigEngine* config = Engine::GetInstance()->GetConfig();
-	window = new sf::RenderWindow(sf::VideoMode(config->screenResolution.x, config->screenResolution.y), "SFGE 0.1");
+	Configuration* config = Engine::GetInstance()->GetConfig();
+	m_Window = new sf::RenderWindow(sf::VideoMode(config->screenResolution.x, config->screenResolution.y), "SFGE 0.1");
 	if(config->maxFramerate)
 	{
-		window->setFramerateLimit(config->maxFramerate);
+		m_Window->setFramerateLimit(config->maxFramerate);
 	}
 	CheckVersion();
 	//Init GUI
-	ImGui::SFML::Init(*(sf::RenderTarget*)window);
+	ImGui::SFML::Init(*(sf::RenderTarget*)m_Window);
 }
 
 void GraphicsManager::Update(sf::Time dt)
 {
-	ImGui::SFML::Update(*window, dt);
+	ImGui::SFML::Update(*m_Window, dt);
 	
-	window->clear();
+	m_Window->clear();
 	
-	ImGui::SFML::Render(*window);
-	window->display();
+	ImGui::SFML::Render(*m_Window);
+	m_Window->display();
 }
 
 sf::RenderWindow * GraphicsManager::GetWindow()
 {
-	return window;
+	return m_Window;
 }
 
 void GraphicsManager::CheckVersion()
 {
-	sf::ContextSettings settings = window->getSettings();
+	sf::ContextSettings settings = m_Window->getSettings();
 	std::stringstream log_message;
 	log_message << "OpenGL version: " << settings.majorVersion << "." << settings.minorVersion << std::endl;
 	
@@ -79,9 +79,9 @@ void checkVersion()
 void GraphicsManager::Destroy()
 {
 	ImGui::SFML::Shutdown();
-	if (window != nullptr)
+	if (m_Window != nullptr)
 	{
-		delete window;
+		delete m_Window;
 	}
-	window = nullptr;
+	m_Window = nullptr;
 }

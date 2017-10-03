@@ -95,7 +95,7 @@ Engine::~Engine()
 	}
 }
 
-ConfigEngine* Engine::GetConfig()
+Configuration* Engine::GetConfig()
 {
 	return m_Config;
 }

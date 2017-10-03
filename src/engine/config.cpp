@@ -35,9 +35,9 @@ using json = nlohmann::json;
 
 
 
-ConfigEngine* ConfigManager::LoadConfig(std::string configFilename)
+Configuration* ConfigManager::LoadConfig(std::string configFilename)
 {
-	ConfigEngine* newConfig = new ConfigEngine();
+	Configuration* newConfig = new Configuration();
 	std::ifstream inputFile(configFilename.c_str());
 	if( inputFile.peek() == std::ifstream::traits_type::eof() )
 	{

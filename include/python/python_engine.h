@@ -28,11 +28,24 @@
 #include <engine/engine.h>
 #include <SFML/System/Time.hpp>
 
+/**
+* \brief Manage the python interpreter 
+*/
 class PythonManager : public Module<PythonManager>
 {
 public:
+	/**
+	* \brief Initialize the python interpreter
+	*/
 	void Init() override;
-	void Update(sf::Time) override;
+	/**
+	* \brief Update the python interpreter, called only in play mode
+	* \param dt The delta time since last frame
+	*/
+	void Update(sf::Time dt) override;
+	/**
+	* \brief Finalize the python interpreter
+	*/
 	void Destroy() override;
 private:
 

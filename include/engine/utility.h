@@ -38,12 +38,19 @@ protected:
     /* Here will be the instance stored. */
     static T* instance;
     
-    /* Private constructor to prevent instancing. */
+    /**
+	* \brief Private Constructor to prevent instancing. 
+	*/
     Singleton(){};
+	/**
+	* \brief Private destructor 
+	*/
     virtual ~Singleton(){};
     
 public:
-    /* Static access method. */
+    /**
+	* \brief Static access method. 
+	*/
     static T* GetInstance()
     {
         {

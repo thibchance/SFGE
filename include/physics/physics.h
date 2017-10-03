@@ -66,7 +66,9 @@ public:
      * @param dt Delta time since last frame
      */
 	void Update(sf::Time dt) override;
-
+	/**
+	* \brief Called at the end of the program to Destroy a b2World, if it sill exists
+	*/
 	void Destroy() override;
 private:
     b2World* m_World = nullptr;

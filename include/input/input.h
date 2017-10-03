@@ -27,6 +27,9 @@ SOFTWARE.
 
 #include <engine/engine.h>
 
+/**
+* \brief Handles Input like the Keyboard, the Joystick or the Mouse
+*/
 class InputManager : public Module<InputManager>
 {
 public:

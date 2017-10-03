@@ -43,15 +43,23 @@ public:
 	 */
 	void Update(sf::Time dt) override;
 
-
+	/**
+	* \brief Destroy the window and other 
+	*/
 	void Destroy() override;
+	/**
+	* \brief Getter of the window created in GraphicsManager
+	* \return The SFML window
+	*/
 	sf::RenderWindow* GetWindow();
 
 protected:
-
+	/**
+	* \brief Write to log the OpenGL version 
+	*/
 	void CheckVersion();
 
-	sf::RenderWindow* window = nullptr;
+	sf::RenderWindow* m_Window = nullptr;
 };
 
 

@@ -29,12 +29,15 @@ SOFTWARE.
 
 #include <engine/utility.h>
 
-struct ConfigEngine
+struct Configuration
 {
 	sf::Vector2i screenResolution = sf::Vector2i(800,600);
 	unsigned int maxFramerate = 60;
 };
 
+/**
+* \brief Used by the Engine to get a Configuration.
+*/
 class ConfigManager : public Singleton<ConfigManager>
 {
 public:
@@ -42,7 +45,7 @@ public:
 	* \brief Load the configuration for the Game Engine
 	* \param configFilename by default "data/config.json"
 	*/
-	ConfigEngine* LoadConfig(std::string configFilename = "data/config.json");
+	Configuration* LoadConfig(std::string configFilename = "data/config.json");
 };
 
 #endif // !CONFIG_H

@@ -40,11 +40,11 @@ public:
 	* \brief takes the reference to a string and output it to cout
 	* \param msgText The message to be written in cout
 	*/
-    void Msg(const std::string& msgText);
+    void Msg (const std::string& msgText);
 	/**
 	* \brief takes the reference to a string and output it to cerr
 	* \param errorText The message to be written in cerr
 	*/
-    void Error(const std::string& errorText);
+    void Error (const std::string& errorText);
 };
 #endif // SFGE_LOG_H

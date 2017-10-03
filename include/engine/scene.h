@@ -43,11 +43,24 @@ protected:
     std::list<GameObject> m_GameObjects;
 };
 
+/**
+* \brief The Scene Manager do the transition between two scenes, read from the Engine Configuration the scenes build list
+*/
 class SceneManager : public Module<SceneManager>
 {
 public:
+	/**
+	* \brief Initialize the SceneManager, get the Configuration from Engine and save the Scene lists from it
+	*/
 	void Init() override;
-	void Update(sf::Time) override;
+	/**
+	* \brief Update the SceneManager^, mostly updating the GameObjects of the current Scene and doing the transition when needed
+	* \param dt Delta time since last frame
+	*/
+	void Update(sf::Time dt) override;
+	/**
+	* \brief Finalize and delete everything created in the SceneManager
+	*/
 	void Destroy() override;
 };
 
