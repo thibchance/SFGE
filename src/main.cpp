@@ -36,5 +36,5 @@ int main()
 #ifdef WIN32
 	system("pause");
 #endif
-	return 0;
+	return EXIT_SUCCESS;
 }

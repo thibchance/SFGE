@@ -36,7 +36,7 @@ public:
 	void Init() override;
 	/**
 	 * \brief Update called each frame to report input status
-	 * @param dt Delta time since last frame
+	 * \param dt Delta time since last frame
 	 */
 	void Update(sf::Time dt) override;
 

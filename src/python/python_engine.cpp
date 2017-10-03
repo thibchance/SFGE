@@ -55,6 +55,5 @@ void PythonManager::Update(sf::Time)
 
 void PythonManager::Destroy()
 {
-	std::cout << "FINALIZING PYTHON!\n";
 	py::finalize_interpreter();
 }

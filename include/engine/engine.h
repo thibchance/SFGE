@@ -73,7 +73,7 @@ public:
 	*/
 	virtual void Update(sf::Time dt) = 0;
 
-	virtual void Destroy();
+	virtual void Destroy() = 0;
 protected:
 	virtual ~Module(){};
 };
