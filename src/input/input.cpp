@@ -22,11 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+
+
 #include <input/input.h>
 #include <engine/log.h>
 #include <SFML/Window.hpp>
 #include <imgui-SFML.h>
 #include <imgui.h>
+
+namespace sfge
+{
 
 void InputManager::Init()
 {
@@ -39,4 +44,6 @@ void InputManager::Update(sf::Time dt)
 
 void InputManager::Destroy()
 {
+}
+
 }

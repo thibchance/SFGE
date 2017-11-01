@@ -29,7 +29,8 @@
 #include <list>
 
 #include <engine/engine.h>
-
+namespace sfge
+{
 class GameObject;
 
 /**
@@ -38,9 +39,9 @@ class GameObject;
 */
 class Scene
 {
-    
+
 protected:
-    std::list<GameObject> m_GameObjects;
+	std::list<GameObject> m_GameObjects;
 };
 
 /**
@@ -63,5 +64,5 @@ public:
 	*/
 	void Destroy() override;
 };
-
+}
 #endif

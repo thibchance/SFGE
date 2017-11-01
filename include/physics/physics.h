@@ -31,7 +31,8 @@ SOFTWARE.
 #include <engine/engine.h>
 #include <engine/component.h>
 
-
+namespace sfge
+{
 
 /**
  * \brief The Physics Manager use Box2D to simulate 2D physics
@@ -42,37 +43,37 @@ public:
 	/**
 	 * \brief Initialize the Physics Manager, but do not create a b2World
 	 */
-    void Init() override;
-    /**
-     * \brief Initialize a b2World
-     */
-    void InitWorld();
-    /**
-     * \brief Create Rigidbody
-     * \return A 2D Rigidbody
-     */
-    b2Body* CreateBody();
-    /**
-     * \brief Destroy the body from the b2World
-     * \param body Rigidbody to be destroyed
-     */
-    void DestroyBody(b2Body* body);
-    /**
-     * \brief Destroy the current b2World
-     */
-    void DestroyWorld();
-    /**
-     * \brief Called each frame to update the b2World if not in editor mode
-     * @param dt Delta time since last frame
-     */
+	void Init() override;
+	/**
+	 * \brief Initialize a b2World
+	 */
+	void InitWorld();
+	/**
+	 * \brief Create Rigidbody
+	 * \return A 2D Rigidbody
+	 */
+	b2Body* CreateBody();
+	/**
+	 * \brief Destroy the body from the b2World
+	 * \param body Rigidbody to be destroyed
+	 */
+	void DestroyBody(b2Body* body);
+	/**
+	 * \brief Destroy the current b2World
+	 */
+	void DestroyWorld();
+	/**
+	 * \brief Called each frame to update the b2World if not in editor mode
+	 * @param dt Delta time since last frame
+	 */
 	void Update(sf::Time dt) override;
 	/**
 	* \brief Called at the end of the program to Destroy a b2World, if it sill exists
 	*/
 	void Destroy() override;
 private:
-    b2World* m_World = nullptr;
-    ~PhysicManager();
+	b2World* m_World = nullptr;
+	~PhysicManager();
 
 };
 
@@ -82,5 +83,5 @@ protected:
 	b2Body* m_Body = nullptr;
 };
 
-
+}
 #endif

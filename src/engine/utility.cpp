@@ -24,5 +24,8 @@
 
 #include <engine/utility.h>
 
+namespace sfge
+{
 
+}
 

@@ -27,9 +27,10 @@
 
 #include <engine/engine.h>
 #include <SFML/System/Time.hpp>
-
+namespace sfge
+{
 /**
-* \brief Manage the python interpreter 
+* \brief Manage the python interpreter
 */
 class PythonManager : public Module<PythonManager>
 {
@@ -50,5 +51,5 @@ public:
 private:
 
 };
-
+}
 #endif /* SFGE_PYENGINE_H */

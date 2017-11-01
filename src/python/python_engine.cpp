@@ -34,7 +34,10 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(SFGE, m) 
+namespace sfge
+{
+
+PYBIND11_MODULE(SFGE, m)
 {
 	py::class_<Scene> scene(m, "Scene");
 	py::class_<GameObject> game_object(m, "GameObject");
@@ -56,4 +59,6 @@ void PythonManager::Update(sf::Time)
 void PythonManager::Destroy()
 {
 	py::finalize_interpreter();
+}
+
 }

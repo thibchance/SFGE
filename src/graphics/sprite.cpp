@@ -24,10 +24,13 @@ SOFTWARE.
 
 #include <graphics/sprite.h>
 
+namespace sfge
+{
+
 unsigned int TextureManager::LoadTexture(std::string filename)
 {
-    if(nameIdsMap.find(filename) != nameIdsMap.end())
-    {
+	if (nameIdsMap.find(filename) != nameIdsMap.end())
+	{
 		auto text_id = nameIdsMap[filename];
 		//Check if the texture was destroyed
 		auto checkTexture = texturesMap.find(text_id);
@@ -45,18 +48,18 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 			nameIdsMap[filename] = increment_id;
 			texturesMap[increment_id] = texture;
 		}
-    }
-    else
-    {
-        increment_id++;
-        sf::Texture texture;
-        if (!texture.loadFromFile(filename))
-            return 0U;
+	}
+	else
+	{
+		increment_id++;
+		sf::Texture texture;
+		if (!texture.loadFromFile(filename))
+			return 0U;
 		refCountMap[increment_id] = 1;
-        nameIdsMap[filename] = increment_id;
-        texturesMap[increment_id] = texture;
-    }
-    return 0U;
+		nameIdsMap[filename] = increment_id;
+		texturesMap[increment_id] = texture;
+	}
+	return 0U;
 }
 
 
@@ -80,9 +83,11 @@ void TextureManager::UnloadTexture(unsigned int text_id)
 
 sf::Texture* TextureManager::GetTexture(unsigned int text_id)
 {
-    if(texturesMap.find(text_id) != texturesMap.end())
-    {
-        return &texturesMap[text_id];
-    }
-    return nullptr;
+	if (texturesMap.find(text_id) != texturesMap.end())
+	{
+		return &texturesMap[text_id];
+	}
+	return nullptr;
+}
+
 }

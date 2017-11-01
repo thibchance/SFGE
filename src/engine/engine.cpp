@@ -35,7 +35,8 @@ SOFTWARE.
 #include <imgui-SFML.h>
 #include <imgui.h>
 
-
+namespace sfge
+{
 
 
 void Engine::Init()
@@ -47,7 +48,7 @@ void Engine::Init()
 	PythonManager::GetInstance()->Init();
 	InputManager::GetInstance()->Init();
 	SceneManager::GetInstance()->Init();
-	
+
 	m_Window = GraphicsManager::GetInstance()->GetWindow();
 	running = true;
 
@@ -62,25 +63,25 @@ void Engine::Start()
 		sf::Time dt = clock.restart();
 		sf::Event event;
 		while (m_Window->pollEvent(event))
+		{
+			ImGui::SFML::ProcessEvent(event);
+			if (event.type == sf::Event::Closed)
 			{
-				ImGui::SFML::ProcessEvent(event);
-				if (event.type == sf::Event::Closed)
+				Engine::GetInstance()->running = false;
+				m_Window->close();
+			}
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::E)
 				{
-					Engine::GetInstance()->running = false;
-					m_Window->close();
-				}
-				if (event.type == sf::Event::KeyPressed)
-				{
-					if (event.key.code == sf::Keyboard::E)
-					{
 
-					}
 				}
 			}
+		}
 		InputManager::GetInstance()->Update(dt);
 		GraphicsManager::GetInstance()->Update(dt);
 	}
-	
+
 	GraphicsManager::GetInstance()->Destroy();
 	PythonManager::GetInstance()->Destroy();
 
@@ -88,7 +89,7 @@ void Engine::Start()
 
 Engine::~Engine()
 {
-	if(m_Config)
+	if (m_Config)
 	{
 		delete m_Config;
 		m_Config = nullptr;
@@ -98,4 +99,6 @@ Engine::~Engine()
 Configuration* Engine::GetConfig()
 {
 	return m_Config;
+}
+
 }

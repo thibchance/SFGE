@@ -26,6 +26,8 @@
 #define SFGE_COMPONENT_H
 #include <engine/game_object.h>
 
+namespace sfge
+{
 /**
  * \brief A GameObject Component that can be anything
  */
@@ -37,8 +39,8 @@ class Component
 	 */
 	Component(GameObject& parentGameObject);
 protected:
-    GameObject& gameObject;
-    
-};
+	GameObject& gameObject;
 
+};
+}
 #endif

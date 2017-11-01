@@ -28,6 +28,9 @@
 
 #include <list>
 
+namespace sfge
+{
+
 class Component;
 
 /**
@@ -35,9 +38,9 @@ class Component;
 */
 class GameObject
 {
-    
-protected:
-    std::list<Component> m_Components;
-};
 
+protected:
+	std::list<Component> m_Components;
+};
+}
 #endif

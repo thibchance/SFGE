@@ -33,13 +33,14 @@ using json = nlohmann::json;
 #include <engine/log.h>
 
 
-
+namespace sfge
+{
 
 Configuration* ConfigManager::LoadConfig(std::string configFilename)
 {
 	Configuration* newConfig = new Configuration();
 	std::ifstream inputFile(configFilename.c_str());
-	if( inputFile.peek() == std::ifstream::traits_type::eof() )
+	if (inputFile.peek() == std::ifstream::traits_type::eof())
 	{
 		Log::GetInstance()->Error("EMPTY CONFIG FILE");
 		return newConfig;
@@ -47,18 +48,20 @@ Configuration* ConfigManager::LoadConfig(std::string configFilename)
 	json jsonConfig;
 	try
 	{
-	inputFile >> jsonConfig;
+		inputFile >> jsonConfig;
 	}
-	catch(json::parse_error& e)
+	catch (json::parse_error& e)
 	{
 		Log::GetInstance()->Error("THE CONFIG FILE IS NOT JSON");
 		return newConfig;
 	}
 
 	newConfig->screenResolution = sf::Vector2i(
-			jsonConfig["screenResolution"]["x"],
-			jsonConfig["screenResolution"]["y"]);
+		jsonConfig["screenResolution"]["x"],
+		jsonConfig["screenResolution"]["y"]);
 
 	newConfig->maxFramerate = jsonConfig["maxFramerate"];
 	return newConfig;
+}
+
 }

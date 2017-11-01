@@ -28,7 +28,8 @@ SOFTWARE.
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <engine/utility.h>
 #include <engine/config.h>
-
+namespace sfge
+{
 /**
 * \brief The main Engine class to centralise the frame process and the references
 */
@@ -46,7 +47,7 @@ public:
 
 	~Engine();
 	/**
-	* \brief A getter of the Configuration 
+	* \brief A getter of the Configuration
 	* \return The Configuration struct got by the Engine
 	*/
 	Configuration* GetConfig();
@@ -76,13 +77,13 @@ public:
 	*/
 	virtual void Update(sf::Time dt) = 0;
 	/**
-	* \brief Used instead of the destructor to delete all heap created structure and finalize 
+	* \brief Used instead of the destructor to delete all heap created structure and finalize
 	*/
 	virtual void Destroy() = 0;
 protected:
-	virtual ~Module(){};
+	virtual ~Module() {};
 };
 
-
+}
 
 #endif // !SFGE_ENGINE_H

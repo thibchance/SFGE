@@ -29,6 +29,9 @@
 
 namespace fs = std::experimental::filesystem;
 
+namespace sfge
+{
+
 void SceneManager::Init()
 {
 	fs::path scene_data_dir = "data/scenes/";
@@ -39,14 +42,14 @@ void SceneManager::Init()
 			if (fs::is_regular_file(f))
 			{
 				auto p = f.path();
-				if (p.extension() ==  fs::path(".scene"))
+				if (p.extension() == fs::path(".scene"))
 				{
 					Log::GetInstance()->Msg("There is a scene");
 				}
 			}
 		}
 	}
-	
+
 }
 
 void SceneManager::Update(sf::Time)
@@ -55,4 +58,6 @@ void SceneManager::Update(sf::Time)
 
 void SceneManager::Destroy()
 {
+}
+
 }

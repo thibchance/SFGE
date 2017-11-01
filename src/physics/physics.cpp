@@ -24,7 +24,8 @@ SOFTWARE.
 
 #include <physics/physics.h>
 
-
+namespace sfge
+{
 
 void PhysicManager::Init()
 {
@@ -38,7 +39,7 @@ void PhysicManager::Update(sf::Time dt)
 
 void PhysicManager::InitWorld()
 {
-	m_World = new b2World(b2Vec2(0.0f,0.0f));
+	m_World = new b2World(b2Vec2(0.0f, 0.0f));
 }
 
 void PhysicManager::DestroyWorld()
@@ -64,5 +65,7 @@ void PhysicManager::Destroy()
 
 PhysicManager::~PhysicManager()
 {
-    DestroyWorld();
+	DestroyWorld();
+}
+
 }

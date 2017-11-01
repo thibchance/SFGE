@@ -24,6 +24,8 @@
 
 #include <engine/log.h>
 
+namespace sfge
+{
 
 void Log::Msg(const std::string & text)
 {
@@ -33,4 +35,6 @@ void Log::Msg(const std::string & text)
 void Log::Error(const std::string & text)
 {
 	std::cerr << text << "\n";
+}
+
 }

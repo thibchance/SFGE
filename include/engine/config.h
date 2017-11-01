@@ -28,10 +28,12 @@ SOFTWARE.
 #include <SFML/System/Vector2.hpp>
 
 #include <engine/utility.h>
+namespace sfge
+{
 
 struct Configuration
 {
-	sf::Vector2i screenResolution = sf::Vector2i(800,600);
+	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
 	unsigned int maxFramerate = 60;
 };
 
@@ -47,5 +49,5 @@ public:
 	*/
 	Configuration* LoadConfig(std::string configFilename = "data/config.json");
 };
-
+}
 #endif // !CONFIG_H

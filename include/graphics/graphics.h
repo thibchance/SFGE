@@ -24,43 +24,49 @@ SOFTWARE.
 
 #ifndef SFGE_GRAPHICS_H
 #define SFGE_GRAPHICS_H
-
 #include <engine/engine.h>
 
+namespace sfge
+{
+
+
 /**
- * \brief The Graphics Manager
- */
+* \brief The Graphics Manager
+*/
 class GraphicsManager : public Module<GraphicsManager>
 {
 public:
-	/**
-	 * \brief Initialize the Graphics Manager
-	 */
-	void Init() override;
-	/**
-	 * \brief Update the Graphics Manager and prepare for the rendering
-	 * \param dt Delta time since last frame
-	 */
-	void Update(sf::Time dt) override;
 
-	/**
-	* \brief Destroy the window and other 
+/**
+	* \brief Initialize the Graphics Manager
 	*/
-	void Destroy() override;
-	/**
-	* \brief Getter of the window created in GraphicsManager
-	* \return The SFML window
+void Init() override;
+
+/**
+	* \brief Update the Graphics Manager and prepare for the rendering
+	* \param dt Delta time since last frame
 	*/
-	sf::RenderWindow* GetWindow();
+void Update(sf::Time dt) override;
+
+/**
+* \brief Destroy the window and other
+*/
+void Destroy() override;
+
+/**
+* \brief Getter of the window created in GraphicsManager
+* \return The SFML window
+*/
+sf::RenderWindow* GetWindow();
 
 protected:
-	/**
-	* \brief Write to log the OpenGL version 
-	*/
-	void CheckVersion();
+/**
+* \brief Write to log the OpenGL version
+*/
+void CheckVersion();
 
-	sf::RenderWindow* m_Window = nullptr;
+sf::RenderWindow* m_Window = nullptr;
 };
 
-
+}
 #endif

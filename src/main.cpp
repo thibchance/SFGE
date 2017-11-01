@@ -29,10 +29,10 @@ SOFTWARE.
 
 int main()
 {
-    Log::GetInstance()->Msg("SFGE 0.1 by SAE Institute Switzerland AG");
+    sfge::Log::GetInstance()->Msg("SFGE 0.1 by SAE Institute Switzerland AG");
     
-	Engine::GetInstance()->Init();
-	Engine::GetInstance()->Start();
+	sfge::Engine::GetInstance()->Init();
+	sfge::Engine::GetInstance()->Start();
 #ifdef WIN32
 	system("pause");
 #endif

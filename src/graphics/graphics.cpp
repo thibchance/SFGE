@@ -33,11 +33,14 @@ SOFTWARE.
 
 #include <sstream>
 
+namespace sfge
+{
+
 void GraphicsManager::Init()
 {
 	Configuration* config = Engine::GetInstance()->GetConfig();
 	m_Window = new sf::RenderWindow(sf::VideoMode(config->screenResolution.x, config->screenResolution.y), "SFGE 0.1");
-	if(config->maxFramerate)
+	if (config->maxFramerate)
 	{
 		m_Window->setFramerateLimit(config->maxFramerate);
 	}
@@ -49,9 +52,9 @@ void GraphicsManager::Init()
 void GraphicsManager::Update(sf::Time dt)
 {
 	ImGui::SFML::Update(*m_Window, dt);
-	
+
 	m_Window->clear();
-	
+
 	ImGui::SFML::Render(*m_Window);
 	m_Window->display();
 }
@@ -66,7 +69,7 @@ void GraphicsManager::CheckVersion()
 	sf::ContextSettings settings = m_Window->getSettings();
 	std::stringstream log_message;
 	log_message << "OpenGL version: " << settings.majorVersion << "." << settings.minorVersion << std::endl;
-	
+
 	Log::GetInstance()->Msg(log_message.str());
 }
 
@@ -84,4 +87,6 @@ void GraphicsManager::Destroy()
 		delete m_Window;
 	}
 	m_Window = nullptr;
+}
+
 }

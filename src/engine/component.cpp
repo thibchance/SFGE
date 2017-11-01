@@ -23,8 +23,12 @@
  */
 
 #include <engine/component.h>
+namespace sfge
+{
 
-Component::Component(GameObject& parentObject):
+Component::Component(GameObject& parentObject) :
 	gameObject(parentObject)
 {
+}
+
 }

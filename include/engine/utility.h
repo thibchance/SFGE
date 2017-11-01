@@ -27,7 +27,8 @@
 
 #include <stdlib.h> // size_t
 #include <string>
-
+namespace sfge
+{
 /**
 * \brief Singleton template class used by the modules of the Engine
 */
@@ -35,35 +36,36 @@ template<typename T>
 class Singleton
 {
 protected:
-    /* Here will be the instance stored. */
-    static T* instance;
-    
-    /**
-	* \brief Private Constructor to prevent instancing. 
-	*/
-    Singleton(){};
+	/* Here will be the instance stored. */
+	static T* instance;
+
 	/**
-	* \brief Private destructor 
+	* \brief Private Constructor to prevent instancing.
 	*/
-    virtual ~Singleton(){};
-    
+	Singleton() {};
+	/**
+	* \brief Private destructor
+	*/
+	virtual ~Singleton() {};
+
 public:
-    /**
-	* \brief Static access method. 
+	/**
+	* \brief Static access method.
 	*/
-    static T* GetInstance()
-    {
-        {
-            if (instance == nullptr)
-            {
-                instance = new T();
-            }
-            
-            return instance;
-        }
-    }
+	static T* GetInstance()
+	{
+		{
+			if (instance == nullptr)
+			{
+				instance = new T();
+			}
+
+			return instance;
+		}
+	}
 };
 
 template<typename T>
 T* Singleton<T>::instance = nullptr;
+}
 #endif /* utility_h */

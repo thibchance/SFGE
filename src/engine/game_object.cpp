@@ -23,3 +23,8 @@
  */
 
 #include "engine/game_object.h"
+
+namespace sfge
+{
+
+}

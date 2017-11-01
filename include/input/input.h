@@ -27,6 +27,9 @@ SOFTWARE.
 
 #include <engine/engine.h>
 
+namespace sfge
+{
+
 /**
 * \brief Handles Input like the Keyboard, the Joystick or the Mouse
 */
@@ -46,5 +49,5 @@ public:
 	void Destroy() override;
 private:
 };
-
+}
 #endif

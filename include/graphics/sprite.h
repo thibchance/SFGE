@@ -35,6 +35,9 @@ SOFTWARE.
 //Dependencies
 #include <SFML/Graphics.hpp>
 
+namespace sfge
+{
+
 /**
 * \brief Sprite component used in the GameObject
 */
@@ -54,7 +57,7 @@ protected:
 	std::list<sf::Sprite> sprites;
 };
 
-/** 
+/**
 * \brief The Texture Manager is the cache of all the textures used for sprites or other objects
 *
 */
@@ -70,23 +73,23 @@ public:
 	/**
 	* \brief unload the texture by removing a reference count, if reference count is 0 then it is unloaded from the cache
 	* \param text_id The texture id striclty positive
-	* 
+	*
 	*/
-    void UnloadTexture(unsigned int text_id);
+	void UnloadTexture(unsigned int text_id);
 	/**
 	* \brief Used after loading the texture in the texture cache to get the pointer to the texture
 	* \param text_id The texture id striclty positive
 	* \return The pointer to the texture in memory
 	*/
-    sf::Texture* GetTexture(unsigned int text_id);
+	sf::Texture* GetTexture(unsigned int text_id);
 
 private:
 
-    std::map<std::string, unsigned int> nameIdsMap;
-    std::map<unsigned int, sf::Texture> texturesMap;
+	std::map<std::string, unsigned int> nameIdsMap;
+	std::map<unsigned int, sf::Texture> texturesMap;
 	std::map<unsigned int, unsigned int> refCountMap;
 	unsigned int increment_id = 0;
 };
 
-
+}
 #endif // !SFGE_SPRITE
