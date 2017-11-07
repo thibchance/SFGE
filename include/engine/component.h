@@ -26,11 +26,11 @@
 #define SFGE_COMPONENT_H
 //Externals includes
 #include <SFML/System.hpp>
-
 #include <engine/game_object.h>
 
 namespace sfge
 {
+class Transform;
 /**
  * \brief A GameObject Component that can be anything
  */
@@ -46,9 +46,11 @@ public:
 	* \brief Update the Component
 	* \param dt Delta time since last frame
 	*/
-	void Update(sf::Time dt);
+	virtual void Update(sf::Time dt) = 0;
+
 protected:
 	GameObject& gameObject;
+	Transform* transform = nullptr;
 
 };
 
@@ -56,10 +58,14 @@ class Transform : public Component
 {
 public:
 	/**
-		 * \brief Constructor of Transform takes the parent GameObject as reference
-		 * \param parentGameObject
-		 */
+	 * \brief Constructor of Transform takes the parent GameObject as reference
+	 * \param parentGameObject
+	 */
 	Transform(GameObject& parentGameObject);
+
+	static Transform* LoadTransform(json componentJson);
+
+	void Update(sf::Time dt) override;
 
 	float GetEulerAngle();
 	void SetEulerAngle(float eulerAngle);

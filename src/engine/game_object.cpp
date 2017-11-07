@@ -24,6 +24,7 @@
 
 #include <engine/game_object.h>
 #include <engine/component.h>
+#include <graphics/sprite.h>
 
 namespace sfge
 {
@@ -33,5 +34,29 @@ void GameObject::Update(sf::Time dt)
 	{
 		component->Update(dt);
 	}
+}
+
+GameObject* GameObject::LoadGameObject(json gameObjectJson)
+{
+	GameObject* gameObject = new GameObject();
+	gameObject->name = gameObjectJson["name"];
+	for(json componentJson : gameObjectJson["components"])
+	{
+		Component* component = nullptr;
+		std::string componentType = componentJson["type"];
+		if(componentType == "Transform")
+		{
+			component = Transform::LoadTransform(componentJson);
+		}
+		else if(componentType == "Sprite")
+		{
+			component = Sprite::LoadSprite(componentJson);
+		}
+		if(component)
+		{
+			gameObject->m_Components.push_back(component);
+		}
+	}
+	return gameObject;
 }
 }

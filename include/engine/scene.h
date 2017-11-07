@@ -25,9 +25,7 @@
 
 #ifndef SFGE_SCENE_H
 #define SFGE_SCENE_H
-//Externals includes
-#include "json.hpp"
-using json = nlohmann::json;
+
 
 #include <list>
 
@@ -66,12 +64,7 @@ private:
 	* \return the heap Scene that will need to be destroyed
 	*/
 	Scene* LoadScene(std::string sceneName);
-	/**
-	* \brief Load a GameObject and create all its Component
-	* \param gameObjectJson the sub json associated with the Game Object
-	* \return the heap GameObject that will need to be destroyed
-	*/
-	GameObject* LoadGameObject(json gameObjectJson);
+
 
 	Scene* currentScene = nullptr;
 };
@@ -88,6 +81,10 @@ public:
 	* \param dt Delta time since last frame
 	*/
 	void Update(sf::Time dt);
+	/**
+	* \brief Destroy all the GameObjects of the scene
+	*/
+	~Scene();
 protected:
 	std::string name;
 	std::list<GameObject*> m_GameObjects;

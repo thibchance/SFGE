@@ -26,9 +26,12 @@
 #ifndef SFGE_GAMEOBJECT_H
 #define SFGE_GAMEOBJECT_H
 //External includes
+#include "json.hpp"
+using json = nlohmann::json;
 #include <SFML/System.hpp>
 //STL includes
 #include <list>
+#include <string>
 
 namespace sfge
 {
@@ -46,8 +49,15 @@ public:
 	* \param dt Delta time since last frame
 	*/
 	void Update(sf::Time dt);
+	/**
+	* \brief Load a GameObject and create all its Component
+	* \param gameObjectJson the sub json associated with the Game Object
+	* \return the heap GameObject that will need to be destroyed
+	*/
+	static GameObject* LoadGameObject(json gameObjectJson);
 protected:
 	std::list<Component*> m_Components;
+	std::string name;
 };
 }
 #endif

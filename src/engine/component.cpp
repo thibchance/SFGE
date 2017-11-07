@@ -32,7 +32,12 @@ Component::Component(GameObject& parentObject) :
 
 }
 
-void Component::Update(sf::Time dt)
+Transform* Transform::LoadTransform(json componentJson)
+{
+	return nullptr;
+}
+
+void Transform::Update(sf::Time dt)
 {
 
 }

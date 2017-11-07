@@ -22,7 +22,8 @@
  SOFTWARE.
  */
 //Externals includes
-
+#include "json.hpp"
+using json = nlohmann::json;
 //STL includes
 #include <experimental/filesystem>
 #include <fstream>
@@ -83,9 +84,10 @@ Scene* SceneManager::LoadScene(std::string sceneName)
 		return nullptr;
 	}
 	Scene* scene = new Scene();
+	scene->name = sceneJson["name"];
 	for(json gameObjectJson : sceneJson["gameObjects"])
 	{
-		GameObject* gameObject = LoadGameObject(gameObjectJson);
+		GameObject* gameObject = GameObject::LoadGameObject(gameObjectJson);
 		if(gameObject)
 		{
 			scene->m_GameObjects.push_back(gameObject);
@@ -94,10 +96,7 @@ Scene* SceneManager::LoadScene(std::string sceneName)
 	return scene;
 }
 
-GameObject* SceneManager::LoadGameObject(json gameObjectJson)
-{
-	return nullptr;
-}
+
 
 void SceneManager::Destroy()
 {
@@ -116,4 +115,12 @@ void Scene::Update(sf::Time dt)
 	}
 }
 
+Scene::~Scene()
+{
+	while(!m_GameObjects.empty())
+	{
+		delete m_GameObjects.front();
+		m_GameObjects.pop_front();
+	}
+}
 }

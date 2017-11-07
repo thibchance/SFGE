@@ -6,8 +6,9 @@
 			"components": [
 				{
 					"type": "Transform",
-					"posX": 300,
-					"posY": 300
+					"position": [300, 300],
+					"scale" : [1.0,1.0,1.0],
+					"eulerAngle": 0.0
 				},
 				{
 					"type": "Sprite",

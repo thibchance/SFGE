@@ -43,6 +43,8 @@ namespace sfge
 */
 class Sprite : public Component
 {
+public:
+	static Sprite* LoadSprite(json componentJson);
 protected:
 	std::string filename;
 	sf::Sprite* sprite;

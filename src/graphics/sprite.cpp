@@ -27,6 +27,11 @@ SOFTWARE.
 namespace sfge
 {
 
+Sprite* Sprite::LoadSprite(json componentJson)
+{
+	return nullptr;
+}
+
 unsigned int TextureManager::LoadTexture(std::string filename)
 {
 	if (nameIdsMap.find(filename) != nameIdsMap.end())
