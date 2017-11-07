@@ -21,17 +21,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
+//Externals includes
 #include "json.hpp"
-
-// for convenience
-using json = nlohmann::json;
-
+//STL includes
 #include <fstream>
-
+//SFGE includes
 #include <engine/config.h>
 #include <engine/log.h>
 
+// for convenience
+using json = nlohmann::json;
 
 namespace sfge
 {
@@ -61,6 +60,11 @@ Configuration* ConfigManager::LoadConfig(std::string configFilename)
 		jsonConfig["screenResolution"]["y"]);
 
 	newConfig->maxFramerate = jsonConfig["maxFramerate"];
+	for(const std::string& scene : jsonConfig["scenesList"])
+	{
+		newConfig->scenesList.push_back(scene);
+	}
+
 	return newConfig;
 }
 

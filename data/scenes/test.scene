@@ -1,10 +1,19 @@
 {
+	"name": "SceneTest",
 	"gameObjects": [
 		{
-			"type": "Sprite",
-			"posX": 12,
-			"posY": 45,
-			"filename": "data/sprites/test.png"
+			"name": "SpriteTest",
+			"components": [
+				{
+					"type": "Transform",
+					"posX": 300,
+					"posY": 300
+				},
+				{
+					"type": "Sprite",
+					"filename": "data/sprites/test.png"
+				}
+			]
 		}
 	]
 }

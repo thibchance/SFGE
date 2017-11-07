@@ -25,24 +25,19 @@
 
 #ifndef SFGE_SCENE_H
 #define SFGE_SCENE_H
+//Externals includes
+#include "json.hpp"
+using json = nlohmann::json;
 
 #include <list>
 
 #include <engine/engine.h>
+
 namespace sfge
 {
+
 class GameObject;
-
-/**
-* \brief The Scene includes GameObjects that are loaded from a JSON file
-*
-*/
-class Scene
-{
-
-protected:
-	std::list<GameObject> m_GameObjects;
-};
+class Scene;
 
 /**
 * \brief The Scene Manager do the transition between two scenes, read from the Engine Configuration the scenes build list
@@ -55,7 +50,7 @@ public:
 	*/
 	void Init() override;
 	/**
-	* \brief Update the SceneManager^, mostly updating the GameObjects of the current Scene and doing the transition when needed
+	* \brief Update the SceneManager, mostly updating the GameObjects of the current Scene and doing the transition when needed
 	* \param dt Delta time since last frame
 	*/
 	void Update(sf::Time dt) override;
@@ -63,6 +58,40 @@ public:
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
+
+private:
+	/**
+	* \brief Load a Scene and create all its GameObject
+	* \param sceneName the scene path given by the configuration
+	* \return the heap Scene that will need to be destroyed
+	*/
+	Scene* LoadScene(std::string sceneName);
+	/**
+	* \brief Load a GameObject and create all its Component
+	* \param gameObjectJson the sub json associated with the Game Object
+	* \return the heap GameObject that will need to be destroyed
+	*/
+	GameObject* LoadGameObject(json gameObjectJson);
+
+	Scene* currentScene = nullptr;
+};
+
+/**
+* \brief The Scene includes GameObjects that are loaded from a JSON file
+*
+*/
+class Scene
+{
+public:
+	/**
+	* \brief Update the Scene, mostly updating the GameObjects and doing the transition when needed
+	* \param dt Delta time since last frame
+	*/
+	void Update(sf::Time dt);
+protected:
+	std::string name;
+	std::list<GameObject*> m_GameObjects;
+	friend class SceneManager;
 };
 }
 #endif

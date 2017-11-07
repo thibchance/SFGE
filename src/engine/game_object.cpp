@@ -22,9 +22,16 @@
  SOFTWARE.
  */
 
-#include "engine/game_object.h"
+#include <engine/game_object.h>
+#include <engine/component.h>
 
 namespace sfge
 {
-
+void GameObject::Update(sf::Time dt)
+{
+	for(Component* component : m_Components)
+	{
+		component->Update(dt);
+	}
+}
 }

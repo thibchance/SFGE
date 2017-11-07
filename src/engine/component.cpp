@@ -29,6 +29,41 @@ namespace sfge
 Component::Component(GameObject& parentObject) :
 	gameObject(parentObject)
 {
+
 }
 
+void Component::Update(sf::Time dt)
+{
+
+}
+
+float Transform::GetEulerAngle()
+{
+	return eulerAngle;
+}
+
+void Transform::SetEulerAngle(float eulerAngle)
+{
+	this->eulerAngle = eulerAngle;
+}
+
+sf::Vector2f Transform::GetPosition()
+{
+	return position;
+}
+
+void Transform::SetPosition(sf::Vector2f position)
+{
+	this->position = position;
+}
+
+sf::Vector2f Transform::GetScale()
+{
+	return scale;
+}
+
+void Transform::SetScale(sf::Vector2f scale)
+{
+	this->scale = scale;
+}
 }

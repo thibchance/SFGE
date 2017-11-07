@@ -24,17 +24,23 @@ SOFTWARE.
 
 #ifndef SFGE_CONFIG_H
 #define SFGE_CONFIG_H
-
+//Externals include
 #include <SFML/System/Vector2.hpp>
-
+//STL includes
+#include <list>
+//SFGE includes
 #include <engine/utility.h>
+
 namespace sfge
 {
-
+/**
+* \brief Used by the Engine to get a Configuration.
+*/
 struct Configuration
 {
 	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
 	unsigned int maxFramerate = 60;
+	std::list<std::string> scenesList;
 };
 
 /**

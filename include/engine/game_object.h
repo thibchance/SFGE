@@ -25,7 +25,9 @@
 
 #ifndef SFGE_GAMEOBJECT_H
 #define SFGE_GAMEOBJECT_H
-
+//External includes
+#include <SFML/System.hpp>
+//STL includes
 #include <list>
 
 namespace sfge
@@ -38,9 +40,14 @@ class Component;
 */
 class GameObject
 {
-
+public:
+	/**
+	* \brief Update the GameObject and its Components
+	* \param dt Delta time since last frame
+	*/
+	void Update(sf::Time dt);
 protected:
-	std::list<Component> m_Components;
+	std::list<Component*> m_Components;
 };
 }
 #endif

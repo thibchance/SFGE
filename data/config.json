@@ -3,5 +3,8 @@
 		"x": 600,
 		"y": 600
 	},
-	"maxFramerate": 60
+	"maxFramerate": 60,
+	"scenesList": [
+		"data/scenes/test.scene"
+	]
 }

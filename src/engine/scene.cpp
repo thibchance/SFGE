@@ -21,43 +21,99 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-#include <experimental/filesystem>
+//Externals includes
 
+//STL includes
+#include <experimental/filesystem>
+#include <fstream>
+//SFGE includes
 #include <engine/game_object.h>
 #include <engine/scene.h>
 #include <engine/log.h>
 
+// for convenience
 namespace fs = std::experimental::filesystem;
+
 
 namespace sfge
 {
 
 void SceneManager::Init()
 {
-	fs::path scene_data_dir = "data/scenes/";
-	if (fs::is_directory(scene_data_dir))
+	std::list<std::string>& scenesList = Engine::GetInstance()->GetConfig()->scenesList;
+	if(scenesList.size() > 0)
 	{
-		for (auto& f : fs::directory_iterator(scene_data_dir))
+		fs::path firstScenePath = *scenesList.begin();
+		if (fs::is_regular_file(firstScenePath))
 		{
-			if (fs::is_regular_file(f))
+			if (firstScenePath.extension() == fs::path(".scene"))
 			{
-				auto p = f.path();
-				if (p.extension() == fs::path(".scene"))
-				{
-					Log::GetInstance()->Msg("There is a scene");
-				}
+				currentScene = LoadScene(firstScenePath.c_str());
 			}
 		}
 	}
-
 }
 
-void SceneManager::Update(sf::Time)
+
+
+void SceneManager::Update(sf::Time dt)
 {
+	if(currentScene)
+	{
+		currentScene->Update(dt);
+	}
+}
+
+Scene* SceneManager::LoadScene(std::string sceneName)
+{
+	std::ifstream sceneFile(sceneName.c_str());
+	if (sceneFile.peek() == std::ifstream::traits_type::eof())
+	{
+		Log::GetInstance()->Error("EMPTY SCENE FILE");
+		return nullptr;
+	}
+	json sceneJson;
+	try
+	{
+		sceneFile >> sceneJson;
+	}
+	catch (json::parse_error& e)
+	{
+		Log::GetInstance()->Error("THE SCENE FILE IS NOT JSON");
+		return nullptr;
+	}
+	Scene* scene = new Scene();
+	for(json gameObjectJson : sceneJson["gameObjects"])
+	{
+		GameObject* gameObject = LoadGameObject(gameObjectJson);
+		if(gameObject)
+		{
+			scene->m_GameObjects.push_back(gameObject);
+		}
+	}
+	return scene;
+}
+
+GameObject* SceneManager::LoadGameObject(json gameObjectJson)
+{
+	return nullptr;
 }
 
 void SceneManager::Destroy()
 {
+	if(currentScene)
+	{
+		delete currentScene;
+		currentScene = nullptr;
+	}
+}
+
+void Scene::Update(sf::Time dt)
+{
+	for(GameObject* gameObject : m_GameObjects)
+	{
+		gameObject->Update(dt);
+	}
 }
 
 }
