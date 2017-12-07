@@ -48,7 +48,7 @@ void GraphicsManager::Init()
 	}
 	CheckVersion();
 	//Init GUI
-	ImGui::SFML::Init((sf::RenderTarget&)(*m_Window), true);
+	ImGui::SFML::Init((sf::RenderTarget&)(*m_Window));
 }
 
 void GraphicsManager::Update(sf::Time dt)
