@@ -25,8 +25,7 @@
 #include "json.hpp"
 using json = nlohmann::json;
 //STL includes
-#include <filesystem>
-#include <fstream>
+#include <experimental/filesystem>
 //SFGE includes
 #include <engine/game_object.h>
 #include <engine/scene.h>
@@ -67,20 +66,10 @@ void SceneManager::Update(sf::Time dt)
 
 Scene* SceneManager::LoadScene(std::string sceneName)
 {
-	std::ifstream sceneFile(sceneName.c_str());
-	if (sceneFile.peek() == std::ifstream::traits_type::eof())
+	auto sceneJsonPtr = LoadJson(sceneName);
+	json sceneJson = *sceneJsonPtr;
+	if(sceneJson == nullptr)
 	{
-		Log::GetInstance()->Error("EMPTY SCENE FILE");
-		return nullptr;
-	}
-	json sceneJson;
-	try
-	{
-		sceneFile >> sceneJson;
-	}
-	catch (json::parse_error& e)
-	{
-		Log::GetInstance()->Error("THE SCENE FILE IS NOT JSON");
 		return nullptr;
 	}
 	Scene* scene = new Scene();

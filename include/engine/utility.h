@@ -25,10 +25,17 @@
 #ifndef SFGE_UTILIY_H
 #define SFGE_UTILIY_H
 
+//Externals includes
+#include "json.hpp"
+using json = nlohmann::json;
+
 #include <stdlib.h> // size_t
 #include <string>
 namespace sfge
 {
+
+std::unique_ptr<json> LoadJson(std::string jsonPath);
+
 /**
 * \brief Singleton template class used by the modules of the Engine
 */

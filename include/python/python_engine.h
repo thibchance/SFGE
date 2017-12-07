@@ -26,6 +26,7 @@
 #define SFGE_PYENGINE_H
 
 #include <engine/engine.h>
+#include <engine/component.h>
 #include <SFML/System/Time.hpp>
 namespace sfge
 {
@@ -51,6 +52,12 @@ public:
 	void Destroy() override;
 private:
 
+};
+
+class PythonScript : public Component
+{
+public:
+	static PythonScript* LoadPythonScript(json componentJson);
 };
 }
 #endif /* SFGE_PYENGINE_H */

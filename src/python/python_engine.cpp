@@ -48,7 +48,6 @@ PYBIND11_MODULE(SFGE, m)
 void PythonManager::Init()
 {
 	py::initialize_interpreter();
-	py::print("Hello from Python!");
 }
 
 void PythonManager::Update(sf::Time)
@@ -59,6 +58,11 @@ void PythonManager::Update(sf::Time)
 void PythonManager::Destroy()
 {
 	py::finalize_interpreter();
+}
+
+PythonScript* PythonScript::LoadPythonScript(json componentJson)
+{
+	return nullptr;
 }
 
 }

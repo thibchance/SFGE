@@ -25,6 +25,7 @@
 #include <engine/game_object.h>
 #include <engine/component.h>
 #include <graphics/sprite.h>
+#include <python/python_engine.h>
 
 namespace sfge
 {
@@ -51,6 +52,10 @@ GameObject* GameObject::LoadGameObject(json gameObjectJson)
 		else if(componentType == "Sprite")
 		{
 			component = Sprite::LoadSprite(componentJson);
+		}
+		else if(componentType == "Python")
+		{
+			component = PythonScript::LoadPythonScript(componentJson);
 		}
 		if(component)
 		{
