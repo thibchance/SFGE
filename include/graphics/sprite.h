@@ -29,8 +29,6 @@ SOFTWARE.
 #include <map>
 #include <string>
 
-//Engine
-#include <engine/engine.h>
 #include <engine/component.h>
 //Dependencies
 #include <SFML/Graphics.hpp>
@@ -53,7 +51,7 @@ protected:
 /**
 * \brief Sprite manager caching all the sprites and rendering them at the end of the frame
 */
-class SpriteManager : public Singleton<SpriteManager>
+class SpriteManager
 {
 protected:
 	std::list<sf::Sprite> sprites;
@@ -63,7 +61,7 @@ protected:
 * \brief The Texture Manager is the cache of all the textures used for sprites or other objects
 *
 */
-class TextureManager : public Singleton<TextureManager>
+class TextureManager
 {
 public:
 	/**

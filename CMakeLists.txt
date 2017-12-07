@@ -29,7 +29,7 @@ message(STATUS "List of CXX features known to CMake")
 	foreach(_f ${CMAKE_CXX17_COMPILE_FEATURES})
 		message("  ${_f}")
 	endforeach()
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/externals)
@@ -41,7 +41,6 @@ file(GLOB_RECURSE SFGE_SRC src/*/*.cpp include/*.h)
 #SFML
 set(SFML_DIR ${EXTERNAL_DIR}/SFML)
 set(SFML_BUILD_EXAMPLES FALSE)
-set(BUILD_SHARED_LIBS FALSE)
 add_subdirectory(${SFML_DIR})
 include_directories(${SFML_DIR}/include)
 LIST(APPEND SFGE_LIBRARIES

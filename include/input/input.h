@@ -33,9 +33,10 @@ namespace sfge
 /**
 * \brief Handles Input like the Keyboard, the Joystick or the Mouse
 */
-class InputManager : public Module<InputManager>
+class InputManager : public Module
 {
 public:
+	using Module::Module;
 	/**
 	 * \brief Initialize the Input Manager
 	 */

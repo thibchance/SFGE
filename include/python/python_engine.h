@@ -32,9 +32,10 @@ namespace sfge
 /**
 * \brief Manage the python interpreter
 */
-class PythonManager : public Module<PythonManager>
+class PythonManager : public Module
 {
 public:
+	using Module::Module;
 	/**
 	* \brief Initialize the python interpreter
 	*/

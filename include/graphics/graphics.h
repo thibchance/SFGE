@@ -33,39 +33,39 @@ namespace sfge
 /**
 * \brief The Graphics Manager
 */
-class GraphicsManager : public Module<GraphicsManager>
+class GraphicsManager : public Module
 {
 public:
+	using Module::Module;
+	/**
+		* \brief Initialize the Graphics Manager
+		*/
+	void Init() override;
 
-/**
-	* \brief Initialize the Graphics Manager
+	/**
+		* \brief Update the Graphics Manager and prepare for the rendering
+		* \param dt Delta time since last frame
+		*/
+	void Update(sf::Time dt) override;
+
+	/**
+	* \brief Destroy the window and other
 	*/
-void Init() override;
+	void Destroy() override;
 
-/**
-	* \brief Update the Graphics Manager and prepare for the rendering
-	* \param dt Delta time since last frame
+	/**
+	* \brief Getter of the window created in GraphicsManager
+	* \return The SFML window
 	*/
-void Update(sf::Time dt) override;
-
-/**
-* \brief Destroy the window and other
-*/
-void Destroy() override;
-
-/**
-* \brief Getter of the window created in GraphicsManager
-* \return The SFML window
-*/
-sf::RenderWindow* GetWindow();
+	std::shared_ptr<sf::RenderWindow> GetWindow();
 
 protected:
-/**
-* \brief Write to log the OpenGL version
-*/
-void CheckVersion();
+	/**
+	* \brief Write to log the OpenGL version
+	*/
+	void CheckVersion();
 
-sf::RenderWindow* m_Window = nullptr;
+	std::shared_ptr<sf::RenderWindow> m_Window = nullptr;
 };
 
 }

@@ -22,18 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <engine/engine.h>
-#include <engine/scene.h>
-#include <graphics/graphics.h>
-#include <input/input.h>
-#include <python/python_engine.h>
-#include <engine/config.h>
 
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 #include <imgui-SFML.h>
 #include <imgui.h>
+
+#include <engine/engine.h>
+#include <engine/scene.h>
+#include <graphics/graphics.h>
+#include <input/input.h>
+#include <python/python_engine.h>
+#include <engine/config.h>
+#include <audio/audio.h>
+
 
 namespace sfge
 {
@@ -42,14 +45,21 @@ namespace sfge
 void Engine::Init()
 {
 
-	m_Config = ConfigManager::GetInstance()->LoadConfig();
+	m_Config = std::move(Configuration::LoadConfig());
+	
+	m_GraphicsManager = std::make_shared<GraphicsManager>(*this);
+	m_AudioManager = std::make_shared<AudioManager>(*this);
+	m_SceneManager = std::make_shared<SceneManager>(*this);
+	m_InputManager = std::make_shared<InputManager>(*this);
+	m_PythonManager = std::make_shared<PythonManager>(*this);
 
-	GraphicsManager::GetInstance()->Init();
-	PythonManager::GetInstance()->Init();
-	InputManager::GetInstance()->Init();
-	SceneManager::GetInstance()->Init();
+	m_GraphicsManager->Init();
+	m_AudioManager->Init();
+	m_InputManager->Init();
+	m_SceneManager->Init();
+	m_PythonManager->Init();
 
-	m_Window = GraphicsManager::GetInstance()->GetWindow();
+	m_Window = m_GraphicsManager->GetWindow();
 	running = true;
 
 
@@ -67,7 +77,7 @@ void Engine::Start()
 			ImGui::SFML::ProcessEvent(event);
 			if (event.type == sf::Event::Closed)
 			{
-				Engine::GetInstance()->running = false;
+				running = false;
 				m_Window->close();
 			}
 			if (event.type == sf::Event::KeyPressed)
@@ -78,27 +88,28 @@ void Engine::Start()
 				}
 			}
 		}
-		InputManager::GetInstance()->Update(dt);
-		GraphicsManager::GetInstance()->Update(dt);
+		m_InputManager->Update(dt);
+		m_GraphicsManager->Update(dt);
 	}
 
-	GraphicsManager::GetInstance()->Destroy();
-	PythonManager::GetInstance()->Destroy();
-
+	m_GraphicsManager->Destroy();
+	m_AudioManager->Destroy();
+	m_InputManager->Destroy();
+	m_SceneManager->Destroy();
+	m_PythonManager->Destroy();
 }
 
 Engine::~Engine()
 {
-	if (m_Config)
-	{
-		delete m_Config;
-		m_Config = nullptr;
-	}
 }
 
-Configuration* Engine::GetConfig()
+std::shared_ptr<Configuration> Engine::GetConfig()
 {
 	return m_Config;
+}
+
+Module::Module(Engine& engine) : m_Engine(engine)
+{
 }
 
 }

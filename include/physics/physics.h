@@ -37,7 +37,7 @@ namespace sfge
 /**
  * \brief The Physics Manager use Box2D to simulate 2D physics
  */
-class PhysicManager : public Module<PhysicManager>
+class PhysicManager : public Module
 {
 public:
 	/**

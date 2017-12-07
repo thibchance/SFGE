@@ -25,7 +25,7 @@
 #include "json.hpp"
 using json = nlohmann::json;
 //STL includes
-#include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 //SFGE includes
 #include <engine/game_object.h>
@@ -41,15 +41,15 @@ namespace sfge
 
 void SceneManager::Init()
 {
-	std::list<std::string>& scenesList = Engine::GetInstance()->GetConfig()->scenesList;
+	std::list<std::string>& scenesList = m_Engine.GetConfig()->scenesList;
 	if(scenesList.size() > 0)
 	{
-		fs::path firstScenePath = *scenesList.begin();
+		const fs::path firstScenePath = *scenesList.begin();
 		if (fs::is_regular_file(firstScenePath))
 		{
 			if (firstScenePath.extension() == fs::path(".scene"))
 			{
-				currentScene = LoadScene(firstScenePath.c_str());
+				currentScene = LoadScene(firstScenePath.string());
 			}
 		}
 	}

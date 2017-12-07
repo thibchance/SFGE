@@ -38,15 +38,17 @@ namespace sfge
 
 void GraphicsManager::Init()
 {
-	Configuration* config = Engine::GetInstance()->GetConfig();
-	m_Window = new sf::RenderWindow(sf::VideoMode(config->screenResolution.x, config->screenResolution.y), "SFGE 0.1");
+	auto config = m_Engine.GetConfig();
+	m_Window = std::make_shared<sf::RenderWindow>(
+		sf::VideoMode(config->screenResolution.x, config->screenResolution.y), 
+		"SFGE 0.1");
 	if (config->maxFramerate)
 	{
 		m_Window->setFramerateLimit(config->maxFramerate);
 	}
 	CheckVersion();
 	//Init GUI
-	ImGui::SFML::Init(*(sf::RenderTarget*)m_Window);
+	ImGui::SFML::Init((sf::RenderTarget&)(*m_Window), true);
 }
 
 void GraphicsManager::Update(sf::Time dt)
@@ -59,7 +61,7 @@ void GraphicsManager::Update(sf::Time dt)
 	m_Window->display();
 }
 
-sf::RenderWindow * GraphicsManager::GetWindow()
+std::shared_ptr<sf::RenderWindow> GraphicsManager::GetWindow()
 {
 	return m_Window;
 }
@@ -81,12 +83,8 @@ void checkVersion()
 
 void GraphicsManager::Destroy()
 {
+	Log::GetInstance()->Msg("Destroy Graphics");
 	ImGui::SFML::Shutdown();
-	if (m_Window != nullptr)
-	{
-		delete m_Window;
-	}
-	m_Window = nullptr;
 }
 
 }

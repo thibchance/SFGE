@@ -35,9 +35,9 @@ using json = nlohmann::json;
 namespace sfge
 {
 
-Configuration* ConfigManager::LoadConfig(std::string configFilename)
+std::unique_ptr<Configuration> Configuration::LoadConfig(std::string configFilename)
 {
-	Configuration* newConfig = new Configuration();
+	auto newConfig = std::make_unique<Configuration>();
 	std::ifstream inputFile(configFilename.c_str());
 	if (inputFile.peek() == std::ifstream::traits_type::eof())
 	{
@@ -54,7 +54,6 @@ Configuration* ConfigManager::LoadConfig(std::string configFilename)
 		Log::GetInstance()->Error("THE CONFIG FILE IS NOT JSON");
 		return newConfig;
 	}
-
 	newConfig->screenResolution = sf::Vector2i(
 		jsonConfig["screenResolution"]["x"],
 		jsonConfig["screenResolution"]["y"]);

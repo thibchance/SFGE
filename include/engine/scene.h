@@ -40,9 +40,10 @@ class Scene;
 /**
 * \brief The Scene Manager do the transition between two scenes, read from the Engine Configuration the scenes build list
 */
-class SceneManager : public Module<SceneManager>
+class SceneManager : public Module
 {
 public:
+	using Module::Module;
 	/**
 	* \brief Initialize the SceneManager, get the Configuration from Engine and save the Scene lists from it
 	*/
@@ -64,7 +65,6 @@ private:
 	* \return the heap Scene that will need to be destroyed
 	*/
 	Scene* LoadScene(std::string sceneName);
-
 
 	Scene* currentScene = nullptr;
 };
