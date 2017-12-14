@@ -28,31 +28,40 @@ SOFTWARE.
 //STL
 #include <map>
 #include <string>
-
+//Engine
 #include <engine/component.h>
+#include <engine/engine.h>
 //Dependencies
 #include <SFML/Graphics.hpp>
 
 namespace sfge
 {
-
 /**
 * \brief Sprite component used in the GameObject
 */
 class Sprite : public Component
 {
 public:
-	static Sprite* LoadSprite(json componentJson);
+	using Component::Component;
+	/**
+	* \brief Update the Component
+	* \param dt Delta time since last frame
+	*/
+	virtual void Update(sf::Time dt) override;
+	static std::shared_ptr<Sprite> LoadSprite(json componentJson);
 protected:
 	std::string filename;
+	int textureId;
+	int layer;
 	sf::Sprite* sprite;
 };
 
 /**
 * \brief Sprite manager caching all the sprites and rendering them at the end of the frame
 */
-class SpriteManager
+class SpriteManager : Module
 {
+	using Module::Module;
 protected:
 	std::list<sf::Sprite> sprites;
 };
@@ -64,6 +73,7 @@ protected:
 class TextureManager
 {
 public:
+	
 	/**
 	* \brief load the texture from the disk or the texture cache
 	* \param filename The filename string of the texture

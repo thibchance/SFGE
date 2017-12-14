@@ -35,6 +35,7 @@ namespace sfge
 
 void InputManager::Init()
 {
+
 }
 
 void InputManager::Update(sf::Time dt)

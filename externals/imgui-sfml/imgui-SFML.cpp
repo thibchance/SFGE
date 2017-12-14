@@ -2,11 +2,113 @@
 #include <imgui.h>
 
 #include <SFML/OpenGL.hpp>
-
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Window.hpp>
 
 #include <cmath> // abs
 #include <cstddef> // offsetof, NULL
 #include <cassert>
+#include <SFML/Window/Touch.hpp>
+
+
+#include <iostream>
+
+#ifdef ANDROID
+#ifdef USE_JNI
+
+#include <jni.h>
+#include <android/native_activity.h>
+#include <SFML/System/NativeActivity.hpp>
+
+static bool s_wantTextInput = false;
+
+int openKeyboardIME()
+{
+    ANativeActivity *activity = sf::getNativeActivity();
+    JavaVM* vm = activity->vm;
+    JNIEnv* env = activity->env;
+    JavaVMAttachArgs attachargs;
+    attachargs.version = JNI_VERSION_1_6;
+    attachargs.name = "NativeThread";
+    attachargs.group = NULL;
+    jint res = vm->AttachCurrentThread(&env, &attachargs);
+    if (res == JNI_ERR)
+        return EXIT_FAILURE;
+
+    jclass natact = env->FindClass("android/app/NativeActivity");
+    jclass context = env->FindClass("android/content/Context");
+
+    jfieldID fid = env->GetStaticFieldID(context, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
+    jobject svcstr = env->GetStaticObjectField(context, fid);
+
+
+    jmethodID getss = env->GetMethodID(natact, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+    jobject imm_obj = env->CallObjectMethod(activity->clazz, getss, svcstr);
+
+    jclass imm_cls = env->GetObjectClass(imm_obj);
+    jmethodID toggleSoftInput = env->GetMethodID(imm_cls, "toggleSoftInput", "(II)V");
+
+    env->CallVoidMethod(imm_obj, toggleSoftInput, 2, 0);
+
+    env->DeleteLocalRef(imm_obj);
+    env->DeleteLocalRef(imm_cls);
+    env->DeleteLocalRef(svcstr);
+    env->DeleteLocalRef(context);
+    env->DeleteLocalRef(natact);
+
+    vm->DetachCurrentThread();
+
+    return EXIT_SUCCESS;
+
+}
+
+int closeKeyboardIME()
+{
+    ANativeActivity *activity = sf::getNativeActivity();
+    JavaVM* vm = activity->vm;
+    JNIEnv* env = activity->env;
+    JavaVMAttachArgs attachargs;
+    attachargs.version = JNI_VERSION_1_6;
+    attachargs.name = "NativeThread";
+    attachargs.group = NULL;
+    jint res = vm->AttachCurrentThread(&env, &attachargs);
+    if (res == JNI_ERR)
+        return EXIT_FAILURE;
+
+    jclass natact = env->FindClass("android/app/NativeActivity");
+    jclass context = env->FindClass("android/content/Context");
+
+    jfieldID fid = env->GetStaticFieldID(context, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
+    jobject svcstr = env->GetStaticObjectField(context, fid);
+
+
+    jmethodID getss = env->GetMethodID(natact, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+    jobject imm_obj = env->CallObjectMethod(activity->clazz, getss, svcstr);
+
+    jclass imm_cls = env->GetObjectClass(imm_obj);
+    jmethodID toggleSoftInput = env->GetMethodID(imm_cls, "toggleSoftInput", "(II)V");
+
+    env->CallVoidMethod(imm_obj, toggleSoftInput, 1, 0);
+
+    env->DeleteLocalRef(imm_obj);
+    env->DeleteLocalRef(imm_cls);
+    env->DeleteLocalRef(svcstr);
+    env->DeleteLocalRef(context);
+    env->DeleteLocalRef(natact);
+
+    vm->DetachCurrentThread();
+
+    return EXIT_SUCCESS;
+
+}
+
+#endif
+#endif
 
 // Supress warnings caused by converting from uint to void* in pCmd->TextureID
 #ifdef __clang__
@@ -17,6 +119,9 @@
 
 static bool s_windowHasFocus = true;
 static bool s_mousePressed[3] = { false, false, false };
+static bool s_touchDown[3] = { false, false, false };
+static bool s_mouseMoved = false;
+static sf::Vector2i s_touchPos;
 static sf::Texture* s_fontTexture = NULL; // owning pointer to internal font atlas which is used if user doesn't set custom sf::Texture.
 namespace
 {
@@ -51,8 +156,12 @@ void Init(sf::RenderTarget& target, bool loadDefaultFont)
     io.KeyMap[ImGuiKey_PageDown] = sf::Keyboard::PageDown;
     io.KeyMap[ImGuiKey_Home] = sf::Keyboard::Home;
     io.KeyMap[ImGuiKey_End] = sf::Keyboard::End;
+#ifdef ANDROID
+    io.KeyMap[ImGuiKey_Backspace] = sf::Keyboard::Delete;
+#else
     io.KeyMap[ImGuiKey_Delete] = sf::Keyboard::Delete;
     io.KeyMap[ImGuiKey_Backspace] = sf::Keyboard::BackSpace;
+#endif
     io.KeyMap[ImGuiKey_Enter] = sf::Keyboard::Return;
     io.KeyMap[ImGuiKey_Escape] = sf::Keyboard::Escape;
     io.KeyMap[ImGuiKey_A] = sf::Keyboard::A;
@@ -63,8 +172,7 @@ void Init(sf::RenderTarget& target, bool loadDefaultFont)
     io.KeyMap[ImGuiKey_Z] = sf::Keyboard::Z;
 
     // init rendering
-	sf::Vector2f tmp = static_cast<sf::Vector2f>(target.getSize());
-	io.DisplaySize = ImVec2(tmp.x, tmp.y);
+    io.DisplaySize = ImVec2(target.getSize().x,target.getSize().y);
     io.RenderDrawListsFn = RenderDrawLists; // set render callback
 
     if (s_fontTexture) { // delete previously created texture
@@ -72,10 +180,9 @@ void Init(sf::RenderTarget& target, bool loadDefaultFont)
     }
     s_fontTexture = new sf::Texture;
 
-    if (loadDefaultFont) { 
+    if (loadDefaultFont) {
         // this will load default font automatically
         // No need to call AddDefaultFont
-		
         UpdateFontTexture();
     }
 }
@@ -86,6 +193,9 @@ void ProcessEvent(const sf::Event& event)
     if (s_windowHasFocus) {
         switch (event.type)
         {
+            case sf::Event::MouseMoved:
+                s_mouseMoved = true;
+                break;
             case sf::Event::MouseButtonPressed: // fall-through
             case sf::Event::MouseButtonReleased:
                 {
@@ -93,6 +203,17 @@ void ProcessEvent(const sf::Event& event)
                     if (event.type == sf::Event::MouseButtonPressed &&
                         button >= 0 && button < 3) {
                         s_mousePressed[event.mouseButton.button] = true;
+                    }
+                }
+                break;
+            case sf::Event::TouchBegan: // fall-through
+            case sf::Event::TouchEnded:
+                {
+                    s_mouseMoved = false;
+                    int button = event.touch.finger;
+                    if (event.type == sf::Event::TouchBegan &&
+                        button >= 0 && button < 3) {
+                        s_touchDown[event.touch.finger] = true;
                     }
                 }
                 break;
@@ -136,23 +257,48 @@ void Update(sf::RenderWindow& window, sf::Time dt)
 
 void Update(sf::Window& window, sf::RenderTarget& target, sf::Time dt)
 {
-    Update(sf::Mouse::getPosition(window), static_cast<sf::Vector2f>(target.getSize()), dt);
+
+    if (!s_mouseMoved)
+    {
+        if (sf::Touch::isDown(0))
+            s_touchPos = sf::Touch::getPosition(0, window);
+
+        Update(s_touchPos, static_cast<sf::Vector2f>(target.getSize()), dt);
+    } else {
+        Update(sf::Mouse::getPosition(window), static_cast<sf::Vector2f>(target.getSize()), dt);
+    }
     window.setMouseCursorVisible(!ImGui::GetIO().MouseDrawCursor); // don't draw mouse cursor if ImGui draws it
 }
 
 void Update(const sf::Vector2i& mousePos, const sf::Vector2f& displaySize, sf::Time dt)
 {
     ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize = ImVec2( displaySize.x, displaySize.y);
+    io.DisplaySize = ImVec2(displaySize.x, displaySize.y);
     io.DeltaTime = dt.asSeconds();
 
     if (s_windowHasFocus) {
         io.MousePos = ImVec2(mousePos.x, mousePos.y);
-        for (int i = 0; i < 3; ++i) {
-            io.MouseDown[i] = s_mousePressed[i] || sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
+        for (unsigned int i = 0; i < 3; i++) {
+            io.MouseDown[i] =  s_touchDown[i] || sf::Touch::isDown(i) || s_mousePressed[i] || sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
             s_mousePressed[i] = false;
+            s_touchDown[i] = false;
         }
     }
+
+#ifdef ANDROID
+#ifdef USE_JNI
+        if (io.WantTextInput && !s_wantTextInput)
+        {
+            openKeyboardIME();
+            s_wantTextInput = true;
+        }
+        if (!io.WantTextInput && s_wantTextInput)
+        {
+            closeKeyboardIME();
+            s_wantTextInput = false;
+        }
+#endif
+#endif
 
     assert(io.Fonts->Fonts.Size > 0); // You forgot to create and set up font atlas (see createFontTexture)
     ImGui::NewFrame();
@@ -163,13 +309,13 @@ void Render(sf::RenderTarget& target)
     target.resetGLStates();
     ImGui::Render();
 }
-
 void Shutdown()
 {
     ImGui::GetIO().Fonts->TexID = NULL;
 
     if (s_fontTexture) { // if internal texture was created, we delete it
-        delete s_fontTexture;
+		
+		delete s_fontTexture;
         s_fontTexture = NULL;
     }
 
@@ -181,7 +327,6 @@ void UpdateFontTexture()
     sf::Texture& texture = *s_fontTexture;
 
     ImGuiIO& io = ImGui::GetIO();
-
     unsigned char* pixels;
     int width, height;
 
@@ -215,7 +360,12 @@ void Image(const sf::Texture& texture,
 void Image(const sf::Texture& texture, const sf::Vector2f& size,
     const sf::Color& tintColor, const sf::Color& borderColor)
 {
-    ImGui::Image((void*)texture.getNativeHandle(), ImVec2(size.x, size.y), ImVec2(0, 0), ImVec2(1, 1), ImColor(tintColor.r, tintColor.g, tintColor.b, tintColor.a), ImColor( borderColor.r, borderColor.g, borderColor.b, borderColor.a));
+    ImGui::Image((void*)texture.getNativeHandle(), 
+		ImVec2(size.x,size.y), 
+		ImVec2(0, 0), 
+		ImVec2(1, 1), 
+		ImVec4(tintColor.r, tintColor.g, tintColor.b, tintColor.a), 
+		ImVec4(borderColor.r, borderColor.g, borderColor.b, borderColor.a));
 }
 
 void Image(const sf::Texture& texture, const sf::FloatRect& textureRect,
@@ -231,7 +381,8 @@ void Image(const sf::Texture& texture, const sf::Vector2f& size, const sf::Float
     ImVec2 uv0(textureRect.left / textureSize.x, textureRect.top / textureSize.y);
     ImVec2 uv1((textureRect.left + textureRect.width) / textureSize.x,
         (textureRect.top + textureRect.height) / textureSize.y);
-    ImGui::Image((void*)texture.getNativeHandle(), ImVec2(size.x, size.y), uv0, uv1, ImColor(tintColor.r, tintColor.g, tintColor.b, tintColor.a), ImColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a));
+    ImGui::Image((void*)texture.getNativeHandle(), ImVec2(size.x, size.y), uv0, uv1, ImVec4(tintColor.r, tintColor.g, tintColor.b, tintColor.a),
+		ImVec4(borderColor.r, borderColor.g, borderColor.b, borderColor.a));
 }
 
 void Image(const sf::Sprite& sprite,
@@ -288,7 +439,10 @@ void DrawLine(const sf::Vector2f& a, const sf::Vector2f& b, const sf::Color& col
 {
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     ImVec2 pos = ImGui::GetCursorScreenPos();
-    draw_list->AddLine(ImVec2(a.x+pos.x, a.y+pos.y), ImVec2(b.x + pos.x, b.y+pos.y), ColorConvertFloat4ToU32(ImColor(color.r, color.g, color.b, color.a)), thickness);
+    draw_list->AddLine(ImVec2(a.x+pos.x,a.y+pos.y), 
+		ImVec2(b.x + pos.x, b.y + pos.y), 
+		ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)),
+		thickness);
 }
 
 void DrawRect(const sf::FloatRect& rect, const sf::Color& color,
@@ -298,7 +452,7 @@ void DrawRect(const sf::FloatRect& rect, const sf::Color& color,
     draw_list->AddRect(
         getTopLeftAbsolute(rect),
         getDownRightAbsolute(rect),
-        ColorConvertFloat4ToU32(ImColor(color.r, color.g, color.b, color.a)), rounding, rounding_corners, thickness);
+        ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)), rounding, rounding_corners, thickness);
 }
 
 void DrawRectFilled(const sf::FloatRect& rect, const sf::Color& color,
@@ -308,7 +462,7 @@ void DrawRectFilled(const sf::FloatRect& rect, const sf::Color& color,
     draw_list->AddRect(
         getTopLeftAbsolute(rect),
         getDownRightAbsolute(rect),
-        ColorConvertFloat4ToU32(ImColor(color.r, color.g, color.b, color.a)), rounding, rounding_corners);
+        ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)), rounding, rounding_corners);
 }
 
 } // end of namespace ImGui
@@ -330,6 +484,7 @@ ImVec2 getDownRightAbsolute(const sf::FloatRect & rect)
 // Rendering callback
 void RenderDrawLists(ImDrawData* draw_data)
 {
+
     if (draw_data->CmdListsCount == 0) {
         return;
     }
@@ -343,7 +498,17 @@ void RenderDrawLists(ImDrawData* draw_data)
     if (fb_width == 0 || fb_height == 0) { return; }
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
-    glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_TRANSFORM_BIT);
+
+
+#ifdef GL_VERSION_ES_CL_1_1
+            GLint last_program, last_texture, last_array_buffer, last_element_array_buffer;
+            glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+            glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
+            glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
+#else
+        glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_TRANSFORM_BIT);
+#endif
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_CULL_FACE);
@@ -362,7 +527,12 @@ void RenderDrawLists(ImDrawData* draw_data)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, -1.0f, +1.0f);
+
+#ifdef GL_VERSION_ES_CL_1_1
+        glOrthof(0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, -1.0f, +1.0f);
+#else
+        glOrtho(0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, -1.0f, +1.0f);
+#endif
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -390,8 +560,14 @@ void RenderDrawLists(ImDrawData* draw_data)
             idx_buffer += pcmd->ElemCount;
         }
     }
-
-    glPopAttrib();
+#ifdef GL_VERSION_ES_CL_1_1
+        glBindTexture(GL_TEXTURE_2D, last_texture);
+            glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
+            glDisable(GL_SCISSOR_TEST);
+#else
+        glPopAttrib();
+#endif
 }
 
 bool imageButtonImpl(const sf::Texture& texture, const sf::FloatRect& textureRect, const sf::Vector2f& size, const int framePadding,
@@ -403,7 +579,9 @@ bool imageButtonImpl(const sf::Texture& texture, const sf::FloatRect& textureRec
     ImVec2 uv1((textureRect.left + textureRect.width)  / textureSize.x,
                (textureRect.top  + textureRect.height) / textureSize.y);
 
-    return ImGui::ImageButton((void*)texture.getNativeHandle(), ImVec2(size.x, size.y), uv0, uv1, framePadding, ImColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a), ImColor(tintColor.r, tintColor.g, tintColor.b, tintColor.a));
+    return ImGui::ImageButton((void*)texture.getNativeHandle(), ImVec2(size.x,size.y), uv0, uv1, framePadding, 
+		ImVec4(bgColor.r, bgColor.g, bgColor.b, bgColor.a), 
+		ImVec4(tintColor.r, tintColor.g, tintColor.b, tintColor.a));
 }
 
 } // end of anonymous namespace

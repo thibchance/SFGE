@@ -32,7 +32,7 @@ Component::Component(GameObject& parentObject) :
 
 }
 
-Transform* Transform::LoadTransform(json componentJson)
+std::shared_ptr<Transform> Transform::LoadTransform(json componentJson)
 {
 	return nullptr;
 }

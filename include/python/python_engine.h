@@ -57,7 +57,7 @@ private:
 class PythonScript : public Component
 {
 public:
-	static PythonScript* LoadPythonScript(json componentJson);
+	static std::shared_ptr<PythonScript> LoadPythonScript(json componentJson);
 };
 }
 #endif /* SFGE_PYENGINE_H */

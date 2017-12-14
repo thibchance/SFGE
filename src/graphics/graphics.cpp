@@ -83,7 +83,7 @@ void checkVersion()
 
 void GraphicsManager::Destroy()
 {
-	Log::GetInstance()->Msg("Destroy Graphics");
+	
 	ImGui::SFML::Shutdown();
 }
 

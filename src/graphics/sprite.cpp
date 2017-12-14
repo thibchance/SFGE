@@ -26,8 +26,10 @@ SOFTWARE.
 
 namespace sfge
 {
-
-Sprite* Sprite::LoadSprite(json componentJson)
+void Sprite::Update(sf::Time dt)
+{
+}
+std::shared_ptr<Sprite> Sprite::LoadSprite(json componentJson)
 {
 	return nullptr;
 }
@@ -52,6 +54,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 			refCountMap[increment_id] = 1;
 			nameIdsMap[filename] = increment_id;
 			texturesMap[increment_id] = texture;
+			return increment_id;
 		}
 	}
 	else
@@ -63,6 +66,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 		refCountMap[increment_id] = 1;
 		nameIdsMap[filename] = increment_id;
 		texturesMap[increment_id] = texture;
+		return increment_id;
 	}
 	return 0U;
 }

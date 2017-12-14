@@ -64,7 +64,7 @@ void SceneManager::Update(sf::Time dt)
 	}
 }
 
-Scene* SceneManager::LoadScene(std::string sceneName)
+std::shared_ptr<Scene> SceneManager::LoadScene(std::string sceneName)
 {
 	auto sceneJsonPtr = LoadJson(sceneName);
 	json sceneJson = *sceneJsonPtr;
@@ -72,11 +72,11 @@ Scene* SceneManager::LoadScene(std::string sceneName)
 	{
 		return nullptr;
 	}
-	Scene* scene = new Scene();
-	scene->name = sceneJson["name"];
+	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+	scene->name = sceneJson["name"].get<std::string>();
 	for(json gameObjectJson : sceneJson["gameObjects"])
 	{
-		GameObject* gameObject = GameObject::LoadGameObject(gameObjectJson);
+		std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(gameObjectJson);
 		if(gameObject)
 		{
 			scene->m_GameObjects.push_back(gameObject);
@@ -89,16 +89,11 @@ Scene* SceneManager::LoadScene(std::string sceneName)
 
 void SceneManager::Destroy()
 {
-	if(currentScene)
-	{
-		delete currentScene;
-		currentScene = nullptr;
-	}
 }
 
 void Scene::Update(sf::Time dt)
 {
-	for(GameObject* gameObject : m_GameObjects)
+	for(auto gameObject : m_GameObjects)
 	{
 		gameObject->Update(dt);
 	}
@@ -108,7 +103,6 @@ Scene::~Scene()
 {
 	while(!m_GameObjects.empty())
 	{
-		delete m_GameObjects.front();
 		m_GameObjects.pop_front();
 	}
 }

@@ -40,11 +40,24 @@ namespace sfge
 /**
 * Prototypes declarations
 */
+class Module;
+class GraphicsManager;
 class AudioManager;
 class PythonManager;
 class InputManager;
-class GraphicsManager;
 class SceneManager;
+class Editor;
+
+enum class EngineModule
+{
+	GRAPHICS_MANAGER,
+	AUDIO_MANAGER,
+	SCENE_MANAGER,
+	INPUT_MANAGER,
+	PYTHON_MANAGER,
+	EDITOR,
+	LENGTH
+};
 
 /**
 * \brief The main Engine class to centralise the frame process and the references
@@ -68,21 +81,26 @@ public:
 	* \return The Configuration struct got by the Engine
 	*/
 	std::shared_ptr<Configuration> GetConfig();
-
+	/**
+	* \brief return the the pointer to an engine module
+	* \parameter engineModule The Engine Module asked
+	* \return the c++14 pointer of the module
+	*/
+	std::shared_ptr<Module> GetModule(EngineModule engineModule);
 
 	bool running = false;
-	bool editor = false;
 protected:
 	std::shared_ptr<sf::RenderWindow> m_Window = nullptr;
 	std::shared_ptr<Configuration> m_Config = nullptr;
 	
 	//modules
+	std::array<std::shared_ptr<Module>, (int)EngineModule::LENGTH> modules;
 	std::shared_ptr<GraphicsManager> m_GraphicsManager;
 	std::shared_ptr<AudioManager> m_AudioManager;
 	std::shared_ptr<SceneManager> m_SceneManager;
-	std::shared_ptr<PythonManager> m_PythonManager;
 	std::shared_ptr<InputManager> m_InputManager;
-	
+	std::shared_ptr<PythonManager> m_PythonManager;
+	std::shared_ptr<Editor> m_Editor;
 };
 
 /**
@@ -105,6 +123,7 @@ public:
 	* \brief Used instead of the destructor to delete all heap created structure and finalize
 	*/
 	virtual void Destroy() = 0;
+
 protected:
 	virtual ~Module() {};
 	Engine& m_Engine;

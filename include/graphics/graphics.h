@@ -28,7 +28,7 @@ SOFTWARE.
 
 namespace sfge
 {
-
+class TextureManager;
 
 /**
 * \brief The Graphics Manager
@@ -64,7 +64,7 @@ protected:
 	* \brief Write to log the OpenGL version
 	*/
 	void CheckVersion();
-
+	std::shared_ptr<TextureManager> m_TextureManager = nullptr;
 	std::shared_ptr<sf::RenderWindow> m_Window = nullptr;
 };
 

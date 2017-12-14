@@ -54,9 +54,9 @@ public:
 	* \param gameObjectJson the sub json associated with the Game Object
 	* \return the heap GameObject that will need to be destroyed
 	*/
-	static GameObject* LoadGameObject(json gameObjectJson);
+	static std::shared_ptr<GameObject> LoadGameObject(json gameObjectJson);
 protected:
-	std::list<Component*> m_Components;
+	std::list<std::shared_ptr<Component>> m_Components;
 	std::string name;
 };
 }

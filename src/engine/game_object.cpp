@@ -31,19 +31,19 @@ namespace sfge
 {
 void GameObject::Update(sf::Time dt)
 {
-	for(Component* component : m_Components)
+	for(auto component : m_Components)
 	{
 		component->Update(dt);
 	}
 }
 
-GameObject* GameObject::LoadGameObject(json gameObjectJson)
+std::shared_ptr<GameObject> GameObject::LoadGameObject(json gameObjectJson)
 {
-	GameObject* gameObject = new GameObject();
-	gameObject->name = gameObjectJson["name"];
+	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
+	gameObject->name = gameObjectJson["name"].get<std::string>();
 	for(json componentJson : gameObjectJson["components"])
 	{
-		Component* component = nullptr;
+		std::shared_ptr<Component> component = nullptr;
 		std::string componentType = componentJson["type"];
 		if(componentType == "Transform")
 		{

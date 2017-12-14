@@ -64,9 +64,9 @@ private:
 	* \param sceneName the scene path given by the configuration
 	* \return the heap Scene that will need to be destroyed
 	*/
-	Scene* LoadScene(std::string sceneName);
+	std::shared_ptr<Scene> LoadScene(std::string sceneName);
 
-	Scene* currentScene = nullptr;
+	std::shared_ptr<Scene> currentScene = nullptr;
 };
 
 /**
@@ -87,7 +87,7 @@ public:
 	~Scene();
 protected:
 	std::string name;
-	std::list<GameObject*> m_GameObjects;
+	std::list<std::shared_ptr<GameObject>> m_GameObjects;
 	friend class SceneManager;
 };
 }

@@ -1,9 +1,10 @@
 #ifndef IMGUI_SFML_H
 #define IMGUI_SFML_H
 
-#include <SFML/System.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Time.hpp>
 
 namespace sf
 {

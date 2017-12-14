@@ -28,7 +28,8 @@ message(STATUS "List of CXX features known to CMake")
 	message(STATUS "List of supported CXX17 features")
 	foreach(_f ${CMAKE_CXX17_COMPILE_FEATURES})
 		message("  ${_f}")
-	endforeach()
+endforeach()
+
 set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -37,7 +38,12 @@ set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/externals)
 include_directories(include ${CMAKE_SOURCE_DIR}/include)
 
 file(GLOB_RECURSE SFGE_SRC src/*/*.cpp include/*.h)
+if(WIN32)
+set_property(GLOBAL PROPERTY USE_FOLDERS On) 
 
+SET_SOURCE_FILES_PROPERTIES( ${SFGE_SRC} PROPERTIES 
+                FOLDER "${CMAKE_SOURCE_DIR}/src" ) 
+endif(WIN32)
 #SFML
 set(SFML_DIR ${EXTERNAL_DIR}/SFML)
 set(SFML_BUILD_EXAMPLES FALSE)
@@ -116,6 +122,18 @@ ENDIF()
 add_library(SFGE_COMMON STATIC ${SFGE_SRC})
 include_directories(include/)
 target_link_libraries(SFGE_COMMON PUBLIC ${SFGE_LIBRARIES})
+
+#SFGE_TEST
+SET(SFGE_TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
+file(GLOB TEST_FILES ${SFGE_TEST_DIR}/*.cpp )
+foreach(test_file ${TEST_FILES} )
+    # I used a simple string replace, to cut off .cpp.
+    file(RELATIVE_PATH test_relative_path ${SFGE_TEST_DIR} ${test_file})
+    string( REPLACE ".cpp" "" test_name ${test_relative_path} )
+    add_executable(${test_name} ${SFGE_TEST_DIR}/${test_relative_path})
+    # Make sure YourLib is linked to each app
+    target_link_libraries(${test_name} PUBLIC SFGE_COMMON)
+endforeach()
 
 #SFGE
 add_executable(SFGE src/main.cpp)

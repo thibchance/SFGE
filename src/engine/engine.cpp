@@ -36,6 +36,7 @@ SOFTWARE.
 #include <python/python_engine.h>
 #include <engine/config.h>
 #include <audio/audio.h>
+#include <engine/editor.h>
 
 
 namespace sfge
@@ -44,20 +45,27 @@ namespace sfge
 
 void Engine::Init()
 {
-
-	m_Config = std::move(Configuration::LoadConfig());
-	
 	m_GraphicsManager = std::make_shared<GraphicsManager>(*this);
 	m_AudioManager = std::make_shared<AudioManager>(*this);
 	m_SceneManager = std::make_shared<SceneManager>(*this);
 	m_InputManager = std::make_shared<InputManager>(*this);
-	m_PythonManager = std::make_shared<PythonManager>(*this);
+		m_PythonManager = std::make_shared<PythonManager>(*this);
+		m_Editor = std::make_shared<Editor>(*this);
+		modules =
+		{
+			std::dynamic_pointer_cast<Module>(m_GraphicsManager),
+			std::dynamic_pointer_cast<Module>(m_AudioManager),
+			std::dynamic_pointer_cast<Module>(m_SceneManager),
+			std::dynamic_pointer_cast<Module>(m_InputManager),
+			std::dynamic_pointer_cast<Module>(m_PythonManager),
+			std::dynamic_pointer_cast<Module>(m_Editor)
+		};
+	m_Config = std::move(Configuration::LoadConfig());
 
-	m_GraphicsManager->Init();
-	m_AudioManager->Init();
-	m_InputManager->Init();
-	m_SceneManager->Init();
-	m_PythonManager->Init();
+	for (auto module : modules)
+	{
+		module->Init();
+	}
 
 	m_Window = m_GraphicsManager->GetWindow();
 	running = true;
@@ -89,14 +97,13 @@ void Engine::Start()
 			}
 		}
 		m_InputManager->Update(dt);
+		m_PythonManager->Update(dt);
 		m_GraphicsManager->Update(dt);
 	}
-
-	m_GraphicsManager->Destroy();
-	m_AudioManager->Destroy();
-	m_InputManager->Destroy();
-	m_SceneManager->Destroy();
-	m_PythonManager->Destroy();
+	for (auto module : modules)
+	{
+		module->Destroy();
+	}
 }
 
 Engine::~Engine()
@@ -108,8 +115,14 @@ std::shared_ptr<Configuration> Engine::GetConfig()
 	return m_Config;
 }
 
+std::shared_ptr<Module> Engine::GetModule(EngineModule engineModule)
+{
+	return modules[(int)engineModule];
+}
+
 Module::Module(Engine& engine) : m_Engine(engine)
 {
 }
+
 
 }

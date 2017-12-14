@@ -60,7 +60,7 @@ void PythonManager::Destroy()
 	py::finalize_interpreter();
 }
 
-PythonScript* PythonScript::LoadPythonScript(json componentJson)
+std::shared_ptr<PythonScript> PythonScript::LoadPythonScript(json componentJson)
 {
 	return nullptr;
 }
