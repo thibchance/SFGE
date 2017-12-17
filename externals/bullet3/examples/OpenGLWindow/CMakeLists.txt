@@ -49,6 +49,9 @@ ENDIF()
 
 
 ADD_LIBRARY(OpenGLWindow ${OpenGLWindow_SRCS} ${OpenGLWindow_HDRS})
+set_target_properties(OpenGLWindow PROPERTIES FOLDER "BULLET3")
+
+
 if (UNIX AND NOT APPLE)
   target_link_libraries(OpenGLWindow ${DL})
 elseif (APPLE)

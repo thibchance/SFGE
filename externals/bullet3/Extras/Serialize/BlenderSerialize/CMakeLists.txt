@@ -5,3 +5,5 @@ ${BULLET_PHYSICS_SOURCE_DIR}/Extras/Serialize/BlenderSerialize
 )
 
 ADD_LIBRARY(BlenderSerialize dna249.cpp dna249-64bit.cpp bBlenderFile.cpp  bBlenderFile.h bMain.cpp bMain.h )
+
+set_target_properties(BlenderSerialize PROPERTIES FOLDER "BULLET3")

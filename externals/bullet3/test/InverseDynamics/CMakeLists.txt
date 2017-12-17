@@ -24,6 +24,7 @@ ENDIF()
 		test_invdyn_jacobian.cpp
 	)
 
+set_target_properties(Test_BulletInverseDynamicsJacobian PROPERTIES FOLDER "BULLET3")
 ADD_TEST(Test_BulletInverseDynamicsJacobian_PASS Test_BulletInverseDynamicsJacobian)
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
@@ -90,6 +91,8 @@ ENDIF()
 		../../examples/ThirdPartyLibs/tinyxml/tinyxmlparser.cpp
 
         )
+		
+set_target_properties(Test_BulletInverseForwardDynamics PROPERTIES FOLDER "BULLET3")
 
 ADD_TEST(Test_BulletInverseForwardDynamics_PASS Test_BulletInverseForwardDynamics)
 
@@ -122,6 +125,7 @@ ENDIF()
                 test_invdyn_kinematics.cpp
         )
 
+set_target_properties(Test_BulletInverseDynamics PROPERTIES FOLDER "BULLET3")
 ADD_TEST(Test_BulletInverseDynamics_PASS Test_BulletInverseDynamics)
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)

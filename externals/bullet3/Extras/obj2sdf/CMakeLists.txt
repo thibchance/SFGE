@@ -18,3 +18,5 @@ ADD_EXECUTABLE(App_obj2sdf
 		../../examples/ThirdPartyLibs/Wavefront/tiny_obj_loader.cpp
 )
 
+set_target_properties(App_obj2sdf PROPERTIES FOLDER "BULLET3")
+

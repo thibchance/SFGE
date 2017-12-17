@@ -15,6 +15,7 @@ ENDIF()
 
 ADD_EXECUTABLE(Test_btKinematicCharacterController test_btKinematicCharacterController.cpp)
 
+set_target_properties(Test_btKinematicCharacterController PROPERTIES FOLDER "BULLET3")
 ADD_TEST(Test_btKinematicCharacterController_PASS Test_btKinematicCharacterController)
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)

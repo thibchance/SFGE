@@ -128,6 +128,8 @@ ELSE(WIN32)
 			        )
         ENDIF(APPLE)
 ENDIF(WIN32)
+set_target_properties(App_PhysicsServer_SharedMemory PROPERTIES FOLDER "BULLET3")
+
 
 
 
@@ -168,6 +170,8 @@ IF (WIN32)
 								../MultiThreading/b3Win32ThreadSupport.h
 			          ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc
         )
+		set_target_properties(App_PhysicsServer_SharedMemory_GUI PROPERTIES FOLDER "BULLET3")
+
 ELSE(WIN32)
 			 IF(APPLE)
 			        LINK_LIBRARIES(  pthread dl )
@@ -184,6 +188,8 @@ ELSE(WIN32)
 			                ../MultiThreading/b3PosixThreadSupport.cpp
 	               			../MultiThreading/b3PosixThreadSupport.h
 			        )
+					set_target_properties(App_PhysicsServer_SharedMemory_GUI PROPERTIES FOLDER "BULLET3")
+
 
         ELSE(APPLE)
 				LINK_LIBRARIES(  pthread ${DL} )
@@ -200,6 +206,8 @@ ELSE(WIN32)
 			                ../MultiThreading/b3PosixThreadSupport.cpp
 	               			../MultiThreading/b3PosixThreadSupport.h
 			        )
+					set_target_properties(App_PhysicsServer_SharedMemory_GUI PROPERTIES FOLDER "BULLET3")
+
         ENDIF(APPLE)
 ENDIF(WIN32)
 
@@ -288,6 +296,8 @@ LINK_LIBRARIES(
 					../ThirdPartyLibs/openvr/samples/shared/strtools.h
 					../ThirdPartyLibs/openvr/samples/shared/Vectors.h
         )
+		set_target_properties(App_PhysicsServer_SharedMemory_VR PROPERTIES FOLDER "BULLET3")
+
 
 
 IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
@@ -314,8 +324,6 @@ ENDIF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
 
 
 SET_TARGET_PROPERTIES(App_PhysicsServer_SharedMemory_VR PROPERTIES  COMPILE_DEFINITIONS BT_ENABLE_VR )
-
-
 
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)

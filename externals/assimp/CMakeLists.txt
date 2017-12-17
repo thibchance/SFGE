@@ -288,6 +288,8 @@ IF (NOT TARGET uninstall)
   # add make uninstall capability
   CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/cmake_uninstall.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
   add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+  
+set_target_properties(uninstall PROPERTIES FOLDER "Assimp")
 ENDIF()
 
 # cmake configuration files
@@ -413,31 +415,7 @@ IF ( ASSIMP_BUILD_ASSIMP_TOOLS )
 
   ADD_SUBDIRECTORY( tools/assimp_cmd/ )
 
-  # Check dependencies for assimp_qt_viewer.
-  # Why here? Maybe user do not want Qt viewer and have no Qt.
-  # Why assimp_qt_viewer/CMakeLists.txt still contain similar check?
-  # Because viewer can be build independently of Assimp.
-  FIND_PACKAGE(Qt5Widgets QUIET)
-  FIND_PACKAGE(DevIL QUIET)
-  FIND_PACKAGE(OpenGL QUIET)
-  IF ( Qt5Widgets_FOUND AND IL_FOUND AND OPENGL_FOUND)
-    ADD_SUBDIRECTORY( tools/assimp_qt_viewer/ )
-  ELSE()
-    SET ( ASSIMP_QT_VIEWER_DEPENDENCIES "")
-    IF (NOT Qt5_FOUND)
-      SET ( ASSIMP_QT_VIEWER_DEPENDENCIES "${ASSIMP_QT_VIEWER_DEPENDENCIES} Qt5")
-    ENDIF (NOT Qt5_FOUND)
-
-    IF (NOT IL_FOUND)
-      SET ( ASSIMP_QT_VIEWER_DEPENDENCIES "${ASSIMP_QT_VIEWER_DEPENDENCIES} DevIL")
-    ENDIF (NOT IL_FOUND)
-
-    IF (NOT OPENGL_FOUND)
-      SET ( ASSIMP_QT_VIEWER_DEPENDENCIES "${ASSIMP_QT_VIEWER_DEPENDENCIES} OpengGL")
-    ENDIF (NOT OPENGL_FOUND)
-
-    MESSAGE (WARNING "Build of assimp_qt_viewer is disabled. Unsatisfied dendencies: ${ASSIMP_QT_VIEWER_DEPENDENCIES}")
-  ENDIF ( Qt5Widgets_FOUND AND IL_FOUND AND OPENGL_FOUND)
+  
 ENDIF ( ASSIMP_BUILD_ASSIMP_TOOLS )
 
 IF ( ASSIMP_BUILD_SAMPLES)
@@ -521,6 +499,7 @@ if(WIN32)
 
   if(MSVC12 OR MSVC14)
     add_custom_target(UpdateAssimpLibsDebugSymbolsAndDLLs COMMENT "Copying Assimp Libraries ..." VERBATIM)
+set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER "Assimp")
     IF(CMAKE_GENERATOR MATCHES "^Visual Studio")
       ADD_CUSTOM_COMMAND(TARGET UpdateAssimpLibsDebugSymbolsAndDLLs COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/code/Release/assimp-${ASSIMP_MSVC_VERSION}-mt.dll	${BIN_DIR}assimp-${ASSIMP_MSVC_VERSION}-mt.dll VERBATIM)
       ADD_CUSTOM_COMMAND(TARGET UpdateAssimpLibsDebugSymbolsAndDLLs COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/code/Release/assimp-${ASSIMP_MSVC_VERSION}-mt.exp	${LIB_DIR}assimp-${ASSIMP_MSVC_VERSION}-mt.exp VERBATIM)

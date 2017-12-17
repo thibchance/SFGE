@@ -8,3 +8,4 @@ FILE(GLOB BussIK_SRCS "*.cpp" )
 FILE(GLOB BussIK_HDRS "*.h" )
 
 ADD_LIBRARY(BussIK ${BussIK_SRCS} ${BussIK_HDRS})
+set_target_properties(BussIK PROPERTIES FOLDER "BULLET3")

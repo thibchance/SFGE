@@ -21,6 +21,7 @@ User2InternalIndex.cpp
 SET_TARGET_PROPERTIES(BulletInverseDynamicsUtils PROPERTIES VERSION ${BULLET_VERSION})
 SET_TARGET_PROPERTIES(BulletInverseDynamicsUtils PROPERTIES SOVERSION ${BULLET_VERSION})
 
+set_target_properties(BulletInverseDynamicsUtils PROPERTIES FOLDER "BULLET3")
 IF (BUILD_SHARED_LIBS)
 	TARGET_LINK_LIBRARIES(BulletInverseDynamicsUtils BulletInverseDynamics BulletDynamics BulletCollision Bullet3Common LinearMath)
 ENDIF (BUILD_SHARED_LIBS)

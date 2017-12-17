@@ -62,6 +62,9 @@ else()
         ADD_LIBRARY(clsocket STATIC ${CLSOCKET_SOURCES})
     endif()
 endif()
+set_target_properties(clsocket PROPERTIES FOLDER "BULLET3")
+
+
 TARGET_LINK_LIBRARIES(clsocket ${PROJECT_LIBS})
 
 # install into configured prefix

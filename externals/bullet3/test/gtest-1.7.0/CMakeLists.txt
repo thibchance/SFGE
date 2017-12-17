@@ -14,3 +14,5 @@ ADD_DEFINITIONS(-D_VARIADIC_MAX=10)
 FILE(GLOB_RECURSE gtest-1.7.0_HDRS "*.h")
 
 ADD_LIBRARY(gtest ${gtest-1.7.0_SRCS} ${gtest-1.7.0_HDRS})
+
+set_target_properties(gtest PROPERTIES FOLDER "BULLET3")

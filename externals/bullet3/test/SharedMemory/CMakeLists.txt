@@ -94,6 +94,8 @@ ENDIF()
 			../../examples/ThirdPartyLibs/stb_image/stb_image.cpp
                         
 	)
+	
+set_target_properties(Test_PhysicsClientServer PROPERTIES FOLDER "BULLET3")
 
 ADD_TEST(Test_PhysicsClientServer_PASS Test_PhysicsClientServer)
 

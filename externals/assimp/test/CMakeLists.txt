@@ -167,6 +167,8 @@ add_executable( unit
     ${POST_PROCESSES}
 )
 
+set_target_properties(unit PROPERTIES FOLDER "Assimp")
+
 add_definitions(-DASSIMP_TEST_MODELS_DIR="${CMAKE_CURRENT_LIST_DIR}/models")
 
 SET_PROPERTY( TARGET assimp PROPERTY DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} )

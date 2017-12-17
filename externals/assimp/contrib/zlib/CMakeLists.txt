@@ -195,6 +195,8 @@ add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZL
 set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
 set_target_properties(zlib PROPERTIES SOVERSION 1)
 
+set_target_properties(zlib PROPERTIES FOLDER "Assimp")
+set_target_properties(zlibstatic PROPERTIES FOLDER "Assimp")
 INSTALL( TARGETS zlibstatic
          LIBRARY DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
          ARCHIVE DESTINATION ${ASSIMP_LIB_INSTALL_DIR}

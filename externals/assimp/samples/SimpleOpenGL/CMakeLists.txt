@@ -37,6 +37,8 @@ ADD_EXECUTABLE( assimp_simpleogl
   Sample_SimpleOpenGL.c
 )
 
+set_target_properties(assimp_simpleogl PROPERTIES FOLDER "Assimp")
+
 SET_PROPERTY(TARGET assimp_simpleogl PROPERTY DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 TARGET_LINK_LIBRARIES( assimp_simpleogl assimp ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${M_LIB} )

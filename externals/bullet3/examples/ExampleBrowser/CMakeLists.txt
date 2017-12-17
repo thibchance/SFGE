@@ -45,6 +45,8 @@ ADD_LIBRARY(BulletExampleBrowserLib
 	
 )
 
+set_target_properties(BulletExampleBrowserLib PROPERTIES FOLDER "BULLET3")
+
 SET_TARGET_PROPERTIES(BulletExampleBrowserLib PROPERTIES VERSION ${BULLET_VERSION})
 SET_TARGET_PROPERTIES(BulletExampleBrowserLib PROPERTIES SOVERSION ${BULLET_VERSION})
 IF (BUILD_SHARED_LIBS)
@@ -357,6 +359,7 @@ ADD_EXECUTABLE(App_ExampleBrowser
 		${BulletExampleBrowser_SRCS} 
 )
 
+set_target_properties(App_ExampleBrowser PROPERTIES FOLDER "BULLET3")
 FILE( MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/data" )
 
 ADD_CUSTOM_COMMAND(

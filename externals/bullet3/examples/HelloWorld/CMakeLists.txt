@@ -19,6 +19,8 @@ ELSE()
 	)
 ENDIF()
 
+set_target_properties(App_HelloWorld PROPERTIES FOLDER "BULLET3")
+
 
 
 

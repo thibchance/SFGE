@@ -81,6 +81,7 @@ ADD_EXECUTABLE(  assimp_viewer WIN32
   txi.bmp
 )
 
+set_target_properties(assimp_viewer PROPERTIES FOLDER "Assimp")
 SET_PROPERTY(TARGET assimp_viewer PROPERTY DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 

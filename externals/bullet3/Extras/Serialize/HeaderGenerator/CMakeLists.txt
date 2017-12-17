@@ -22,6 +22,7 @@ SET(Main_LIBS  LinearMath)
 
 ADD_EXECUTABLE(HeaderGenerator ${cpp_SRC} ${h_SRC})
 
+set_target_properties(HeaderGenerator PROPERTIES FOLDER "BULLET3")
 IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
 	ADD_CUSTOM_COMMAND(
 		TARGET HeaderGenerator

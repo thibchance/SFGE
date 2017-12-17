@@ -35,6 +35,8 @@ SET(ConvexDecomposition_HDRS
 )
 
 ADD_LIBRARY(ConvexDecomposition ${ConvexDecomposition_SRCS} ${ConvexDecomposition_HDRS})
+
+set_target_properties(ConvexDecomposition PROPERTIES FOLDER "BULLET3")
 SET_TARGET_PROPERTIES(ConvexDecomposition PROPERTIES VERSION ${BULLET_VERSION})
 SET_TARGET_PROPERTIES(ConvexDecomposition PROPERTIES SOVERSION ${BULLET_VERSION})
 

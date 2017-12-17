@@ -30,6 +30,7 @@ ENDIF()
 		../../src/BulletCollision/CollisionShapes/btConvexPolyhedron.cpp
 	)
 
+set_target_properties(Test_Collision PROPERTIES FOLDER "BULLET3")
 ADD_TEST(Test_Collision_PASS Test_Collision)
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)

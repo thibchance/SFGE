@@ -14,6 +14,9 @@ if ( MSVC )
 endif ( MSVC )
 
 add_library(IrrXML STATIC ${IrrXML_SRCS})
+set_target_properties(IrrXML PROPERTIES FOLDER "Assimp")
+
+
 set(IRRXML_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE INTERNAL "IrrXML_Include" )
 set(IRRXML_LIBRARY "IrrXML" CACHE INTERNAL "IrrXML" )
 

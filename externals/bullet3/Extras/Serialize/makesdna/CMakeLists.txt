@@ -23,6 +23,7 @@ SET (INC_FILES
 SET(SRC makesdna.cpp)
 ADD_EXECUTABLE(makesdna ${SRC} ${INC_FILES})
 
+set_target_properties(makesdna PROPERTIES FOLDER "BULLET3")
 IF (CMAKE_CL_64)
 	# Output BulletDNA.c
 	ADD_CUSTOM_COMMAND(

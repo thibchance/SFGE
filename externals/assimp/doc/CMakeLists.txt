@@ -19,6 +19,9 @@ add_custom_target(
     DEPENDS docs.done
 )
 
+
+set_target_properties(docs PROPERTIES FOLDER "Assimp")
+
 add_custom_command(
     OUTPUT docs.done
     COMMAND ${DOXYGEN_EXECUTABLE}

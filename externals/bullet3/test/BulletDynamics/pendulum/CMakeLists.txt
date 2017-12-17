@@ -21,6 +21,7 @@ ENDIF()
 		 ../../../examples/MultiBody/Pendulum.cpp
 	)
 
+set_target_properties(Test_BulletDynamics PROPERTIES FOLDER "BULLET3")
 ADD_TEST(Test_BulletDynamics_PASS Test_BulletDynamics)
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)

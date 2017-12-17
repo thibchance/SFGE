@@ -22,6 +22,7 @@ ELSE()
 ENDIF()
 
 
+set_target_properties(App_BasicExample PROPERTIES FOLDER "BULLET3")
 
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
@@ -93,6 +94,7 @@ ADD_EXECUTABLE(AppBasicExampleGui
                 ${AppBasicExampleGui_SRCS}
 )
 
+set_target_properties(AppBasicExampleGui PROPERTIES FOLDER "BULLET3")
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
                         SET_TARGET_PROPERTIES(AppBasicExampleGui PROPERTIES  DEBUG_POSTFIX "_Debug")

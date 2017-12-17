@@ -29,6 +29,8 @@ FOREACH( HEADER ${headers} )
   configure_file( headercheck.cpp.in ${TEST_FILE} )
   # add library
   add_library( ${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} )
+  
+  set_target_properties(${TEST_NAME} PROPERTIES FOLDER "Assimp")
   list(APPEND headerchecklibs ${TEST_NAME})
 ENDFOREACH( HEADER )
 

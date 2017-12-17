@@ -57,6 +57,7 @@ ADD_EXECUTABLE( assimp_cmd
   Export.cpp
 )
 
+set_target_properties(assimp_cmd PROPERTIES FOLDER "Assimp")
 SET_PROPERTY(TARGET assimp_cmd PROPERTY DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 IF( WIN32 )

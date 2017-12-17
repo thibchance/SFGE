@@ -21,6 +21,7 @@ ADD_LIBRARY(
 SET_TARGET_PROPERTIES(BulletXmlWorldImporter  PROPERTIES VERSION ${BULLET_VERSION})
 SET_TARGET_PROPERTIES(BulletXmlWorldImporter PROPERTIES SOVERSION ${BULLET_VERSION})
 
+set_target_properties(BulletXmlWorldImporter PROPERTIES FOLDER "BULLET3")
 IF (BUILD_SHARED_LIBS)
 	TARGET_LINK_LIBRARIES(BulletXmlWorldImporter BulletWorldImporter BulletDynamics BulletCollision BulletFileLoader LinearMath)
 ENDIF (BUILD_SHARED_LIBS)
