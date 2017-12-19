@@ -59,15 +59,15 @@ class Transform : public Component
 public:
 	using Component::Component;
 
-	static std::shared_ptr<Transform> LoadTransform(json componentJson);
+	static std::shared_ptr<Transform> LoadTransform(json& componentJson, GameObject& gameObject);
 
 	void Update(sf::Time dt) override;
 
-	float GetEulerAngle();
+	const float GetEulerAngle();
 	void SetEulerAngle(float eulerAngle);
-	sf::Vector2f GetPosition();
+	const sf::Vector2f GetPosition();
 	void SetPosition(sf::Vector2f position);
-	sf::Vector2f GetScale();
+	const sf::Vector2f GetScale();
 	void SetScale(sf::Vector2f scale);
 
 private:

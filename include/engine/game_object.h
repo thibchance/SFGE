@@ -25,9 +25,9 @@
 
 #ifndef SFGE_GAMEOBJECT_H
 #define SFGE_GAMEOBJECT_H
+
+#include <utility/json_utility.h>
 //External includes
-#include "json.hpp"
-using json = nlohmann::json;
 #include <SFML/System.hpp>
 //STL includes
 #include <list>
@@ -37,6 +37,7 @@ namespace sfge
 {
 
 class Component;
+class Transform;
 
 /**
 * \brief The basic Game Object handler containing a list of Components
@@ -56,9 +57,11 @@ public:
 	*/
 	static std::shared_ptr<GameObject> LoadGameObject(json& gameObjectJson);
 
+	std::shared_ptr<Transform> GetTransform();
 protected:
 	std::list<std::shared_ptr<Component>> m_Components;
 	std::string name;
+	std::shared_ptr<Transform> transform = nullptr;
 };
 }
 #endif

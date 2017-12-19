@@ -32,8 +32,9 @@ Component::Component(GameObject& parentObject) :
 
 }
 
-std::shared_ptr<Transform> Transform::LoadTransform(json componentJson)
+std::shared_ptr<Transform> Transform::LoadTransform(json& componentJson, GameObject& gameObject)
 {
+
 	return nullptr;
 }
 
@@ -42,7 +43,7 @@ void Transform::Update(sf::Time dt)
 
 }
 
-float Transform::GetEulerAngle()
+const float Transform::GetEulerAngle()
 {
 	return eulerAngle;
 }
@@ -52,7 +53,7 @@ void Transform::SetEulerAngle(float eulerAngle)
 	this->eulerAngle = eulerAngle;
 }
 
-sf::Vector2f Transform::GetPosition()
+const sf::Vector2f Transform::GetPosition()
 {
 	return position;
 }
@@ -62,7 +63,7 @@ void Transform::SetPosition(sf::Vector2f position)
 	this->position = position;
 }
 
-sf::Vector2f Transform::GetScale()
+const sf::Vector2f Transform::GetScale()
 {
 	return scale;
 }

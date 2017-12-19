@@ -58,7 +58,7 @@ void PythonManager::Destroy()
 	py::finalize_interpreter();
 }
 
-std::shared_ptr<PythonScript> PythonScript::LoadPythonScript(json componentJson)
+std::shared_ptr<PythonScript> PythonScript::LoadPythonScript(json& componentJson, GameObject& gameObject)
 {
 	return nullptr;
 }

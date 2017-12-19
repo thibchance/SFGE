@@ -54,7 +54,7 @@ public:
 
 	static std::shared_ptr<Sprite> LoadSprite(json& componentJson, GameObject& gameObject);
 
-	void SetTexture(sf::Texture* newTexture);
+	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
 
 	void SetLayer(int layer);
 
@@ -105,23 +105,16 @@ public:
 	*/
 	unsigned int LoadTexture(std::string filename);
 	/**
-	* \brief unload the texture by removing a reference count, if reference count is 0 then it is unloaded from the cache
-	* \param text_id The texture id striclty positive
-	*
-	*/
-	void UnloadTexture(unsigned int text_id);
-	/**
 	* \brief Used after loading the texture in the texture cache to get the pointer to the texture
 	* \param text_id The texture id striclty positive
 	* \return The pointer to the texture in memory
 	*/
-	sf::Texture* GetTexture(unsigned int text_id);
+	std::shared_ptr<sf::Texture> GetTexture(unsigned int text_id);
 
 private:
 
 	std::map<std::string, unsigned int> nameIdsMap;
-	std::map<unsigned int, sf::Texture> texturesMap;
-	std::map<unsigned int, unsigned int> refCountMap;
+	std::map<unsigned int, std::shared_ptr<sf::Texture>> texturesMap;
 	unsigned int increment_id = 0;
 	GraphicsManager& m_GraphicsManager;
 };

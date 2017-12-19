@@ -36,17 +36,27 @@ namespace fs = std::experimental::filesystem;
 namespace sfge
 {
 
+SceneManager::SceneManager(bool windowless): Module()
+{
+	m_Windowless = windowless;
+}
+
 void SceneManager::Init()
 {
-	std::list<std::string>& scenesList = Engine::GetInstance()->GetConfig()->scenesList;
-	if(scenesList.size() > 0)
+	if (!m_Windowless)
 	{
-		const fs::path firstScenePath = *scenesList.begin();
-		if (fs::is_regular_file(firstScenePath))
+
+
+		std::list<std::string>& scenesList = Engine::GetInstance()->GetConfig()->scenesList;
+		if (scenesList.size() > 0)
 		{
-			if (firstScenePath.extension() == fs::path(".scene"))
+			const fs::path firstScenePath = *scenesList.begin();
+			if (fs::is_regular_file(firstScenePath))
 			{
-				currentScene = LoadScene(firstScenePath.string());
+				if (firstScenePath.extension() == fs::path(".scene"))
+				{
+					currentScene = LoadScene(firstScenePath.string());
+				}
 			}
 		}
 	}
@@ -93,6 +103,7 @@ std::shared_ptr<Scene> SceneManager::LoadScene(json& sceneJson)
 void SceneManager::Destroy()
 {
 }
+
 
 void Scene::Update(sf::Time dt)
 {

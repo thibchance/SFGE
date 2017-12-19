@@ -47,7 +47,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 		std::string componentType = componentJson["type"];
 		if(componentType == "Transform")
 		{
-			component = Transform::LoadTransform(componentJson);
+			component = Transform::LoadTransform(componentJson, *gameObject);
 		}
 		else if(componentType == "Sprite")
 		{
@@ -55,7 +55,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 		}
 		else if(componentType == "Python")
 		{
-			component = PythonScript::LoadPythonScript(componentJson);
+			component = PythonScript::LoadPythonScript(componentJson, *gameObject);
 		}
 		if(component)
 		{
@@ -63,6 +63,16 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 		}
 	}
 	return gameObject;
+}
+
+std::shared_ptr<Transform> GameObject::GetTransform()
+{
+	if (transform == nullptr)
+	{
+		transform = std::make_shared<Transform>(*this);
+		m_Components.push_back(transform);
+	}
+	return transform;
 }
 
 }

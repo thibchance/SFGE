@@ -50,7 +50,7 @@ void Engine::Init(bool windowless)
 {
 	m_GraphicsManager = std::make_shared<GraphicsManager>(windowless);
 	m_AudioManager = std::make_shared<AudioManager>();
-	m_SceneManager = std::make_shared<SceneManager>();
+	m_SceneManager = std::make_shared<SceneManager>(windowless);
 	m_InputManager = std::make_shared<InputManager>();
 	m_PythonManager = std::make_shared<PythonManager>();
 	m_Editor = std::make_shared<Editor>();
