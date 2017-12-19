@@ -35,18 +35,31 @@ void Sprite::Update(sf::Time dt)
 }
 void Sprite::Draw(sf::RenderWindow& window)
 {
-
+	window.draw(sprite);
 }
-std::shared_ptr<Sprite> Sprite::LoadSprite(json& componentJson)
+void Sprite::SetTexture(sf::Texture * newTexture)
+{
+	sprite.setTexture(*newTexture);
+}
+void Sprite::SetLayer(int layer)
+{
+	
+}
+std::shared_ptr<Sprite> Sprite::LoadSprite(json& componentJson, GameObject& gameObject)
 {
 	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
 		Engine::GetInstance()->GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
 	auto spriteManager = graphicsManager->GetSpriteManager();
 	if (spriteManager != nullptr)
 	{
-		return spriteManager->LoadSprite(componentJson);
+		auto newSprite = std::make_shared<Sprite>(gameObject);
+		spriteManager->LoadSprite(componentJson, newSprite);
+		return newSprite;
 	}
 	return nullptr;
+}
+SpriteManager::SpriteManager(GraphicsManager& graphicsManager):Module(), m_GraphicsManager(graphicsManager)
+{
 }
 void SpriteManager::Init()
 {
@@ -60,15 +73,34 @@ void SpriteManager::Destroy()
 {
 }
 
-std::shared_ptr<Sprite> SpriteManager::LoadSprite(json& componentJson)
+void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newSprite)
 {
-	std::cout << componentJson["path"] << "\n";
-	std::string path = componentJson["path"].get<std::string>();
-	if (FileExists(path))
+	if(componentJson.find("path") != componentJson.end())
 	{
-
+		std::string path = componentJson["path"].get<std::string>();
+		sf::Texture* texture = nullptr;
+		if (FileExists(path))
+		{
+			unsigned int text_id = m_GraphicsManager.GetTextureManager()->LoadTexture(path);
+			if (text_id != 0)
+			{
+				texture = m_GraphicsManager.GetTextureManager()->GetTexture(text_id);
+				newSprite->SetTexture(texture);
+			}
+		}
 	}
-	return std::shared_ptr<Sprite>();
+	else
+	{
+		Log::GetInstance()->Error("[Error] No Path for Sprite");
+	}
+	if (componentJson.find("layer") != componentJson.end())
+	{
+		newSprite->SetLayer(componentJson["layer"]);
+	}
+}
+
+TextureManager::TextureManager(GraphicsManager & graphicsManager):Module(), m_GraphicsManager(graphicsManager)
+{
 }
 
 void TextureManager::Init()
@@ -108,14 +140,17 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 	}
 	else
 	{
-		increment_id++;
-		sf::Texture texture;
-		if (!texture.loadFromFile(filename))
-			return 0U;
-		refCountMap[increment_id] = 1;
-		nameIdsMap[filename] = increment_id;
-		texturesMap[increment_id] = texture;
-		return increment_id;
+		if (FileExists(filename) && filename != "")
+		{
+			increment_id++;
+			sf::Texture texture;
+			if (!texture.loadFromFile(filename))
+				return 0U;
+			refCountMap[increment_id] = 1;
+			nameIdsMap[filename] = increment_id;
+			texturesMap[increment_id] = texture;
+			return increment_id;
+		}
 	}
 	return 0U;
 }

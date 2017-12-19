@@ -60,8 +60,8 @@ GraphicsManager::GraphicsManager(bool windowless) : Module(), m_Windowless(windo
 	
 
 	//Init Texture and Sprite Manager
-	m_TextureManager = std::make_shared<TextureManager>();
-	m_SpriteManager = std::make_shared<SpriteManager>();
+	m_TextureManager = std::make_shared<TextureManager>(*this);
+	m_SpriteManager = std::make_shared<SpriteManager>(*this);
 }
 
 void GraphicsManager::Update(sf::Time dt)
@@ -85,6 +85,11 @@ std::shared_ptr<sf::RenderWindow> GraphicsManager::GetWindow()
 std::shared_ptr<SpriteManager> GraphicsManager::GetSpriteManager()
 {
 	return m_SpriteManager;
+}
+
+std::shared_ptr<TextureManager> GraphicsManager::GetTextureManager()
+{
+	return m_TextureManager;
 }
 
 void GraphicsManager::CheckVersion()

@@ -60,6 +60,7 @@ public:
 	std::shared_ptr<sf::RenderWindow> GetWindow();
 
 	std::shared_ptr<SpriteManager> GetSpriteManager();
+	std::shared_ptr<TextureManager> GetTextureManager();
 
 protected:
 	bool m_Windowless = false;

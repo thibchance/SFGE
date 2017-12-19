@@ -51,7 +51,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 		}
 		else if(componentType == "Sprite")
 		{
-			component = Sprite::LoadSprite(componentJson);
+			component = Sprite::LoadSprite(componentJson, *gameObject);
 		}
 		else if(componentType == "Python")
 		{

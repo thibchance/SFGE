@@ -27,6 +27,7 @@ SOFTWARE.
 #include <graphics/sprite.h>
 #include <engine/game_object.h>
 #include <utility/json_utility.h>
+#include <engine/log.h>
 
 //Dependencies
 #include <SFML/Graphics.hpp>
@@ -39,8 +40,9 @@ int main()
 
 	json spriteJson;
 	spriteJson["path"] = "data/sprites/boss_01_dialog_pose_001_b.png";
+	std::cout << spriteJson["path"]<<"\n";
 	sfge::GameObject gameObject;
-	auto sprite = sfge::Sprite::LoadSprite(spriteJson);
+	auto sprite = sfge::Sprite::LoadSprite(spriteJson, gameObject);
 
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Sprite");

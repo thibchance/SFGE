@@ -36,6 +36,7 @@ SOFTWARE.
 
 namespace sfge
 {
+class GraphicsManager;
 /**
 * \brief Sprite component used in the GameObject
 */
@@ -51,13 +52,17 @@ public:
 	
 	void Draw(sf::RenderWindow& window);
 
-	static std::shared_ptr<Sprite> LoadSprite(json& componentJson);
+	static std::shared_ptr<Sprite> LoadSprite(json& componentJson, GameObject& gameObject);
+
+	void SetTexture(sf::Texture* newTexture);
+
+	void SetLayer(int layer);
 
 protected:
 	std::string filename;
 	int textureId;
 	int layer;
-	sf::Sprite* sprite;
+	sf::Sprite sprite;
 };
 
 /**
@@ -66,7 +71,7 @@ protected:
 class SpriteManager : Module
 {
 public:
-	using Module::Module;
+	SpriteManager(GraphicsManager& graphicsManager);
 
 	virtual void Init() override;
 
@@ -74,9 +79,10 @@ public:
 
 	virtual void Destroy() override;
 
-	std::shared_ptr<Sprite> LoadSprite(json& componentJson);
+	void LoadSprite(json& componentJson, std::shared_ptr<Sprite> sprite);
 protected:
-	std::list<std::shared_ptr<sfge::Sprite>> sprites;
+	std::list<std::shared_ptr<sfge::Sprite>> m_Sprites;
+	GraphicsManager& m_GraphicsManager;
 };
 
 /**
@@ -86,7 +92,7 @@ protected:
 class TextureManager : public Module
 {
 public:
-	using Module::Module;
+	TextureManager(GraphicsManager& graphicsManager);
 	virtual void Init() override;
 
 	virtual void Update(sf::Time dt) override;
@@ -117,6 +123,7 @@ private:
 	std::map<unsigned int, sf::Texture> texturesMap;
 	std::map<unsigned int, unsigned int> refCountMap;
 	unsigned int increment_id = 0;
+	GraphicsManager& m_GraphicsManager;
 };
 
 }
