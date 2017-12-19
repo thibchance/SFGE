@@ -30,6 +30,7 @@
 #include <list>
 
 #include <engine/engine.h>
+#include <utility/json_utility.h>
 
 namespace sfge
 {
@@ -57,14 +58,20 @@ public:
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
-
-private:
 	/**
 	* \brief Load a Scene and create all its GameObject
 	* \param sceneName the scene path given by the configuration
-	* \return the heap Scene that will need to be destroyed
+	* \return the heap Scene that is automatically destroyed when not used
 	*/
 	std::shared_ptr<Scene> LoadScene(std::string sceneName);
+	/**
+	* \brief Load a Scene and create all its GameObject
+	* \param sceneName the scene path given by the configuration
+	* \return the heap Scene that is automatically destroyed when not used
+	*/
+	std::shared_ptr<Scene> LoadScene(json& sceneJson);
+private:
+	
 
 	std::shared_ptr<Scene> currentScene = nullptr;
 };

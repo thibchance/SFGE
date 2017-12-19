@@ -21,39 +21,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-//Externals includes
-#include "json.hpp"
+
 //STL includes
 #include <fstream>
 //SFGE includes
 #include <engine/config.h>
 #include <engine/log.h>
+#include <utility/json_utility.h>
 
-// for convenience
-using json = nlohmann::json;
 
 namespace sfge
 {
 
 std::unique_ptr<Configuration> Configuration::LoadConfig(std::string configFilename)
 {
+	auto jsonConfigPtr = LoadJson(configFilename);
+	if (jsonConfigPtr == nullptr)
+		return nullptr;
+	json jsonConfig = *jsonConfigPtr;
 	auto newConfig = std::make_unique<Configuration>();
-	std::ifstream inputFile(configFilename.c_str());
-	if (inputFile.peek() == std::ifstream::traits_type::eof())
-	{
-		Log::GetInstance()->Error("EMPTY CONFIG FILE");
-		return newConfig;
-	}
-	json jsonConfig;
-	try
-	{
-		inputFile >> jsonConfig;
-	}
-	catch (json::parse_error& e)
-	{
-		Log::GetInstance()->Error("THE CONFIG FILE IS NOT JSON");
-		return newConfig;
-	}
 	newConfig->screenResolution = sf::Vector2i(
 		jsonConfig["screenResolution"]["x"],
 		jsonConfig["screenResolution"]["y"]);

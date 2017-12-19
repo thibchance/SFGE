@@ -23,9 +23,10 @@ SOFTWARE.
 */
 
 #include <graphics/graphics.h>
-
+#include <graphics/sprite.h>
 #include <engine/log.h>
 #include <engine/config.h>
+
 //Dependencies includes
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "imgui-SFML.h"
@@ -35,35 +36,55 @@ SOFTWARE.
 
 namespace sfge
 {
-
-void GraphicsManager::Init()
+GraphicsManager::GraphicsManager(bool windowless) : Module(), m_Windowless(windowless)
 {
-	auto config = m_Engine.GetConfig();
-	m_Window = std::make_shared<sf::RenderWindow>(
-		sf::VideoMode(config->screenResolution.x, config->screenResolution.y), 
-		"SFGE 0.1");
-	if (config->maxFramerate)
+	
+}
+	void GraphicsManager::Init()
+{
+	auto config = Engine::GetInstance()->GetConfig();
+	if (!m_Windowless)
 	{
-		m_Window->setFramerateLimit(config->maxFramerate);
+		m_Window = std::make_shared<sf::RenderWindow>(
+			sf::VideoMode(config->screenResolution.x, config->screenResolution.y),
+			"SFGE 0.1");
+		if (config->maxFramerate)
+		{
+			m_Window->setFramerateLimit(config->maxFramerate);
+			CheckVersion();
+			//Init GUI
+			ImGui::SFML::Init((sf::RenderTarget&)(*m_Window));
+		}
 	}
-	CheckVersion();
-	//Init GUI
-	ImGui::SFML::Init((sf::RenderTarget&)(*m_Window));
+	
+	
+
+	//Init Texture and Sprite Manager
+	m_TextureManager = std::make_shared<TextureManager>();
+	m_SpriteManager = std::make_shared<SpriteManager>();
 }
 
 void GraphicsManager::Update(sf::Time dt)
 {
-	ImGui::SFML::Update(*m_Window, dt);
+	if (!m_Windowless)
+	{
+		ImGui::SFML::Update(*m_Window, dt);
 
-	m_Window->clear();
+		m_Window->clear();
 
-	ImGui::SFML::Render(*m_Window);
-	m_Window->display();
+		ImGui::SFML::Render(*m_Window);
+		m_Window->display();
+	}
 }
 
 std::shared_ptr<sf::RenderWindow> GraphicsManager::GetWindow()
 {
 	return m_Window;
+}
+
+std::shared_ptr<SpriteManager> GraphicsManager::GetSpriteManager()
+{
+	return m_SpriteManager;
 }
 
 void GraphicsManager::CheckVersion()

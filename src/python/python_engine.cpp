@@ -21,15 +21,13 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-
+#include <engine/scene.h>
+#include <engine/game_object.h>
+#include <engine/component.h>
 #include <python/python_engine.h>
 
 #include <pybind11/embed.h>// everything needed for embedding
 
-#include "engine/scene.h"
-#include "engine/game_object.h"
-#include "engine/component.h"
-#include <engine/utility.h>
 #include <iostream>
 
 namespace py = pybind11;

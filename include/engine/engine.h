@@ -28,9 +28,10 @@ SOFTWARE.
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <memory>
+#include <array>
 
-#include <engine/utility.h>
 #include <engine/config.h>
+#include <utility/singleton.h>
 
 
 
@@ -46,15 +47,17 @@ class AudioManager;
 class PythonManager;
 class InputManager;
 class SceneManager;
+class SpriteManager;
+class TextureManager;
 class Editor;
 
 enum class EngineModule
 {
 	GRAPHICS_MANAGER,
 	AUDIO_MANAGER,
-	SCENE_MANAGER,
 	INPUT_MANAGER,
 	PYTHON_MANAGER,
+	SCENE_MANAGER,
 	EDITOR,
 	LENGTH
 };
@@ -62,14 +65,14 @@ enum class EngineModule
 /**
 * \brief The main Engine class to centralise the frame process and the references
 */
-class Engine 
+class Engine : public Singleton<Engine>
 {
 public:
 
 	/**
 	* \brief Initialize all the modules of the Game Engine, reading the config file too
 	*/
-	void Init();
+	void Init(bool windowless=false);
 	/**
 	* \brief Starting the Game Engine after the Init()
 	*/
@@ -109,7 +112,7 @@ protected:
 class Module
 {
 public:
-	Module(Engine& engine);
+	Module();
 	/**
 	* \brief Called to initialize the module
 	*/
@@ -126,7 +129,6 @@ public:
 
 protected:
 	virtual ~Module() {};
-	Engine& m_Engine;
 };
 
 }

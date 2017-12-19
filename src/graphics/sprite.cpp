@@ -22,16 +22,65 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <graphics/graphics.h>
 #include <graphics/sprite.h>
+#include <utility/file_utility.h>
+
+#include <engine/log.h>
 
 namespace sfge
 {
 void Sprite::Update(sf::Time dt)
 {
 }
-std::shared_ptr<Sprite> Sprite::LoadSprite(json componentJson)
+void Sprite::Draw(sf::RenderWindow& window)
 {
+
+}
+std::shared_ptr<Sprite> Sprite::LoadSprite(json& componentJson)
+{
+	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
+		Engine::GetInstance()->GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
+	auto spriteManager = graphicsManager->GetSpriteManager();
+	if (spriteManager != nullptr)
+	{
+		return spriteManager->LoadSprite(componentJson);
+	}
 	return nullptr;
+}
+void SpriteManager::Init()
+{
+}
+
+void SpriteManager::Update(sf::Time dt)
+{
+}
+
+void SpriteManager::Destroy()
+{
+}
+
+std::shared_ptr<Sprite> SpriteManager::LoadSprite(json& componentJson)
+{
+	std::cout << componentJson["path"] << "\n";
+	std::string path = componentJson["path"].get<std::string>();
+	if (FileExists(path))
+	{
+
+	}
+	return std::shared_ptr<Sprite>();
+}
+
+void TextureManager::Init()
+{
+}
+
+void TextureManager::Update(sf::Time dt)
+{
+}
+
+void TextureManager::Destroy()
+{
 }
 
 unsigned int TextureManager::LoadTexture(std::string filename)
@@ -98,5 +147,7 @@ sf::Texture* TextureManager::GetTexture(unsigned int text_id)
 	}
 	return nullptr;
 }
+
+
 
 }

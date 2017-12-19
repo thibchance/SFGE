@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <memory>
 
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
@@ -37,33 +38,35 @@ SOFTWARE.
 #include <engine/config.h>
 #include <audio/audio.h>
 #include <engine/editor.h>
+#include <graphics/sprite.h>
+#include <engine/log.h>
 
 
 namespace sfge
 {
 
 
-void Engine::Init()
+void Engine::Init(bool windowless)
 {
-	m_GraphicsManager = std::make_shared<GraphicsManager>(*this);
-	m_AudioManager = std::make_shared<AudioManager>(*this);
-	m_SceneManager = std::make_shared<SceneManager>(*this);
-	m_InputManager = std::make_shared<InputManager>(*this);
-		m_PythonManager = std::make_shared<PythonManager>(*this);
-		m_Editor = std::make_shared<Editor>(*this);
-		modules =
-		{
-			std::dynamic_pointer_cast<Module>(m_GraphicsManager),
-			std::dynamic_pointer_cast<Module>(m_AudioManager),
-			std::dynamic_pointer_cast<Module>(m_SceneManager),
-			std::dynamic_pointer_cast<Module>(m_InputManager),
-			std::dynamic_pointer_cast<Module>(m_PythonManager),
-			std::dynamic_pointer_cast<Module>(m_Editor)
-		};
-	m_Config = std::move(Configuration::LoadConfig());
-
-	for (auto module : modules)
+	m_GraphicsManager = std::make_shared<GraphicsManager>(windowless);
+	m_AudioManager = std::make_shared<AudioManager>();
+	m_SceneManager = std::make_shared<SceneManager>();
+	m_InputManager = std::make_shared<InputManager>();
+	m_PythonManager = std::make_shared<PythonManager>();
+	m_Editor = std::make_shared<Editor>();
+	modules =
 	{
+		std::dynamic_pointer_cast<Module>(m_GraphicsManager),
+		std::dynamic_pointer_cast<Module>(m_AudioManager),
+		std::dynamic_pointer_cast<Module>(m_InputManager),
+		std::dynamic_pointer_cast<Module>(m_PythonManager),
+		std::dynamic_pointer_cast<Module>(m_SceneManager),
+		std::dynamic_pointer_cast<Module>(m_Editor)
+	};
+	m_Config = std::move(Configuration::LoadConfig());
+	
+	for (auto module : modules)
+	{	
 		module->Init();
 	}
 
@@ -120,7 +123,7 @@ std::shared_ptr<Module> Engine::GetModule(EngineModule engineModule)
 	return modules[(int)engineModule];
 }
 
-Module::Module(Engine& engine) : m_Engine(engine)
+Module::Module() 
 {
 }
 

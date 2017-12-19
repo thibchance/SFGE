@@ -21,56 +21,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include <engine/scene.h>
+#include <json.hpp>
+using json = nlohmann::json;
 
-#ifndef SFGE_GRAPHICS_H
-#define SFGE_GRAPHICS_H
-#include <engine/engine.h>
-
-namespace sfge
+int main()
 {
-class TextureManager;
-
-/**
-* \brief The Graphics Manager
-*/
-class GraphicsManager : public Module
-{
-public:
-	GraphicsManager(bool windowless);
-	/**
-		* \brief Initialize the Graphics Manager
-		*/
-	void Init() override;
-
-	/**
-		* \brief Update the Graphics Manager and prepare for the rendering
-		* \param dt Delta time since last frame
-		*/
-	void Update(sf::Time dt) override;
-
-	/**
-	* \brief Destroy the window and other
-	*/
-	void Destroy() override;
-
-	/**
-	* \brief Getter of the window created in GraphicsManager
-	* \return The SFML window
-	*/
-	std::shared_ptr<sf::RenderWindow> GetWindow();
-
-	std::shared_ptr<SpriteManager> GetSpriteManager();
-
-protected:
-	bool m_Windowless = false;
-	/**
-	* \brief Write to log the OpenGL version
-	*/
-	void CheckVersion();
-	std::shared_ptr<TextureManager> m_TextureManager = nullptr;
-	std::shared_ptr<SpriteManager> m_SpriteManager = nullptr;
-	std::shared_ptr<sf::RenderWindow> m_Window = nullptr;
-};
-
-}
+	sfge::Engine engine;
+	engine.Init();
+	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
+	engine.Start();
+#ifdef WIN32
+	system("pause");
 #endif
+	return EXIT_SUCCESS;
+}

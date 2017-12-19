@@ -37,7 +37,7 @@ void GameObject::Update(sf::Time dt)
 	}
 }
 
-std::shared_ptr<GameObject> GameObject::LoadGameObject(json gameObjectJson)
+std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 {
 	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
 	gameObject->name = gameObjectJson["name"].get<std::string>();
@@ -64,4 +64,5 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json gameObjectJson)
 	}
 	return gameObject;
 }
+
 }

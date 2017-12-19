@@ -21,9 +21,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-//Externals includes
-#include "json.hpp"
-using json = nlohmann::json;
+
 //STL includes
 #include <experimental/filesystem>
 //SFGE includes
@@ -40,7 +38,7 @@ namespace sfge
 
 void SceneManager::Init()
 {
-	std::list<std::string>& scenesList = m_Engine.GetConfig()->scenesList;
+	std::list<std::string>& scenesList = Engine::GetInstance()->GetConfig()->scenesList;
 	if(scenesList.size() > 0)
 	{
 		const fs::path firstScenePath = *scenesList.begin();
@@ -67,17 +65,22 @@ void SceneManager::Update(sf::Time dt)
 std::shared_ptr<Scene> SceneManager::LoadScene(std::string sceneName)
 {
 	auto sceneJsonPtr = LoadJson(sceneName);
-	json sceneJson = *sceneJsonPtr;
-	if(sceneJson == nullptr)
+	
+	if(sceneJsonPtr != nullptr)
 	{
-		return nullptr;
+		return LoadScene(*sceneJsonPtr);
 	}
+	
+}
+
+std::shared_ptr<Scene> SceneManager::LoadScene(json& sceneJson)
+{
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 	scene->name = sceneJson["name"].get<std::string>();
-	for(json gameObjectJson : sceneJson["gameObjects"])
+	for (json gameObjectJson : sceneJson["gameObjects"])
 	{
 		std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(gameObjectJson);
-		if(gameObject)
+		if (gameObject)
 		{
 			scene->m_GameObjects.push_back(gameObject);
 		}

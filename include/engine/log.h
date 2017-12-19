@@ -28,7 +28,7 @@
 #include <iostream>
 #include <string>
 
-#include <engine/utility.h>
+#include <utility/singleton.h>
 
 namespace sfge
 {

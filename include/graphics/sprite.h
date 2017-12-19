@@ -48,7 +48,11 @@ public:
 	* \param dt Delta time since last frame
 	*/
 	virtual void Update(sf::Time dt) override;
-	static std::shared_ptr<Sprite> LoadSprite(json componentJson);
+	
+	void Draw(sf::RenderWindow& window);
+
+	static std::shared_ptr<Sprite> LoadSprite(json& componentJson);
+
 protected:
 	std::string filename;
 	int textureId;
@@ -61,19 +65,33 @@ protected:
 */
 class SpriteManager : Module
 {
+public:
 	using Module::Module;
+
+	virtual void Init() override;
+
+	virtual void Update(sf::Time dt) override;
+
+	virtual void Destroy() override;
+
+	std::shared_ptr<Sprite> LoadSprite(json& componentJson);
 protected:
-	std::list<sf::Sprite> sprites;
+	std::list<std::shared_ptr<sfge::Sprite>> sprites;
 };
 
 /**
 * \brief The Texture Manager is the cache of all the textures used for sprites or other objects
 *
 */
-class TextureManager
+class TextureManager : public Module
 {
 public:
-	
+	using Module::Module;
+	virtual void Init() override;
+
+	virtual void Update(sf::Time dt) override;
+
+	virtual void Destroy() override;
 	/**
 	* \brief load the texture from the disk or the texture cache
 	* \param filename The filename string of the texture

@@ -23,17 +23,20 @@ SOFTWARE.
 */
 
 //Engine
+#include <engine/engine.h>
 #include <graphics/sprite.h>
 #include <engine/game_object.h>
+#include <utility/json_utility.h>
 
 //Dependencies
 #include <SFML/Graphics.hpp>
-#include <json.hpp>
-// for convenience
-using json = nlohmann::json;
+
 
 int main()
 {
+	sfge::Engine* engine = sfge::Engine::GetInstance();
+	engine->Init(true);
+
 	json spriteJson;
 	spriteJson["path"] = "data/sprites/boss_01_dialog_pose_001_b.png";
 	sfge::GameObject gameObject;
@@ -57,7 +60,7 @@ int main()
 		// clear the window with black color
 		window.clear(sf::Color::Black);
 
-		
+		sprite->Draw(window);
 
 		// end the current frame
 		window.display();

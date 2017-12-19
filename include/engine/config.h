@@ -28,8 +28,8 @@ SOFTWARE.
 #include <SFML/System/Vector2.hpp>
 //STL includes
 #include <list>
-//SFGE includes
-#include <engine/utility.h>
+#include <memory>
+
 
 namespace sfge
 {
@@ -41,6 +41,9 @@ struct Configuration
 	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
 	unsigned int maxFramerate = 60;
 	std::list<std::string> scenesList;
+	/**
+	* \brief Used to load the overall Configuration of the GameEngine at start
+	*/
 	static std::unique_ptr<Configuration> LoadConfig(std::string configFilename = "data/config.json");
 };
 }
