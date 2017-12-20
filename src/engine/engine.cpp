@@ -48,9 +48,19 @@ namespace sfge
 
 void Engine::Init(bool windowless)
 {
+	m_Config = std::move(Configuration::LoadConfig());
+	if (m_Config == nullptr)
+	{
+		Log::GetInstance()->Error("[Error] Game Engine is null");
+	}
+	else
+	{
+		Log::GetInstance()->Msg("Game Engine Configuration Successfull");
+	}
+
 	m_GraphicsManager = std::make_shared<GraphicsManager>(windowless);
 	m_AudioManager = std::make_shared<AudioManager>();
-	m_SceneManager = std::make_shared<SceneManager>(windowless);
+	m_SceneManager = std::make_shared<SceneManager>();
 	m_InputManager = std::make_shared<InputManager>();
 	m_PythonManager = std::make_shared<PythonManager>();
 	m_Editor = std::make_shared<Editor>();
@@ -63,7 +73,6 @@ void Engine::Init(bool windowless)
 		std::dynamic_pointer_cast<Module>(m_SceneManager),
 		std::dynamic_pointer_cast<Module>(m_Editor)
 	};
-	m_Config = std::move(Configuration::LoadConfig());
 	
 	for (auto module : modules)
 	{	
@@ -79,11 +88,11 @@ void Engine::Init(bool windowless)
 void Engine::Start()
 {
 	sf::Clock clock;
-	while (running)
+	while (running && m_Window != nullptr)
 	{
 		sf::Time dt = clock.restart();
 		sf::Event event;
-		while (m_Window->pollEvent(event))
+		while (m_Window != nullptr && m_Window->pollEvent(event))
 		{
 			ImGui::SFML::ProcessEvent(event);
 			if (event.type == sf::Event::Closed)

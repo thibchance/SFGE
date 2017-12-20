@@ -36,37 +36,17 @@ namespace fs = std::experimental::filesystem;
 namespace sfge
 {
 
-SceneManager::SceneManager(bool windowless): Module()
-{
-	m_Windowless = windowless;
-}
 
 void SceneManager::Init()
 {
-	if (!m_Windowless)
-	{
-
-
-		std::list<std::string>& scenesList = Engine::GetInstance()->GetConfig()->scenesList;
-		if (scenesList.size() > 0)
-		{
-			const fs::path firstScenePath = *scenesList.begin();
-			if (fs::is_regular_file(firstScenePath))
-			{
-				if (firstScenePath.extension() == fs::path(".scene"))
-				{
-					currentScene = LoadScene(firstScenePath.string());
-				}
-			}
-		}
-	}
+	
 }
 
 
 
 void SceneManager::Update(sf::Time dt)
 {
-	if(currentScene)
+	if(currentScene != nullptr)
 	{
 		currentScene->Update(dt);
 	}
@@ -87,12 +67,15 @@ std::shared_ptr<Scene> SceneManager::LoadScene(json& sceneJson)
 {
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 	scene->name = sceneJson["name"].get<std::string>();
-	for (json gameObjectJson : sceneJson["gameObjects"])
+	if (sceneJson.find("game_objects") != sceneJson.end() && sceneJson["game_objects"].type() == json::value_t::array)
 	{
-		std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(gameObjectJson);
-		if (gameObject)
+		for (json gameObjectJson : sceneJson["game_objects"])
 		{
-			scene->m_GameObjects.push_back(gameObject);
+			std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(gameObjectJson);
+			if (gameObject)
+			{
+				scene->m_GameObjects.push_back(gameObject);
+			}
 		}
 	}
 	return scene;

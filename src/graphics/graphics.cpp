@@ -43,7 +43,11 @@ GraphicsManager::GraphicsManager(bool windowless) : Module(), m_Windowless(windo
 	void GraphicsManager::Init()
 {
 	auto config = Engine::GetInstance()->GetConfig();
-	if (!m_Windowless)
+	if (config == nullptr)
+	{
+		Log::GetInstance()->Error("[Error] Config is null from Graphics Manager");
+	}
+	if (!m_Windowless && config != nullptr)
 	{
 		m_Window = std::make_shared<sf::RenderWindow>(
 			sf::VideoMode(config->screenResolution.x, config->screenResolution.y),

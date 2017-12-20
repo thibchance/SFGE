@@ -35,9 +35,20 @@ namespace sfge
 
 std::unique_ptr<Configuration> Configuration::LoadConfig(std::string configFilename)
 {
+	{
+		std::ostringstream oss;
+		oss << "Creating Configuration from " << configFilename;
+		Log::GetInstance()->Msg(oss.str());
+	}
+	
 	auto jsonConfigPtr = LoadJson(configFilename);
 	if (jsonConfigPtr == nullptr)
+	{
+		std::ostringstream oss;
+		oss << "[Error] Config JSON file: " << configFilename << " failed to open or did not parse as JSON";
+		Log::GetInstance()->Error(oss.str());
 		return nullptr;
+	}
 	json jsonConfig = *jsonConfigPtr;
 	auto newConfig = std::make_unique<Configuration>();
 	newConfig->screenResolution = sf::Vector2i(

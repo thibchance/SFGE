@@ -47,9 +47,12 @@ int main()
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Sprite");
 
+
+	sf::Clock clock;
 	// run the program as long as the window is open
 	while (window.isOpen())
 	{
+		sf::Time dt = clock.restart();
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -58,7 +61,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-
+		gameObject.GetTransform()->SetPosition(gameObject.GetTransform()->GetPosition() + sf::Vector2f(10.f, 10.f)*dt.asSeconds());
 		// clear the window with black color
 		window.clear(sf::Color::Black);
 

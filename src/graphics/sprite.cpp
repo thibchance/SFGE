@@ -55,6 +55,8 @@ std::shared_ptr<Sprite> Sprite::LoadSprite(json& componentJson, GameObject& game
 	{
 		auto newSprite = std::make_shared<Sprite>(gameObject);
 		spriteManager->LoadSprite(componentJson, newSprite);
+		//To Ensure that we have a transform
+		gameObject.GetTransform();
 		return newSprite;
 	}
 	return nullptr;
@@ -76,7 +78,7 @@ void SpriteManager::Destroy()
 
 void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newSprite)
 {
-	if(componentJson.find("path") != componentJson.end())
+	if(CheckJsonParameter(componentJson, "path", json::value_t::string))
 	{
 		std::string path = componentJson["path"].get<std::string>();
 		std::shared_ptr<sf::Texture> texture = nullptr;
@@ -94,7 +96,7 @@ void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newS
 	{
 		Log::GetInstance()->Error("[Error] No Path for Sprite");
 	}
-	if (componentJson.find("layer") != componentJson.end())
+	if (CheckJsonParameter(componentJson, "layer", json::value_t::number_integer))
 	{
 		newSprite->SetLayer(componentJson["layer"]);
 	}

@@ -44,7 +44,7 @@ class Scene;
 class SceneManager : public Module
 {
 public:
-	SceneManager(bool windowless);
+	using Module::Module;
 	/**
 	* \brief Initialize the SceneManager, get the Configuration from Engine and save the Scene lists from it
 	*/
@@ -71,7 +71,6 @@ public:
 	*/
 	std::shared_ptr<Scene> LoadScene(json& sceneJson);
 private:
-	bool m_Windowless = false;
 
 	std::shared_ptr<Scene> currentScene = nullptr;
 };

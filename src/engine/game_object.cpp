@@ -24,6 +24,7 @@
 
 #include <engine/game_object.h>
 #include <engine/component.h>
+#include <engine/log.h>
 #include <graphics/sprite.h>
 #include <python/python_engine.h>
 
@@ -40,26 +41,39 @@ void GameObject::Update(sf::Time dt)
 std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 {
 	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
-	gameObject->name = gameObjectJson["name"].get<std::string>();
-	for(json componentJson : gameObjectJson["components"])
+	if (CheckJsonParameter(gameObjectJson, "name", json::value_t::string))
 	{
-		std::shared_ptr<Component> component = nullptr;
-		std::string componentType = componentJson["type"];
-		if(componentType == "Transform")
+		gameObject->name = gameObjectJson["name"].get<std::string>();
+	}
+	else
+	{
+		gameObject->name = "GameObject";
+	}
+	if (CheckJsonParameter(gameObjectJson, "components", json::value_t::array))
+	{
+		for (json componentJson : gameObjectJson["components"])
 		{
-			component = Transform::LoadTransform(componentJson, *gameObject);
-		}
-		else if(componentType == "Sprite")
-		{
-			component = Sprite::LoadSprite(componentJson, *gameObject);
-		}
-		else if(componentType == "Python")
-		{
-			component = PythonScript::LoadPythonScript(componentJson, *gameObject);
-		}
-		if(component)
-		{
-			gameObject->m_Components.push_back(component);
+			std::shared_ptr<Component> component = nullptr;
+			if (CheckJsonParameter(componentJson, "type", json::value_t::string))
+			{
+				std::string componentType = componentJson["type"];
+				if (componentType == "Transform")
+				{
+					component = Transform::LoadTransform(componentJson, *gameObject);
+				}
+				else if (componentType == "Sprite")
+				{
+					component = Sprite::LoadSprite(componentJson, *gameObject);
+				}
+				else if (componentType == "Python")
+				{
+					component = PythonScript::LoadPythonScript(componentJson, *gameObject);
+				}
+				if (component)
+				{
+					gameObject->m_Components.push_back(component);
+				}
+			}
 		}
 	}
 	return gameObject;
@@ -70,7 +84,8 @@ std::shared_ptr<Transform> GameObject::GetTransform()
 	if (transform == nullptr)
 	{
 		transform = std::make_shared<Transform>(*this);
-		m_Components.push_back(transform);
+		m_Components.insert(m_Components.begin(),transform);
+
 	}
 	return transform;
 }

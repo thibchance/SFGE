@@ -1,6 +1,6 @@
 {
 	"name": "SceneTest",
-	"gameObjects": [
+	"gam_objects": [
 		{
 			"name": "SpriteTest",
 			"components": [

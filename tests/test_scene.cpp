@@ -22,15 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include <engine/scene.h>
-#include <json.hpp>
-using json = nlohmann::json;
+#include <utility/json_utility.h>
 
 int main()
 {
-	sfge::Engine engine;
-	engine.Init();
-	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
-	engine.Start();
+	sfge::Engine::GetInstance()->Init();
+	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
+		sfge::Engine::GetInstance()->GetModule(sfge::EngineModule::SCENE_MANAGER));
+	sceneManager->LoadScene("data/scenes/SceneTest.scene");
+
+	sfge::Engine::GetInstance()->Start();
 #ifdef WIN32
 	system("pause");
 #endif

@@ -4,8 +4,14 @@
 
 #include <fstream>
 #include <string>
+
 namespace sfge
 {
+bool CheckJsonParameter(const json & jsonObject, std::string parameterName, json::value_t expectedType)
+{
+	return jsonObject.find(parameterName) != jsonObject.end() && jsonObject[parameterName].type() == expectedType;
+}
+
 std::unique_ptr<json> LoadJson(std::string jsonPath)
 {
 	std::ifstream jsonFile(jsonPath.c_str());
