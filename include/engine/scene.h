@@ -74,6 +74,8 @@ public:
 	void SetCurrentScene(std::string sceneName);
 
 	void SetCurrentScene(std::shared_ptr<Scene> scene);
+
+	std::shared_ptr<Scene> GetCurrentScene();
 private:
 
 	std::shared_ptr<Scene> m_CurrentScene = nullptr;
@@ -96,6 +98,8 @@ public:
 	* \brief Destroy all the GameObjects of the scene
 	*/
 	~Scene();
+
+	std::list<std::shared_ptr<GameObject>>& GetGameObjects();
 protected:
 	std::string name;
 	std::list<std::shared_ptr<GameObject>> m_GameObjects;

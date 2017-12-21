@@ -103,4 +103,9 @@ void GameObject::SetTransform(std::shared_ptr<Transform> newTransform)
 	m_Transform = newTransform;
 }
 
+std::string & GameObject::GetName()
+{
+	return m_Name;
+}
+
 }

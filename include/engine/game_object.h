@@ -60,6 +60,8 @@ public:
 	std::shared_ptr<Transform> GetTransform();
 
 	void SetTransform(std::shared_ptr<Transform> newTransform);
+
+	std::string& GetName();
 protected:
 	//if there is a transform, it is always at the beginning of the list
 	std::list<std::shared_ptr<Component>> m_Components;

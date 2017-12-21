@@ -70,12 +70,10 @@ void GraphicsManager::Update(sf::Time dt)
 {
 	if (!m_Windowless)
 	{
-
 		m_Window->clear();
+
 		m_SpriteManager->Update(dt);
 		m_SpriteManager->Draw(*m_Window);
-
-		
 	}
 }
 

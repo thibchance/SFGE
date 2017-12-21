@@ -27,6 +27,9 @@ SOFTWARE.
 
 #include <engine/editor.h>
 #include <graphics/graphics.h>
+#include <engine/scene.h>
+#include <engine/game_object.h>
+#include <engine/log.h>
 
 
 namespace sfge
@@ -37,7 +40,8 @@ namespace sfge
 void Editor::Init()
 {
 	m_GraphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
-		Engine::GetInstance()->GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
+		Engine::GetInstance()->GetModule(EngineModule::GRAPHICS_MANAGER));
+	m_SceneManager = std::dynamic_pointer_cast<SceneManager>(Engine::GetInstance()->GetModule(EngineModule::SCENE_MANAGER));
 	if (m_Enable)
 	{
 		ImGui::SFML::Init(*m_GraphicsManager->GetWindow(), true);
@@ -48,7 +52,22 @@ void Editor::Update(sf::Time dt)
 	if (m_Enable)
 	{
 		ImGui::SFML::Update(*m_GraphicsManager->GetWindow(), dt);
-		ImGui::SFML::Render(*m_GraphicsManager->GetWindow());
+
+		ImGui::Begin("GameObjects");
+		if (m_SceneManager->GetCurrentScene() != nullptr)
+		{
+			for (auto gameObject : m_SceneManager->GetCurrentScene()->GetGameObjects())
+			{
+				ImGui::Selectable(gameObject->GetName().c_str());
+			}
+		}
+		else
+		{
+			Log::GetInstance()->Error("No Current Scene for editor");
+		}
+		ImGui::End();
+
+		
 	}
 }
 /**
@@ -63,9 +82,11 @@ void Editor::ProcessEvent(sf::Event& event)
 	}
 }
 
-void Editor::Draw(sf::RenderWindow& window)
+void Editor::Draw()
 {
+	ImGui::SFML::Render(*m_GraphicsManager->GetWindow());
 }
+
 
 
 /**

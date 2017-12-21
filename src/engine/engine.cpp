@@ -116,8 +116,10 @@ void Engine::Start()
 		
 		m_InputManager->Update(dt);
 		m_PythonManager->Update(dt);
-		m_GraphicsManager->Update(dt);
 		m_Editor->Update(dt);
+
+		m_GraphicsManager->Update(dt);
+		m_Editor->Draw();
 		m_GraphicsManager->Display();
 	}
 	for (auto module : modules)

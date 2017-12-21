@@ -42,13 +42,16 @@ public:
 	*/
 	void Update(sf::Time dt) override;
 	void ProcessEvent(sf::Event& event);
+	void Draw();
 	/**
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
 protected:
 	std::shared_ptr<GraphicsManager> m_GraphicsManager;
-	void Draw(sf::RenderWindow& window);
+	std::shared_ptr<SceneManager> m_SceneManager;
+	
+
 
 };
 }

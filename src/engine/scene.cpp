@@ -123,6 +123,11 @@ void SceneManager::SetCurrentScene(std::shared_ptr<Scene> scene)
 	m_CurrentScene = scene;
 }
 
+std::shared_ptr<Scene> SceneManager::GetCurrentScene()
+{
+	return m_CurrentScene;
+}
+
 
 
 void SceneManager::Destroy()
@@ -144,5 +149,9 @@ Scene::~Scene()
 	{
 		m_GameObjects.pop_front();
 	}
+}
+std::list<std::shared_ptr<GameObject>>& Scene::GetGameObjects()
+{
+	return m_GameObjects;
 }
 }
