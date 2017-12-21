@@ -41,10 +41,15 @@ public:
 	* \param dt Delta time since last frame
 	*/
 	void Update(sf::Time dt) override;
+	void ProcessEvent(sf::Event& event);
 	/**
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
+protected:
+	std::shared_ptr<GraphicsManager> m_GraphicsManager;
+	void Draw(sf::RenderWindow& window);
+
 };
 }
 

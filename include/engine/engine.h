@@ -72,7 +72,7 @@ public:
 	/**
 	* \brief Initialize all the modules of the Game Engine, reading the config file too
 	*/
-	void Init(bool windowless=false);
+	void Init(bool windowless=false, bool editor=false);
 	/**
 	* \brief Starting the Game Engine after the Init()
 	*/
@@ -112,7 +112,9 @@ protected:
 class Module
 {
 public:
-	Module();
+	Module(bool enable);
+
+	virtual ~Module() {};
 	/**
 	* \brief Called to initialize the module
 	*/
@@ -127,8 +129,11 @@ public:
 	*/
 	virtual void Destroy() = 0;
 
+	void SetEnable(bool enable);
+	bool GetEnable();
+
 protected:
-	virtual ~Module() {};
+	bool m_Enable = true;
 };
 
 }

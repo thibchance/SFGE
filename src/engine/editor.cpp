@@ -26,6 +26,7 @@ SOFTWARE.
 #include <imgui-SFML.h>
 
 #include <engine/editor.h>
+#include <graphics/graphics.h>
 
 
 namespace sfge
@@ -35,21 +36,47 @@ namespace sfge
 */
 void Editor::Init()
 {
-
+	m_GraphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
+		Engine::GetInstance()->GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
+	if (m_Enable)
+	{
+		ImGui::SFML::Init(*m_GraphicsManager->GetWindow(), true);
+	}
+}
+void Editor::Update(sf::Time dt)
+{
+	if (m_Enable)
+	{
+		ImGui::SFML::Update(*m_GraphicsManager->GetWindow(), dt);
+		ImGui::SFML::Render(*m_GraphicsManager->GetWindow());
+	}
 }
 /**
 * \brief Update the SceneManager, mostly updating the GameObjects of the current Scene and doing the transition when needed
 * \param dt Delta time since last frame
 */
-void Editor::Update(sf::Time dt)
+void Editor::ProcessEvent(sf::Event& event)
 {
-
+	if (m_Enable)
+	{
+		ImGui::SFML::ProcessEvent(event);
+	}
 }
+
+void Editor::Draw(sf::RenderWindow& window)
+{
+}
+
+
 /**
 * \brief Finalize and delete everything created in the SceneManager
 */
 void Editor::Destroy()
 {
-
+	if (m_Enable)
+	{
+		m_GraphicsManager = nullptr;
+		ImGui::Shutdown();
+	}
 }
 }

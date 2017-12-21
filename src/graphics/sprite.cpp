@@ -48,6 +48,10 @@ void Sprite::SetLayer(int layer)
 {
 	
 }
+bool Sprite::SpriteLayerComp(std::shared_ptr<Sprite> s1, std::shared_ptr<Sprite> s2)
+{
+	return s1->layer>s2->layer;
+}
 std::shared_ptr<Sprite> Sprite::LoadSprite(json& componentJson, GameObject& gameObject)
 {
 	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
@@ -63,23 +67,21 @@ std::shared_ptr<Sprite> Sprite::LoadSprite(json& componentJson, GameObject& game
 	}
 	return nullptr;
 }
-SpriteManager::SpriteManager(GraphicsManager& graphicsManager):Module(), m_GraphicsManager(graphicsManager)
-{
-}
-void SpriteManager::Init()
+SpriteManager::SpriteManager(GraphicsManager& graphicsManager): m_GraphicsManager(graphicsManager)
 {
 }
 
 void SpriteManager::Update(sf::Time dt)
 {
-	for (auto sprite : m_Sprites)
-	{
-		sprite->Draw(*m_GraphicsManager.GetWindow());
-	}
+	m_Sprites.sort(Sprite::SpriteLayerComp);
 }
 
-void SpriteManager::Destroy()
+void SpriteManager::Draw(sf::RenderWindow& window)
 {
+	for (auto sprite : m_Sprites)
+	{
+		sprite->Draw(window);
+	}
 }
 
 void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newSprite)
@@ -117,21 +119,10 @@ void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newS
 	m_Sprites.push_back(newSprite);
 }
 
-TextureManager::TextureManager(GraphicsManager & graphicsManager):Module(), m_GraphicsManager(graphicsManager)
+TextureManager::TextureManager(GraphicsManager & graphicsManager): m_GraphicsManager(graphicsManager)
 {
 }
 
-void TextureManager::Init()
-{
-}
-
-void TextureManager::Update(sf::Time dt)
-{
-}
-
-void TextureManager::Destroy()
-{
-}
 
 unsigned int TextureManager::LoadTexture(std::string filename)
 {

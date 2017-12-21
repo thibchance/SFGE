@@ -46,7 +46,7 @@ namespace sfge
 {
 
 
-void Engine::Init(bool windowless)
+void Engine::Init(bool windowless, bool editor)
 {
 	m_Config = std::move(Configuration::LoadConfig());
 	if (m_Config == nullptr)
@@ -58,12 +58,12 @@ void Engine::Init(bool windowless)
 		Log::GetInstance()->Msg("Game Engine Configuration Successfull");
 	}
 
-	m_GraphicsManager = std::make_shared<GraphicsManager>(windowless);
-	m_AudioManager = std::make_shared<AudioManager>();
-	m_SceneManager = std::make_shared<SceneManager>();
-	m_InputManager = std::make_shared<InputManager>();
-	m_PythonManager = std::make_shared<PythonManager>();
-	m_Editor = std::make_shared<Editor>();
+	m_GraphicsManager = std::make_shared<GraphicsManager>(true, windowless);
+	m_AudioManager = std::make_shared<AudioManager>(true);
+	m_SceneManager = std::make_shared<SceneManager>(true);
+	m_InputManager = std::make_shared<InputManager>(true);
+	m_PythonManager = std::make_shared<PythonManager>(true);
+	m_Editor = std::make_shared<Editor>(editor);
 	modules =
 	{
 		std::dynamic_pointer_cast<Module>(m_GraphicsManager),
@@ -76,6 +76,11 @@ void Engine::Init(bool windowless)
 	
 	for (auto module : modules)
 	{	
+		{
+			std::ostringstream oss;
+			oss << "Init Module: " << module;
+			Log::GetInstance()->Msg(oss.str());
+		}
 		module->Init();
 	}
 
@@ -94,7 +99,7 @@ void Engine::Start()
 		sf::Event event;
 		while (m_Window != nullptr && m_Window->pollEvent(event))
 		{
-			ImGui::SFML::ProcessEvent(event);
+			m_Editor->ProcessEvent(event);
 			if (event.type == sf::Event::Closed)
 			{
 				running = false;
@@ -108,9 +113,12 @@ void Engine::Start()
 				}
 			}
 		}
+		
 		m_InputManager->Update(dt);
 		m_PythonManager->Update(dt);
 		m_GraphicsManager->Update(dt);
+		m_Editor->Update(dt);
+		m_GraphicsManager->Display();
 	}
 	for (auto module : modules)
 	{
@@ -132,8 +140,18 @@ std::shared_ptr<Module> Engine::GetModule(EngineModule engineModule)
 	return modules[(int)engineModule];
 }
 
-Module::Module() 
+Module::Module(bool enable=true) 
 {
+	m_Enable = enable;
+}
+
+void Module::SetEnable(bool enable)
+{
+}
+
+bool Module::GetEnable()
+{
+	return false;
 }
 
 

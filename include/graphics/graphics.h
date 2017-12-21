@@ -36,7 +36,7 @@ class TextureManager;
 class GraphicsManager : public Module
 {
 public:
-	GraphicsManager(bool windowless);
+	GraphicsManager(bool enable, bool windowless);
 	/**
 		* \brief Initialize the Graphics Manager
 		*/
@@ -48,6 +48,7 @@ public:
 		*/
 	void Update(sf::Time dt) override;
 
+	void Display();
 	/**
 	* \brief Destroy the window and other
 	*/

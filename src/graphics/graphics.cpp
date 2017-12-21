@@ -36,7 +36,7 @@ SOFTWARE.
 
 namespace sfge
 {
-GraphicsManager::GraphicsManager(bool windowless) : Module(), m_Windowless(windowless)
+GraphicsManager::GraphicsManager(bool enable, bool windowless) : Module(enable), m_Windowless(windowless)
 {
 	
 }
@@ -56,8 +56,6 @@ GraphicsManager::GraphicsManager(bool windowless) : Module(), m_Windowless(windo
 		{
 			m_Window->setFramerateLimit(config->maxFramerate);
 			CheckVersion();
-			//Init GUI
-			ImGui::SFML::Init((sf::RenderTarget&)(*m_Window));
 		}
 	}
 	
@@ -72,14 +70,19 @@ void GraphicsManager::Update(sf::Time dt)
 {
 	if (!m_Windowless)
 	{
-		ImGui::SFML::Update(*m_Window, dt);
 
 		m_Window->clear();
-
-		m_TextureManager->Update(dt);
 		m_SpriteManager->Update(dt);
+		m_SpriteManager->Draw(*m_Window);
 
-		ImGui::SFML::Render(*m_Window);
+		
+	}
+}
+
+void GraphicsManager::Display()
+{
+	if (!m_Windowless)
+	{
 		m_Window->display();
 	}
 }

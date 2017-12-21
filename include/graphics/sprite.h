@@ -57,7 +57,7 @@ public:
 	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
 
 	void SetLayer(int layer);
-
+	static bool SpriteLayerComp(std::shared_ptr<Sprite> s1, std::shared_ptr<Sprite> s2);
 protected:
 	std::string filename;
 	int textureId;
@@ -68,17 +68,12 @@ protected:
 /**
 * \brief Sprite manager caching all the sprites and rendering them at the end of the frame
 */
-class SpriteManager : Module
+class SpriteManager 
 {
 public:
 	SpriteManager(GraphicsManager& graphicsManager);
-
-	virtual void Init() override;
-
-	virtual void Update(sf::Time dt) override;
-
-	virtual void Destroy() override;
-
+	void Update(sf::Time dt);
+	void Draw(sf::RenderWindow& window);
 	void LoadSprite(json& componentJson, std::shared_ptr<Sprite> sprite);
 protected:
 	std::list<std::shared_ptr<sfge::Sprite>> m_Sprites;
@@ -89,15 +84,11 @@ protected:
 * \brief The Texture Manager is the cache of all the textures used for sprites or other objects
 *
 */
-class TextureManager : public Module
+class TextureManager
 {
 public:
 	TextureManager(GraphicsManager& graphicsManager);
-	virtual void Init() override;
-
-	virtual void Update(sf::Time dt) override;
-
-	virtual void Destroy() override;
+	
 	/**
 	* \brief load the texture from the disk or the texture cache
 	* \param filename The filename string of the texture
