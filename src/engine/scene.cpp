@@ -46,39 +46,81 @@ void SceneManager::Init()
 
 void SceneManager::Update(sf::Time dt)
 {
-	if(currentScene != nullptr)
+	if(m_CurrentScene != nullptr)
 	{
-		currentScene->Update(dt);
+		m_CurrentScene->Update(dt);
 	}
 }
 
 std::shared_ptr<Scene> SceneManager::LoadScene(std::string sceneName)
 {
+	{
+		std::ostringstream oss;
+		oss << "Loading scene from: " << sceneName;
+		Log::GetInstance()->Msg(oss.str());
+	}
 	auto sceneJsonPtr = LoadJson(sceneName);
 	
 	if(sceneJsonPtr != nullptr)
 	{
 		return LoadScene(*sceneJsonPtr);
 	}
+	return nullptr;
 	
 }
 
 std::shared_ptr<Scene> SceneManager::LoadScene(json& sceneJson)
 {
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
-	scene->name = sceneJson["name"].get<std::string>();
-	if (sceneJson.find("game_objects") != sceneJson.end() && sceneJson["game_objects"].type() == json::value_t::array)
+	if (CheckJsonParameter(sceneJson, "name", json::value_t::string))
+	{
+		scene->name = sceneJson["name"].get<std::string>();
+	}
+	else
+	{
+		scene->name = "NewScene";
+	}
+	{
+		std::ostringstream oss;
+		oss << "Loading scene: " << scene->name;
+		Log::GetInstance()->Msg(oss.str());
+	}
+	if (CheckJsonParameter(sceneJson, "game_objects", json::value_t::array))
 	{
 		for (json gameObjectJson : sceneJson["game_objects"])
 		{
 			std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(gameObjectJson);
-			if (gameObject)
+			if (gameObject != nullptr)
 			{
 				scene->m_GameObjects.push_back(gameObject);
 			}
 		}
 	}
+	else
+	{
+		std::ostringstream oss;
+		oss << "No GameObjects in " << scene->name;
+		Log::GetInstance()->Error(oss.str());
+	}
+	m_Scenes.push_back(scene);
 	return scene;
+}
+
+void SceneManager::SetCurrentScene(std::string sceneName)
+{
+	for (auto scene : m_Scenes)
+	{
+		if (scene->name == sceneName)
+		{
+			SetCurrentScene(scene);
+			break;
+		}
+	}
+}
+
+void SceneManager::SetCurrentScene(std::shared_ptr<Scene> scene)
+{
+	m_CurrentScene = scene;
 }
 
 

@@ -71,9 +71,9 @@ public:
 	void SetScale(sf::Vector2f scale);
 
 private:
-	sf::Vector2f position;
-	sf::Vector2f scale;
-	float eulerAngle;
+	sf::Vector2f m_Position = sf::Vector2f(0.0f,0.0f);
+	sf::Vector2f m_Scale = sf::Vector2f(1.0f,1.0f);
+	float m_EulerAngle = 0.0f;
 
 };
 }

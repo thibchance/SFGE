@@ -34,8 +34,49 @@ Component::Component(GameObject& parentObject) :
 
 std::shared_ptr<Transform> Transform::LoadTransform(json& componentJson, GameObject& gameObject)
 {
-
-	return nullptr;
+	std::shared_ptr<Transform> newTransform = std::make_shared<Transform>(gameObject);
+	if (CheckJsonParameter(componentJson, "position", json::value_t::array))
+	{
+		auto positionJson = componentJson["position"].array();
+		if (positionJson.size() == 2)
+		{
+			sf::Vector2f newPosition;
+			if (IsJsonValueNumeric(positionJson[0]))
+			{
+				newPosition.x = positionJson[0];
+			}
+			if (IsJsonValueNumeric(positionJson[1]))
+			{
+				newPosition.y = positionJson[1];
+			}
+			newTransform->SetPosition(newPosition);
+		}
+	}
+	if (CheckJsonParameter(componentJson, "scale", json::value_t::array))
+	{
+		auto scaleJson = componentJson["scale"].array();
+		if (scaleJson.size() == 2)
+		{
+			sf::Vector2f newScale;
+			if (IsJsonValueNumeric(scaleJson[0]))
+			{
+				newScale.x = scaleJson[0];
+			}
+			if (IsJsonValueNumeric(scaleJson[1]))
+			{
+				newScale.y = scaleJson[1];
+			}
+			newTransform->SetScale(newScale);
+		}
+	}
+	if (CheckJsonExists(componentJson, "angle"))
+	{
+		if (IsJsonValueNumeric(componentJson["angle"]))
+		{
+			newTransform->SetEulerAngle(componentJson["angle"]);
+		}
+	}
+	return newTransform;
 }
 
 void Transform::Update(sf::Time dt)
@@ -45,31 +86,31 @@ void Transform::Update(sf::Time dt)
 
 const float Transform::GetEulerAngle()
 {
-	return eulerAngle;
+	return m_EulerAngle;
 }
 
 void Transform::SetEulerAngle(float eulerAngle)
 {
-	this->eulerAngle = eulerAngle;
+	this->m_EulerAngle = eulerAngle;
 }
 
 const sf::Vector2f Transform::GetPosition()
 {
-	return position;
+	return m_Position;
 }
 
 void Transform::SetPosition(sf::Vector2f position)
 {
-	this->position = position;
+	this->m_Position = position;
 }
 
 const sf::Vector2f Transform::GetScale()
 {
-	return scale;
+	return m_Scale;
 }
 
 void Transform::SetScale(sf::Vector2f scale)
 {
-	this->scale = scale;
+	this->m_Scale = scale;
 }
 }

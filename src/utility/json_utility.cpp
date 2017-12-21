@@ -7,9 +7,22 @@
 
 namespace sfge
 {
-bool CheckJsonParameter(const json & jsonObject, std::string parameterName, json::value_t expectedType)
+
+bool IsJsonValueNumeric(const json::value_type & jsonValue)
 {
-	return jsonObject.find(parameterName) != jsonObject.end() && jsonObject[parameterName].type() == expectedType;
+	return jsonValue.type() == json::value_t::number_float || 
+		   jsonValue.type() == json::value_t::number_integer || 
+		   jsonValue.type() == json::value_t::number_unsigned;
+}
+
+bool CheckJsonExists(const json & jsonObject, std::string parameterName)
+{
+	return jsonObject.find(parameterName) != jsonObject.end();
+}
+
+bool CheckJsonParameter(const json& jsonObject, std::string parameterName, json::value_t expectedType)
+{
+	return CheckJsonExists(jsonObject, parameterName) && jsonObject[parameterName].type() == expectedType;
 }
 
 std::unique_ptr<json> LoadJson(std::string jsonPath)

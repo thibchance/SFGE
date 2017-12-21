@@ -76,6 +76,9 @@ void GraphicsManager::Update(sf::Time dt)
 
 		m_Window->clear();
 
+		m_TextureManager->Update(dt);
+		m_SpriteManager->Update(dt);
+
 		ImGui::SFML::Render(*m_Window);
 		m_Window->display();
 	}

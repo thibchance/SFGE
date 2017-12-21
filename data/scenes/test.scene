@@ -1,18 +1,18 @@
 {
 	"name": "SceneTest",
-	"gam_objects": [
+	"game_objects": [
 		{
 			"name": "SpriteTest",
 			"components": [
 				{
 					"type": "Transform",
 					"position": [300, 300],
-					"scale" : [1.0,1.0,1.0],
-					"eulerAngle": 0.0
+					"scale" : [1.0,1.0],
+					"angle": 0.0
 				},
 				{
 					"type": "Sprite",
-					"filename": "data/sprites/test.png"
+					"path": "data/sprites/test.png"
 				}
 			]
 		}

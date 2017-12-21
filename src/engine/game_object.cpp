@@ -43,12 +43,19 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
 	if (CheckJsonParameter(gameObjectJson, "name", json::value_t::string))
 	{
-		gameObject->name = gameObjectJson["name"].get<std::string>();
+		gameObject->m_Name = gameObjectJson["name"].get<std::string>();
 	}
 	else
 	{
-		gameObject->name = "GameObject";
+		gameObject->m_Name = "GameObject";
 	}
+
+	{
+		std::ostringstream oss;
+		oss << "Loading game_object: " << gameObject->m_Name;
+		Log::GetInstance()->Msg(oss.str());
+	}
+
 	if (CheckJsonParameter(gameObjectJson, "components", json::value_t::array))
 	{
 		for (json componentJson : gameObjectJson["components"])
@@ -60,6 +67,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 				if (componentType == "Transform")
 				{
 					component = Transform::LoadTransform(componentJson, *gameObject);
+					gameObject->SetTransform(std::dynamic_pointer_cast<Transform>(component));
 				}
 				else if (componentType == "Sprite")
 				{
@@ -69,7 +77,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 				{
 					component = PythonScript::LoadPythonScript(componentJson, *gameObject);
 				}
-				if (component)
+				if (component != nullptr)
 				{
 					gameObject->m_Components.push_back(component);
 				}
@@ -81,13 +89,18 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 
 std::shared_ptr<Transform> GameObject::GetTransform()
 {
-	if (transform == nullptr)
+	if (m_Transform == nullptr)
 	{
-		transform = std::make_shared<Transform>(*this);
-		m_Components.insert(m_Components.begin(),transform);
+		m_Transform = std::make_shared<Transform>(*this);
+		m_Components.insert(m_Components.begin(),m_Transform);
 
 	}
-	return transform;
+	return m_Transform;
+}
+
+void GameObject::SetTransform(std::shared_ptr<Transform> newTransform)
+{
+	m_Transform = newTransform;
 }
 
 }

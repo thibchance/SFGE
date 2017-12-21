@@ -36,6 +36,8 @@ void Sprite::Update(sf::Time dt)
 void Sprite::Draw(sf::RenderWindow& window)
 {
 	sprite.setPosition(gameObject.GetTransform()->GetPosition());
+	sprite.setScale(gameObject.GetTransform()->GetScale());
+	sprite.setRotation(gameObject.GetTransform()->GetEulerAngle());
 	window.draw(sprite);
 }
 void Sprite::SetTexture(std::shared_ptr<sf::Texture> newTexture)
@@ -70,6 +72,10 @@ void SpriteManager::Init()
 
 void SpriteManager::Update(sf::Time dt)
 {
+	for (auto sprite : m_Sprites)
+	{
+		sprite->Draw(*m_GraphicsManager.GetWindow());
+	}
 }
 
 void SpriteManager::Destroy()
@@ -78,6 +84,8 @@ void SpriteManager::Destroy()
 
 void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newSprite)
 {
+	if (newSprite == nullptr)
+		return;
 	if(CheckJsonParameter(componentJson, "path", json::value_t::string))
 	{
 		std::string path = componentJson["path"].get<std::string>();
@@ -91,6 +99,12 @@ void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newS
 				newSprite->SetTexture(texture);
 			}
 		}
+		else
+		{
+			std::ostringstream oss;
+			oss << "Texture file " << path << " does not exist";
+			Log::GetInstance()->Error(oss.str());
+		}
 	}
 	else
 	{
@@ -100,6 +114,7 @@ void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newS
 	{
 		newSprite->SetLayer(componentJson["layer"]);
 	}
+	m_Sprites.push_back(newSprite);
 }
 
 TextureManager::TextureManager(GraphicsManager & graphicsManager):Module(), m_GraphicsManager(graphicsManager)
@@ -120,6 +135,11 @@ void TextureManager::Destroy()
 
 unsigned int TextureManager::LoadTexture(std::string filename)
 {
+	{
+		std::ostringstream oss;
+		oss << "Loading texture " << filename;
+		Log::GetInstance()->Error(oss.str());
+	}
 	if (nameIdsMap.find(filename) != nameIdsMap.end())
 	{
 		auto text_id = nameIdsMap[filename];

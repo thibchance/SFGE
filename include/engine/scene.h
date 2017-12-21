@@ -70,9 +70,14 @@ public:
 	* \return the heap Scene that is automatically destroyed when not used
 	*/
 	std::shared_ptr<Scene> LoadScene(json& sceneJson);
+
+	void SetCurrentScene(std::string sceneName);
+
+	void SetCurrentScene(std::shared_ptr<Scene> scene);
 private:
 
-	std::shared_ptr<Scene> currentScene = nullptr;
+	std::shared_ptr<Scene> m_CurrentScene = nullptr;
+	std::list<std::shared_ptr<Scene>> m_Scenes;
 };
 
 /**

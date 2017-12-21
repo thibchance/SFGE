@@ -27,9 +27,10 @@ SOFTWARE.
 int main()
 {
 	sfge::Engine::GetInstance()->Init();
+
 	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
 		sfge::Engine::GetInstance()->GetModule(sfge::EngineModule::SCENE_MANAGER));
-	sceneManager->LoadScene("data/scenes/SceneTest.scene");
+	sceneManager->SetCurrentScene(sceneManager->LoadScene("data/scenes/test.scene"));
 
 	sfge::Engine::GetInstance()->Start();
 #ifdef WIN32
