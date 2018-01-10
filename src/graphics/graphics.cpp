@@ -62,7 +62,7 @@ GraphicsManager::GraphicsManager(bool enable, bool windowless) : Module(enable),
 	
 
 	//Init Texture and Sprite Manager
-	m_TextureManager = std::make_shared<TextureManager>(*this);
+	m_TextureManager = std::make_shared<TextureManager>();
 	m_SpriteManager = std::make_shared<SpriteManager>(*this);
 }
 

@@ -119,9 +119,6 @@ void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newS
 	m_Sprites.push_back(newSprite);
 }
 
-TextureManager::TextureManager(GraphicsManager & graphicsManager): m_GraphicsManager(graphicsManager)
-{
-}
 
 
 unsigned int TextureManager::LoadTexture(std::string filename)

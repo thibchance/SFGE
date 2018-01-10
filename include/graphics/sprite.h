@@ -87,7 +87,6 @@ protected:
 class TextureManager
 {
 public:
-	TextureManager(GraphicsManager& graphicsManager);
 	
 	/**
 	* \brief load the texture from the disk or the texture cache
@@ -107,7 +106,7 @@ private:
 	std::map<std::string, unsigned int> nameIdsMap;
 	std::map<unsigned int, std::shared_ptr<sf::Texture>> texturesMap;
 	unsigned int increment_id = 0;
-	GraphicsManager& m_GraphicsManager;
+
 };
 
 }
