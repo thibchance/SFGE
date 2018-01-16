@@ -27,9 +27,35 @@
 
 #include <engine/engine.h>
 #include <engine/component.h>
-#include <SFML/System/Time.hpp>
+
+#include <python/python_engine.h>
+#include <pybind11/embed.h>// everything needed for embedding
+namespace py = pybind11;
+
 namespace sfge
 {
+
+/**
+ * \brief Python abstraction of Component
+ */
+class PyComponent : public Component
+{
+public:
+	using Component::Component;
+
+	void Update(float dt) override
+	{
+		PYBIND11_OVERLOAD(
+			void,
+			Component,
+			Update,
+			dt
+		);
+	}
+
+	static std::shared_ptr<PyComponent> LoadPythonScript(json& componentJson, GameObject& gameObject);
+};
+
 /**
 * \brief Manage the python interpreter
 */
@@ -46,18 +72,29 @@ public:
 	* \param dt The delta time since last frame
 	*/
 	void Update(sf::Time dt) override;
+
 	/**
 	* \brief Finalize the python interpreter
 	*/
 	void Destroy() override;
+
+	/**
+	 * \brief Load a python script and return a python object of it
+	 * \param script_name
+	 * \return scriptId
+	 */
+	unsigned int LoadPyComponentFile(std::string script_name);
+	/**
+	 * \brief Get a python component object
+	 * \param scriptId
+	 * \return python object of the python component class
+	 */
+	py::object GetPyComponent(unsigned int scriptId);
 private:
-
+	std::map<std::string, unsigned int> pythonScriptMap;
+	std::map<unsigned int, py::object> pythonObjectMap;
+	unsigned int incrementalScriptId = 0;
 };
 
-class PythonScript : public Component
-{
-public:
-	static std::shared_ptr<PythonScript> LoadPythonScript(json& componentJson, GameObject& gameObject);
-};
 }
 #endif /* SFGE_PYENGINE_H */

@@ -48,7 +48,7 @@ public:
 	* \brief Update the Component
 	* \param dt Delta time since last frame
 	*/
-	virtual void Update(sf::Time dt) override;
+	virtual void Update(float dt) override;
 	
 	void Draw(sf::RenderWindow& window);
 

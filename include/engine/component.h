@@ -46,7 +46,7 @@ public:
 	* \brief Update the Component
 	* \param dt Delta time since last frame
 	*/
-	virtual void Update(sf::Time dt) = 0;
+	virtual void Update(float dt) = 0;
 
 protected:
 	GameObject& gameObject;
@@ -61,7 +61,7 @@ public:
 
 	static std::shared_ptr<Transform> LoadTransform(json& componentJson, GameObject& gameObject);
 
-	void Update(sf::Time dt) override;
+	void Update(float dt) override;
 
 	const float GetEulerAngle();
 	void SetEulerAngle(float eulerAngle);
