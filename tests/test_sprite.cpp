@@ -39,7 +39,7 @@ int main()
 	engine->Init(true);
 
 	json spriteJson;
-	spriteJson["path"] = "data/sprites/boss_01_dialog_pose_001_b.png";
+	spriteJson["path"] = "C:/Users/guill/Pictures/DOOOOOOOOOOOOOOOOOOOOOOOOOOOM.jpg";
 	std::cout << spriteJson["path"]<<"\n";
 	sfge::GameObject gameObject;
 	auto sprite = sfge::Sprite::LoadSprite(spriteJson, gameObject);

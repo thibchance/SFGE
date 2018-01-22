@@ -32,6 +32,7 @@ namespace sfge
 {
 void Sprite::Update(sf::Time dt)
 {
+
 }
 void Sprite::Draw(sf::RenderWindow& window)
 {

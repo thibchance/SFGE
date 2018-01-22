@@ -23,16 +23,66 @@ SOFTWARE.
 */
 
 #include <audio/audio.h>
+#include <iostream>
+#include <utility/file_utility.h>
 
 namespace sfge
 {
 void AudioManager::Init()
 {
+
 };
 void AudioManager::Update(sf::Time dt)
 {
+
 };
 void AudioManager::Destroy()
 {
+
 };
+unsigned int SoundBuffer::LoadSoundBuffer(std::string filename)
+{
+	if (nameIdMap.find(filename) != nameIdMap.end())
+	{
+		auto sound_buffer_id = nameIdMap[filename];
+		auto checkSoundBuffer = soundBufferMap.find(sound_buffer_id);
+
+		if (checkSoundBuffer != soundBufferMap.end())
+		{
+			return nameIdMap[filename];
+		}
+		else
+		{
+			std::shared_ptr<sf::SoundBuffer> soundBuffer = std::make_shared<sf::SoundBuffer>();
+			if (!soundBuffer->loadFromFile(filename))
+			{
+				return 0U;
+			}
+			nameIdMap[filename] = increment_id;
+			soundBufferMap[increment_id] = soundBuffer;
+			return increment_id;
+		}
+	}
+	else
+	{
+		if (FileExists(filename))
+		{
+			increment_id++;
+			auto soundBuffer = std::make_shared<sf::SoundBuffer>();
+
+			if (!soundBuffer->loadFromFile(filename))
+			{
+				return 0U;
+			}
+			nameIdMap[filename] = increment_id;
+			soundBufferMap[increment_id] = soundBuffer;
+			return increment_id;
+		}
+	}
+	return 0U;
+}
+std::shared_ptr<sf::SoundBuffer> SoundBuffer::GetSoundBuffer(unsigned int sound_buffer_id)
+{
+	return std::shared_ptr<sf::SoundBuffer>();
+}
 }

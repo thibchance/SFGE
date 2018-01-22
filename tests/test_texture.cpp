@@ -4,7 +4,7 @@ int main()
 {
 	sfge::TextureManager textureManager;
 
-	unsigned int goodTextId = textureManager.LoadTexture("data/sprites/boss_01_dialog_pose_001_b.png");
+	unsigned int goodTextId = textureManager.LoadTexture("C:/Users/guill/Pictures/DOOOOOOOOOOOOOOOOOOOOOOOOOOOM.jpg");
 	unsigned int badTextId = textureManager.LoadTexture("prout.jpg");
 
 	sf::Sprite sprite;

@@ -25,18 +25,41 @@ SOFTWARE.
 #ifndef SFGE_AUDIO_H
 #define SFGE_AUDIO_H
 #include <engine/engine.h>
+#include <SFML/Audio.hpp>
+#include <map>
+#include <string>
 
 namespace sfge
 {
 class AudioManager : public Module
 {
 public:
+	using Module::Module;
+
 	void Init() override;
 	void Update(sf::Time dt) override;
 	void Destroy() override;
+};
+class SoundBuffer
+{
+public:
 
-	using Module::Module;
+	unsigned int LoadSoundBuffer(std::string filename);
+	std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(unsigned int sound_buffer_id);
+
+private:
+	
+	std::map<std::string, unsigned int> nameIdMap;
+	std::map<unsigned int, std::shared_ptr<sf::SoundBuffer>> soundBufferMap;
+	unsigned int increment_id = 0;
+};
+class Sound : public Singleton<Sound>
+{
+
+};
+class Music : public Singleton<Music>
+{
 
 };
 }
-#endif // !SFGE_SPRITE
+#endif // !SFGE_AUDIO
