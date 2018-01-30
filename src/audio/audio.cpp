@@ -83,6 +83,11 @@ unsigned int SoundBuffer::LoadSoundBuffer(std::string filename)
 }
 std::shared_ptr<sf::SoundBuffer> SoundBuffer::GetSoundBuffer(unsigned int sound_buffer_id)
 {
-	return std::shared_ptr<sf::SoundBuffer>();
+	if (soundBufferMap.find(sound_buffer_id) != soundBufferMap.end())
+	{
+		return soundBufferMap[sound_buffer_id];
+	}
+	return nullptr;
+	
 }
 }
