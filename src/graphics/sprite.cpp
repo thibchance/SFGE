@@ -28,6 +28,7 @@ SOFTWARE.
 #include <utility/file_utility.h>
 
 #include <engine/log.h>
+#include <engine/transform.h>
 
 namespace sfge
 {

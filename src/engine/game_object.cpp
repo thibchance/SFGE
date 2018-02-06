@@ -24,6 +24,7 @@
 
 #include <engine/game_object.h>
 #include <engine/component.h>
+#include <engine/transform.h>
 #include <engine/log.h>
 #include <graphics/sprite.h>
 #include <python/python_engine.h>

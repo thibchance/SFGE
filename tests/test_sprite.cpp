@@ -26,6 +26,7 @@ SOFTWARE.
 #include <engine/engine.h>
 #include <graphics/sprite.h>
 #include <engine/game_object.h>
+#include <engine/transform.h>
 #include <utility/json_utility.h>
 #include <engine/log.h>
 
