@@ -25,6 +25,7 @@
 #include <engine/component.h>
 #include <engine/transform.h>
 #include <graphics/sprite.h>
+#include <graphics/shape.h>
 #include <python/pycomponent.h>
 
 namespace sfge
@@ -55,6 +56,8 @@ std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& compon
 		case ComponentType::PYCOMPONENT:
 			component = PyComponent::LoadPythonScript(engine, componentJson, gameObject);
 			break;
+		case ComponentType::SHAPE:
+			component = Shape::LoadShape(engine, componentJson, gameObject);
 		}
 		if (component != nullptr)
 		{

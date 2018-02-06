@@ -29,6 +29,7 @@ SOFTWARE.
 namespace sfge
 {
 class TextureManager;
+class ShapeManager;
 
 /**
 * \brief The Graphics Manager
@@ -54,12 +55,14 @@ public:
 	*/
 	void Destroy() override;
 
+	void DrawLine(sf::Vector2f from, sf::Vector2f to, sf::Color color=sf::Color::Red);
+
 	/**
 	* \brief Getter of the window created in GraphicsManager
 	* \return The SFML window
 	*/
 	std::shared_ptr<sf::RenderWindow> GetWindow();
-
+	std::shared_ptr<ShapeManager> GetShapeManager();
 	std::shared_ptr<SpriteManager> GetSpriteManager();
 	std::shared_ptr<TextureManager> GetTextureManager();
 
@@ -71,6 +74,7 @@ protected:
 	void CheckVersion();
 	std::shared_ptr<TextureManager> m_TextureManager = nullptr;
 	std::shared_ptr<SpriteManager> m_SpriteManager = nullptr;
+	std::shared_ptr<ShapeManager> m_ShapeManager = nullptr;
 	std::shared_ptr<sf::RenderWindow> m_Window = nullptr;
 };
 
