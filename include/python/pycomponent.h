@@ -1,18 +1,18 @@
 /*
  MIT License
- 
+
  Copyright (c) 2017 SAE Institute Switzerland AG
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in all
  copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,44 +21,22 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-#include <engine/scene.h>
-#include <engine/game_object.h>
+
+#ifndef SFGE_PYCOMPONENT_H_
+#define SFGE_PYCOMPONENT_H_
+
 #include <engine/component.h>
-#include <python/python_engine.h>
+//STL
+#include <memory>
 
-#include <pybind11/embed.h>// everything needed for embedding
-
-#include <iostream>
-
-namespace py = pybind11;
-
-PYBIND11_MODULE(SFGE, m)
-{
-	py::class_<sfge::Scene> scene(m, "Scene");
-	py::class_<sfge::GameObject> game_object(m, "GameObject");
-	py::class_<sfge::Component> component(m, "Component");
-
-}
 namespace sfge
 {
-
-
-
-void PythonManager::Init()
+class PythonScript : public Component
 {
-	py::initialize_interpreter();
-}
-
-void PythonManager::Update(sf::Time)
-{
-}
-
-
-void PythonManager::Destroy()
-{
-	py::finalize_interpreter();
+public:
+	static std::shared_ptr<PythonScript> LoadPythonScript(json& componentJson, GameObject& gameObject);
+};
 }
 
 
-
-}
+#endif /* INCLUDE_PYTHON_PYCOMPONENT_H_ */

@@ -3,11 +3,12 @@
 
 int main()
 {
-	sfge::Engine::GetInstance()->Init(false, true);
+	sfge::Engine engine;
+	engine.Init(false, true);
 	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
-		sfge::Engine::GetInstance()->GetModule(sfge::EngineModule::SCENE_MANAGER));
+		engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
 	sceneManager->SetCurrentScene( sceneManager->LoadScene("data/scenes/test.scene"));
-	sfge::Engine::GetInstance()->Start();
+	engine.Start();
 #ifdef WIN32
 	system("pause");
 #endif

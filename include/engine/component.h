@@ -24,9 +24,13 @@
 
 #ifndef SFGE_COMPONENT_H
 #define SFGE_COMPONENT_H
+
+#include <engine/game_object.h>
+#include <utility/json_utility.h>
+
 //Externals includes
 #include <SFML/System.hpp>
-#include <engine/game_object.h>
+
 
 namespace sfge
 {
@@ -34,6 +38,16 @@ class Transform;
 /**
  * \brief A GameObject Component that can be anything
  */
+
+enum class ComponentType
+{
+	NONE,
+	TRANSFORM,
+	SPRITE,
+	SHAPE,
+	PYCOMPONENT
+};
+
 class Component
 {
 public:
@@ -42,6 +56,8 @@ public:
 	 * \param parentGameObject The parent GameObject
 	 */
 	Component(GameObject& parentGameObject);
+
+	static std::shared_ptr<Component> LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject);
 	/**
 	* \brief Update the Component
 	* \param dt Delta time since last frame
@@ -54,27 +70,6 @@ protected:
 
 };
 
-class Transform : public Component
-{
-public:
-	using Component::Component;
 
-	static std::shared_ptr<Transform> LoadTransform(json& componentJson, GameObject& gameObject);
-
-	void Update(sf::Time dt) override;
-
-	const float GetEulerAngle();
-	void SetEulerAngle(float eulerAngle);
-	const sf::Vector2f GetPosition();
-	void SetPosition(sf::Vector2f position);
-	const sf::Vector2f GetScale();
-	void SetScale(sf::Vector2f scale);
-
-private:
-	sf::Vector2f m_Position = sf::Vector2f(0.0f,0.0f);
-	sf::Vector2f m_Scale = sf::Vector2f(1.0f,1.0f);
-	float m_EulerAngle = 0.0f;
-
-};
 }
 #endif

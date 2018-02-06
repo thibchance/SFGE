@@ -21,21 +21,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <engine/scene.h>
-#include <utility/json_utility.h>
 
-int main()
+#ifndef SFGE_TEXTURE_H_
+#define SFGE_TEXTURE_H_
+
+//STL
+#include <map>
+#include <string>
+#include <memory>
+
+
+//Externals
+#include <SFML/Graphics.hpp>
+
+namespace sfge
 {
-	sfge::Engine engine;
-	engine.Init();
+/**
+* \brief The Texture Manager is the cache of all the textures used for sprites or other objects
+*
+*/
+class TextureManager
+{
+public:
 
-	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
-		engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
-	sceneManager->SetCurrentScene(sceneManager->LoadScene("data/scenes/test.scene"));
+	/**
+	* \brief load the texture from the disk or the texture cache
+	* \param filename The filename string of the texture
+	* \return The strictly positive texture id > 0, if equals 0 then the texture was not loaded
+	*/
+	unsigned int LoadTexture(std::string filename);
+	/**
+	* \brief Used after loading the texture in the texture cache to get the pointer to the texture
+	* \param text_id The texture id striclty positive
+	* \return The pointer to the texture in memory
+	*/
+	std::shared_ptr<sf::Texture> GetTexture(unsigned int text_id);
 
-	engine.Start();
-#ifdef WIN32
-	system("pause");
-#endif
-	return EXIT_SUCCESS;
+private:
+
+	std::map<std::string, unsigned int> nameIdsMap;
+	std::map<unsigned int, std::shared_ptr<sf::Texture>> texturesMap;
+	unsigned int increment_id = 0;
+
+};
 }
+
+
+#endif /* INCLUDE_GRAPHICS_TEXTURE_H_ */

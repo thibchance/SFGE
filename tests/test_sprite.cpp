@@ -26,6 +26,7 @@ SOFTWARE.
 #include <engine/engine.h>
 #include <graphics/sprite.h>
 #include <engine/game_object.h>
+#include <engine/transform.h>
 #include <utility/json_utility.h>
 #include <engine/log.h>
 
@@ -35,14 +36,15 @@ SOFTWARE.
 
 int main()
 {
-	sfge::Engine* engine = sfge::Engine::GetInstance();
-	engine->Init(true);
+	sfge::Engine engine;
+
+	engine.Init(true);
 
 	json spriteJson;
 	spriteJson["path"] = "data/sprites/boss_01_dialog_pose_001_b.png";
 	std::cout << spriteJson["path"]<<"\n";
 	sfge::GameObject gameObject;
-	auto sprite = sfge::Sprite::LoadSprite(spriteJson, gameObject);
+	auto sprite = sfge::Sprite::LoadSprite(engine, spriteJson, gameObject);
 
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Sprite");
