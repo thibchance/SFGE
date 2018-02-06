@@ -61,28 +61,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gam
 	{
 		for (json componentJson : gameObjectJson["components"])
 		{
-			std::shared_ptr<Component> component = nullptr;
-			if (CheckJsonParameter(componentJson, "type", json::value_t::string))
-			{
-				std::string componentType = componentJson["type"];
-				if (componentType == "Transform")
-				{
-					component = Transform::LoadTransform(componentJson, *gameObject);
-					gameObject->SetTransform(std::dynamic_pointer_cast<Transform>(component));
-				}
-				else if (componentType == "Sprite")
-				{
-					component = Sprite::LoadSprite(engine, componentJson, *gameObject);
-				}
-				else if (componentType == "Python")
-				{
-					component = PythonScript::LoadPythonScript(componentJson, *gameObject);
-				}
-				if (component != nullptr)
-				{
-					gameObject->m_Components.push_back(component);
-				}
-			}
+			Component::LoadComponent(engine, componentJson, *gameObject);
 		}
 	}
 	return gameObject;

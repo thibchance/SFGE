@@ -54,10 +54,6 @@ private:
 
 };
 
-class PythonScript : public Component
-{
-public:
-	static std::shared_ptr<PythonScript> LoadPythonScript(json& componentJson, GameObject& gameObject);
-};
+
 }
 #endif /* SFGE_PYENGINE_H */

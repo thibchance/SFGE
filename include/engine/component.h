@@ -26,6 +26,7 @@
 #define SFGE_COMPONENT_H
 
 #include <engine/game_object.h>
+#include <utility/json_utility.h>
 
 //Externals includes
 #include <SFML/System.hpp>
@@ -37,6 +38,16 @@ class Transform;
 /**
  * \brief A GameObject Component that can be anything
  */
+
+enum class ComponentType
+{
+	NONE,
+	TRANSFORM,
+	SPRITE,
+	SHAPE,
+	PYCOMPONENT
+};
+
 class Component
 {
 public:
@@ -45,6 +56,8 @@ public:
 	 * \param parentGameObject The parent GameObject
 	 */
 	Component(GameObject& parentGameObject);
+
+	static std::shared_ptr<Component> LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject);
 	/**
 	* \brief Update the Component
 	* \param dt Delta time since last frame

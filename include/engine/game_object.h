@@ -64,6 +64,7 @@ public:
 
 	std::string& GetName();
 protected:
+	friend class Component;
 	//if there is a transform, it is always at the beginning of the list
 	std::list<std::shared_ptr<Component>> m_Components;
 	std::string m_Name;

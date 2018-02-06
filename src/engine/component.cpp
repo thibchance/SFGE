@@ -23,6 +23,10 @@
  */
 
 #include <engine/component.h>
+#include <engine/transform.h>
+#include <graphics/sprite.h>
+#include <python/pycomponent.h>
+
 namespace sfge
 {
 
@@ -30,6 +34,34 @@ Component::Component(GameObject& parentObject) :
 	gameObject(parentObject)
 {
 
+}
+
+std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject)
+{
+	std::shared_ptr<Component> component = nullptr;
+	if (CheckJsonParameter(componentJson, "type", json::value_t::number_integer))
+	{
+		ComponentType componentType = (ComponentType)componentJson["type"];
+
+		switch(componentType)
+		{
+		case ComponentType::TRANSFORM:
+			component = Transform::LoadTransform(componentJson, gameObject);
+			gameObject.SetTransform(std::dynamic_pointer_cast<Transform>(component));
+			break;
+		case ComponentType::SPRITE:
+			component = Sprite::LoadSprite(engine, componentJson, gameObject);
+			break;
+		case ComponentType::PYCOMPONENT:
+			component = PythonScript::LoadPythonScript(componentJson, gameObject);
+			break;
+		}
+		if (component != nullptr)
+		{
+			gameObject.m_Components.push_back(component);
+		}
+	}
+	return component;
 }
 
 
