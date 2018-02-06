@@ -30,6 +30,7 @@ namespace sfge
 void Log::Msg(const std::string & text)
 {
 	std::cout << text << "\n";
+
 }
 
 void Log::Error(const std::string & text)

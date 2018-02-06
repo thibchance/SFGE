@@ -1,4 +1,5 @@
 #include <engine/engine.h>
+#include <engine/log.h>
 #include <python/python_engine.h>
 #include <python/pycomponent.h>
 #include <utility/json_utility.h>
@@ -16,9 +17,21 @@ int main()
 		json componentJson;
 		componentJson["script_path"] = "scripts/component_test.py";
 		auto pyComponent = sfge::PyComponent::LoadPythonScript(engine, componentJson, gameObject);
+
 		if(pyComponent != nullptr)
 		{
-			pyComponent->Update(0.3f);
+			try
+			{
+				pyComponent->Update(0.4f);
+			}
+			catch (std::runtime_error& e)
+			{
+				sfge::Log::GetInstance()->Error(e.what());
+			}
+		}
+		else
+		{
+			sfge::Log::GetInstance()->Error("Component is null");
 		}
 	}
 	engine.Destroy();

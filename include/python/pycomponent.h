@@ -26,6 +26,7 @@
 #define SFGE_PYCOMPONENT_H_
 
 #include <engine/component.h>
+#include <utility/python_utility.h>
 //STL
 #include <memory>
 
@@ -35,14 +36,18 @@ namespace sfge
 /**
  * \brief Python abstraction of Component
  */
-class PyComponent : public Component
+class PyComponent final : public Component
 {
 public:
 	using Component::Component;
 
-	void Update(float dt) override;
+	~PyComponent();
 
+	void Update(float dt) override;
+	void SetInstance(py::object& instance);
 	static std::shared_ptr<PyComponent> LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject);
+protected:
+	py::object m_Instance;
 };
 
 }

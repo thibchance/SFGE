@@ -25,9 +25,32 @@
 
 #include <python/pycomponent.h>
 #include <python/python_engine.h>
+#include <engine/log.h>
 
 namespace sfge
 {
+
+void PyComponent::Update(float dt)
+{
+	PYBIND11_OVERLOAD_PURE_NAME(
+		void,
+		Component,
+		"update",
+		Update,
+		dt
+	);
+}
+
+PyComponent::~PyComponent()
+{
+	Log::GetInstance()->Msg("Destroying PyComponent");
+}
+
+void PyComponent::SetInstance(py::object& instance)
+{
+	m_Instance = instance;
+}
+
 std::shared_ptr<PyComponent> PyComponent::LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject)
 {
 	auto pythonManager = std::dynamic_pointer_cast<PythonManager>(engine.GetModule(EngineModule::PYTHON_MANAGER));
@@ -38,8 +61,10 @@ std::shared_ptr<PyComponent> PyComponent::LoadPythonScript(Engine& engine, json&
 		{
 			auto classComponent = pythonManager->GetPyComponent(scriptId);
 			auto componentInstance = classComponent(gameObject);
+			//componentInstance.attr("update")(0.2f);
 			auto pyComponent = std::shared_ptr<PyComponent>(componentInstance.cast<PyComponent*>());
-
+			pyComponent->SetInstance(componentInstance);
+			return pyComponent;
 		}
 	}
 	return nullptr;

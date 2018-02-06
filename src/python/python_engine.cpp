@@ -31,26 +31,19 @@
 
 
 
-PYBIND11_MODULE(SFGE, m)
-{
-	py::class_<sfge::Scene> scene(m, "Scene");
-	py::class_<sfge::GameObject> game_object(m, "GameObject");
-	py::class_<sfge::Component, sfge::PyComponent> component(m, "Component");
-	component.def(py::init<sfge::GameObject&>());
-		component.def("update", &sfge::Component::Update);
-}
 
-void sfge::PyComponent::Update(float dt)
-{
-	PYBIND11_OVERLOAD_PURE(
-		void,
-		sfge::Component,
-		Update,
-		dt
-	);
-}
 namespace sfge
 {
+
+PYBIND11_EMBEDDED_MODULE(SFGE, m)
+{
+	py::class_<Scene> scene(m, "Scene");
+	py::class_<GameObject> game_object(m, "GameObject");
+	py::class_<Component, PyComponent> component(m, "Component");
+	component
+		.def(py::init<GameObject&>())
+		.def("update", &Component::Update);
+}
 
 
 
@@ -60,6 +53,7 @@ void PythonManager::Init()
 {
 	Log::GetInstance()->Msg("Initialise the python embed interpretor");
 	py::initialize_interpreter();
+
 }
 
 void PythonManager::Update(sf::Time)
@@ -69,6 +63,7 @@ void PythonManager::Update(sf::Time)
 
 void PythonManager::Destroy()
 {
+	Log::GetInstance()->Msg("Finalize the python embed interpretor");
 	py::finalize_interpreter();
 }
 
@@ -90,6 +85,9 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path)
 				return 0U;
 			}
 			{
+				std::ostringstream oss;
+				oss << "Loading Python script: "<<script_path<<" has id: "<<scriptId;
+				Log::GetInstance()->Msg(oss.str());
 				return scriptId;
 			}
 		}
@@ -100,14 +98,18 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path)
 				std::string module_name = p.filename().replace_extension("");
 				std::string class_name = module2class(module_name);
 				py::object globals  = py::globals();
+
 				py::object module   = import(module_name, script_path, globals);
+				py::object componentClass = module.attr(class_name.c_str());
+
 				{
 					std::stringstream oss;
-					oss << "Module imported: "<< py::str(module).cast<std::string>();
+					oss << "Module imported: "<< py::str(module).cast<std::string>()<<
+							" with "<<py::str(componentClass.attr("__dict__")).cast<std::string>();
 					Log::GetInstance()->Msg(oss.str());
 				}
 
-				py::object componentClass = module.attr(class_name.c_str());
+
 				incrementalScriptId++;
 				pythonScriptMap[script_path] = incrementalScriptId;
 				pythonObjectMap[incrementalScriptId] = componentClass;
