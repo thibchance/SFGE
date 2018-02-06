@@ -27,6 +27,7 @@
 #define SFGE_GAMEOBJECT_H
 
 #include <utility/json_utility.h>
+#include <engine/engine.h>
 //External includes
 #include <SFML/System.hpp>
 //STL includes
@@ -55,7 +56,7 @@ public:
 	* \param gameObjectJson the sub json associated with the Game Object
 	* \return the heap GameObject that will need to be destroyed
 	*/
-	static std::shared_ptr<GameObject> LoadGameObject(json& gameObjectJson);
+	static std::shared_ptr<GameObject> LoadGameObject(Engine& engine, json& gameObjectJson);
 
 	std::shared_ptr<Transform> GetTransform();
 

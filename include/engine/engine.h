@@ -65,7 +65,7 @@ enum class EngineModule
 /**
 * \brief The main Engine class to centralise the frame process and the references
 */
-class Engine : public Singleton<Engine>
+class Engine
 {
 public:
 
@@ -112,7 +112,7 @@ protected:
 class Module
 {
 public:
-	Module(bool enable);
+	Module(Engine& engine, bool enable);
 
 	virtual ~Module() {};
 	/**
@@ -134,6 +134,7 @@ public:
 
 protected:
 	bool m_Enable = true;
+	Engine& m_Engine;
 };
 
 }

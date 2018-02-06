@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <graphics/graphics.h>
 #include <graphics/sprite.h>
+#include <graphics/texture.h>
 #include <utility/file_utility.h>
 
 #include <engine/log.h>
@@ -52,10 +53,10 @@ bool Sprite::SpriteLayerComp(std::shared_ptr<Sprite> s1, std::shared_ptr<Sprite>
 {
 	return s1->layer>s2->layer;
 }
-std::shared_ptr<Sprite> Sprite::LoadSprite(json& componentJson, GameObject& gameObject)
+std::shared_ptr<Sprite> Sprite::LoadSprite(Engine& engine, json& componentJson, GameObject& gameObject)
 {
 	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
-		Engine::GetInstance()->GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
+		engine.GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
 	auto spriteManager = graphicsManager->GetSpriteManager();
 	if (spriteManager != nullptr)
 	{
@@ -121,61 +122,7 @@ void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newS
 
 
 
-unsigned int TextureManager::LoadTexture(std::string filename)
-{
-	{
-		std::ostringstream oss;
-		oss << "Loading texture " << filename;
-		Log::GetInstance()->Error(oss.str());
-	}
-	if (nameIdsMap.find(filename) != nameIdsMap.end())
-	{
-		auto text_id = nameIdsMap[filename];
-		//Check if the texture was destroyed
-		auto checkTexture = texturesMap.find(text_id);
-		if (checkTexture != texturesMap.end())
-		{
-			return nameIdsMap[filename];
-		}
-		else
-		{
-			std::shared_ptr<sf::Texture> texture = std::make_shared<sf::Texture>();
-			if (!texture->loadFromFile(filename))
-				return 0U;
-			nameIdsMap[filename] = increment_id;
-			texturesMap[increment_id] = texture;
-			return increment_id;
-		}
-	}
-	else
-	{
-		if (FileExists(filename))
-		{
-			increment_id++;
-			auto texture = std::make_shared<sf::Texture>();
-			if (!texture->loadFromFile(filename))
-				return 0U;
-			nameIdsMap[filename] = increment_id;
-			texturesMap[increment_id] = texture;
-			return increment_id;
-		}
-	}
-	return 0U;
-}
 
-
-
-
-
-
-std::shared_ptr<sf::Texture> TextureManager::GetTexture(unsigned int text_id)
-{
-	if (texturesMap.find(text_id) != texturesMap.end())
-	{
-		return texturesMap[text_id];
-	}
-	return nullptr;
-}
 
 
 

@@ -38,7 +38,7 @@ void GameObject::Update(sf::Time dt)
 	}
 }
 
-std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
+std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
 {
 	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
 	if (CheckJsonParameter(gameObjectJson, "name", json::value_t::string))
@@ -71,7 +71,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 				}
 				else if (componentType == "Sprite")
 				{
-					component = Sprite::LoadSprite(componentJson, *gameObject);
+					component = Sprite::LoadSprite(engine, componentJson, *gameObject);
 				}
 				else if (componentType == "Python")
 				{

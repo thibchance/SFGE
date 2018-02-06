@@ -36,7 +36,7 @@ class TextureManager;
 class GraphicsManager : public Module
 {
 public:
-	GraphicsManager(bool enable, bool windowless);
+	GraphicsManager(Engine& engine, bool enable, bool windowless);
 	/**
 		* \brief Initialize the Graphics Manager
 		*/
