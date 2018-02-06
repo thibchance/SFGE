@@ -25,6 +25,7 @@
 #include <utility/python_utility.h>
 #include <sstream>
 #include <engine/log.h>
+#include <cctype>
 
 py::object import(const std::string& module, const std::string& path, py::object& globals)
 {

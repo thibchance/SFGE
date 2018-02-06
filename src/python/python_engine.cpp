@@ -95,7 +95,7 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path)
 		{
 			try
 			{
-				std::string module_name = p.filename().replace_extension("");
+				std::string module_name = p.filename().replace_extension("").generic_string();
 				std::string class_name = module2class(module_name);
 				py::object globals  = py::globals();
 
