@@ -54,14 +54,14 @@ std::shared_ptr<SoundBuffer> AudioManager::GetSoundBuffer()
 ;
 unsigned int SoundBuffer::LoadSoundBuffer(std::string filename)
 {
-	if (nameIdMap.find(filename) != nameIdMap.end())
+	if (bufferIdPath.find(filename) != bufferIdPath.end())
 	{
-		auto sound_buffer_id = nameIdMap[filename];
+		auto sound_buffer_id = bufferIdPath[filename];
 		auto checkSoundBuffer = soundBufferMap.find(sound_buffer_id);
 
 		if (checkSoundBuffer != soundBufferMap.end())
 		{
-			return nameIdMap[filename];
+			return bufferIdPath[filename];
 		}
 		else
 		{
@@ -70,7 +70,7 @@ unsigned int SoundBuffer::LoadSoundBuffer(std::string filename)
 			{
 				return 0U;
 			}
-			nameIdMap[filename] = increment_id;
+			bufferIdPath[filename] = increment_id;
 			soundBufferMap[increment_id] = soundBuffer;
 			return increment_id;
 		}
@@ -86,7 +86,7 @@ unsigned int SoundBuffer::LoadSoundBuffer(std::string filename)
 			{
 				return 0U;
 			}
-			nameIdMap[filename] = increment_id;
+			bufferIdPath[filename] = increment_id;
 			soundBufferMap[increment_id] = soundBuffer;
 			return increment_id;
 		}
@@ -102,14 +102,14 @@ std::shared_ptr<sf::SoundBuffer> SoundBuffer::GetSoundBuffer(unsigned int sound_
 	return nullptr;
 	
 }
-std::shared_ptr<Sound> Sound::LoadSound(json & componentJson)
+std::shared_ptr<sf::Sound> Sound::LoadSound(json & componentJson)
 {
 	auto audioManager = std::dynamic_pointer_cast<AudioManager>(
 		Engine::GetInstance()->GetModule(sfge::EngineModule::AUDIO_MANAGER));
 	auto soundManager = audioManager->GetSoundManager();
 	if (soundManager != nullptr)
 	{
-		auto newSound = std::make_shared<Sound>();
+		auto newSound = std::make_shared<sf::Sound>();
 		soundManager->LoadSound(componentJson, newSound);
 		return newSound;
 	}
@@ -119,7 +119,7 @@ void Sound::SetSoundBuffer(std::shared_ptr<sf::SoundBuffer> newSoundBuffer)
 {
 	sound.setBuffer(*newSoundBuffer);
 }
-void Sound::Play(sf::Sound sound )
+void Sound::Play(sf::Sound& sound)
 {
 	sound.play();
 }
@@ -127,7 +127,7 @@ SoundManager::SoundManager(AudioManager & audioManager): m_AudioManager(audioMan
 {
 
 }
-void SoundManager::LoadSound(json & componentJson, std::shared_ptr<Sound> newSound)
+void SoundManager::LoadSound(json & componentJson, std::shared_ptr<sf::Sound> newSound)
 {
 	if (newSound == nullptr)
 		return;
@@ -141,7 +141,7 @@ void SoundManager::LoadSound(json & componentJson, std::shared_ptr<Sound> newSou
 			if (text_id != 0)
 			{
 				buffer = m_AudioManager.GetSoundBuffer()->GetSoundBuffer(text_id);
-				newSound->SetSoundBuffer(buffer);
+				newSound->setBuffer(*buffer);
 			}
 		}
 		else
@@ -157,4 +157,65 @@ void SoundManager::LoadSound(json & componentJson, std::shared_ptr<Sound> newSou
 	}
 	m_Sounds.push_back(newSound);
 }
+
+SoundManager::~SoundManager()
+{
+}
+
+unsigned int MusicManager::LoadMusic(std::string filename)
+{
+	if (musicPathId.find(filename) != musicPathId.end())
+	{
+		auto musicId = musicPathId[filename];
+		auto checkMusic = musicMap.find(musicId);
+
+		if (checkMusic != musicMap.end())
+		{
+			return musicPathId[filename];
+		}
+		else
+		{
+			std::shared_ptr<sf::Music> music = std::make_shared<sf::Music>();
+			if (!music->openFromFile(filename))
+			{
+				return 0U;
+			}
+			musicPathId[filename] = increment_id;
+			musicMap[increment_id] = music;
+			return increment_id;
+		}
+	}
+	else
+	{
+		if (FileExists(filename))
+		{
+			increment_id++;
+			auto music = std::make_shared<sf::Music>();
+
+			if (!music->openFromFile(filename))
+			{
+				return 0U;
+			}
+			musicPathId[filename] = increment_id;
+			musicMap[increment_id] = music;
+			return increment_id;
+		}
+	}
+	return 0U;
+}
+
+std::shared_ptr<sf::Music> MusicManager::GetMusic(unsigned int musicId)
+{
+	if (musicMap.find(musicId) != musicMap.end())
+	{
+		return musicMap[musicId];
+	}
+	return nullptr;
+}
+
+void MusicManager::PlayMusic(sf::Music& music)
+{
+	music.play();
+}
+
 }

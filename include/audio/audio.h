@@ -25,6 +25,7 @@ SOFTWARE.
 #ifndef SFGE_AUDIO_H
 #define SFGE_AUDIO_H
 #include <engine/engine.h>
+#include <engine/component.h>
 #include <SFML/Audio.hpp>
 #include <map>
 #include <string>
@@ -34,6 +35,7 @@ namespace sfge
 {
 class SoundBuffer;
 class SoundManager;
+class Sound;
 
 class AudioManager : public Module
 {
@@ -60,8 +62,7 @@ public:
 	std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(unsigned int sound_buffer_id);
 
 private:
-	
-	std::map<std::string, unsigned int> nameIdMap;
+	std::map<std::string, unsigned int> bufferIdPath;
 	std::map<unsigned int, std::shared_ptr<sf::SoundBuffer>> soundBufferMap;
 	unsigned int increment_id = 0;
 };
@@ -69,15 +70,12 @@ private:
 class Sound : public Singleton<Sound>
 {
 public:
-
-	std::shared_ptr<Sound> LoadSound(json& componentJson);
-
+	static std::shared_ptr<sf::Sound> LoadSound(json& componentJson);
 	void SetSoundBuffer(std::shared_ptr<sf::SoundBuffer> newSoundBuffer);
-	void Play(sf::Sound sound );
+	void Play(sf::Sound& sound);
 
 protected:
 	std::string filename;
-	int soundBufferId;
 	sf::Sound sound;
 };
 
@@ -85,15 +83,26 @@ class SoundManager
 {
 public:
 	SoundManager(AudioManager& audioManager);
-	void LoadSound(json& componentJson, std::shared_ptr<Sound> newSound);
+	void LoadSound(json& componentJson, std::shared_ptr<sf::Sound> newSound);
+	~SoundManager();
 protected:
-	std::list<std::shared_ptr<sfge::Sound>> m_Sounds;
-	AudioManager & m_AudioManager;
+	std::list<std::shared_ptr<sf::Sound>> m_Sounds;
+	AudioManager& m_AudioManager;
 };
 
-class Music : public Singleton<Music>
+class MusicManager : public Singleton<MusicManager>
 {
+public:
+	unsigned int LoadMusic(std::string filename);
+	std::shared_ptr<sf::Music> GetMusic(unsigned int musicId);
+	void PlayMusic(sf::Music& music);
 
+protected:
+	sf::Music music;
+	std::map< std::string , unsigned int> musicPathId;
+	std::map<unsigned int, std::shared_ptr<sf::Music>> musicMap;
+	std::string filename;
+	unsigned int increment_id = 0;
 };
 }
 #endif // !SFGE_AUDIO
