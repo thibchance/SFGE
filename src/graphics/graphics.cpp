@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <graphics/graphics.h>
 #include <graphics/sprite.h>
+#include <graphics/texture.h>
 #include <engine/log.h>
 #include <engine/config.h>
 
@@ -36,13 +37,14 @@ SOFTWARE.
 
 namespace sfge
 {
-GraphicsManager::GraphicsManager(bool enable, bool windowless) : Module(enable), m_Windowless(windowless)
+GraphicsManager::GraphicsManager(Engine& engine, bool enable, bool windowless) :
+		Module(engine, enable), m_Windowless(windowless)
 {
 	
 }
 	void GraphicsManager::Init()
 {
-	auto config = Engine::GetInstance()->GetConfig();
+	auto config = m_Engine.GetConfig();
 	if (config == nullptr)
 	{
 		Log::GetInstance()->Error("[Error] Config is null from Graphics Manager");

@@ -52,7 +52,7 @@ public:
 	
 	void Draw(sf::RenderWindow& window);
 
-	static std::shared_ptr<Sprite> LoadSprite(json& componentJson, GameObject& gameObject);
+	static std::shared_ptr<Sprite> LoadSprite(Engine& engine, json& componentJson, GameObject& gameObject);
 
 	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
 
@@ -80,34 +80,7 @@ protected:
 	GraphicsManager& m_GraphicsManager;
 };
 
-/**
-* \brief The Texture Manager is the cache of all the textures used for sprites or other objects
-*
-*/
-class TextureManager
-{
-public:
-	
-	/**
-	* \brief load the texture from the disk or the texture cache
-	* \param filename The filename string of the texture
-	* \return The strictly positive texture id > 0, if equals 0 then the texture was not loaded
-	*/
-	unsigned int LoadTexture(std::string filename);
-	/**
-	* \brief Used after loading the texture in the texture cache to get the pointer to the texture
-	* \param text_id The texture id striclty positive
-	* \return The pointer to the texture in memory
-	*/
-	std::shared_ptr<sf::Texture> GetTexture(unsigned int text_id);
 
-private:
-
-	std::map<std::string, unsigned int> nameIdsMap;
-	std::map<unsigned int, std::shared_ptr<sf::Texture>> texturesMap;
-	unsigned int increment_id = 0;
-
-};
 
 }
 #endif // !SFGE_SPRITE

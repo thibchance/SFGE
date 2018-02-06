@@ -1,6 +1,6 @@
 from SFGE import *
 
 
-class ComponentTest(SFGE.Component):
+class ComponentTest(Component):
     def update(self, dt):
         print("Hello from Python")

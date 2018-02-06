@@ -32,18 +32,7 @@
 namespace sfge
 {
 
-/**
- * \brief Python abstraction of Component
- */
-class PyComponent : public Component
-{
-public:
-	using Component::Component;
 
-	void Update(float dt) override;
-
-	static std::shared_ptr<PyComponent> LoadPythonScript(json& componentJson, GameObject& gameObject);
-};
 
 /**
 * \brief Manage the python interpreter

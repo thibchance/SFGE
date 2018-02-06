@@ -1,18 +1,18 @@
 /*
  MIT License
- 
+
  Copyright (c) 2017 SAE Institute Switzerland AG
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in all
  copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,53 +22,30 @@
  SOFTWARE.
  */
 
+#ifndef SFGE_PYCOMPONENT_H_
+#define SFGE_PYCOMPONENT_H_
 
-#ifndef SFGE_GAMEOBJECT_H
-#define SFGE_GAMEOBJECT_H
-
-#include <utility/json_utility.h>
-#include <engine/engine.h>
-//External includes
-#include <SFML/System.hpp>
-//STL includes
-#include <list>
-#include <string>
+#include <engine/component.h>
+//STL
+#include <memory>
 
 namespace sfge
 {
 
-class Component;
-class Transform;
-
 /**
-* \brief The basic Game Object handler containing a list of Components
-*/
-class GameObject
+ * \brief Python abstraction of Component
+ */
+class PyComponent : public Component
 {
 public:
-	/**
-	* \brief Update the GameObject and its Components
-	* \param dt Delta time since last frame
-	*/
-	void Update(sf::Time dt);
-	/**
-	* \brief Load a GameObject and create all its Component
-	* \param gameObjectJson the sub json associated with the Game Object
-	* \return the heap GameObject that will need to be destroyed
-	*/
-	static std::shared_ptr<GameObject> LoadGameObject(Engine& engine, json& gameObjectJson);
+	using Component::Component;
 
-	std::shared_ptr<Transform> GetTransform();
+	void Update(float dt) override;
 
-	void SetTransform(std::shared_ptr<Transform> newTransform);
-
-	std::string& GetName();
-protected:
-	friend class Component;
-	//if there is a transform, it is always at the beginning of the list
-	std::list<std::shared_ptr<Component>> m_Components;
-	std::string m_Name;
-	std::shared_ptr<Transform> m_Transform = nullptr;
+	static std::shared_ptr<PyComponent> LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject);
 };
+
 }
-#endif
+
+
+#endif /* INCLUDE_PYTHON_PYCOMPONENT_H_ */

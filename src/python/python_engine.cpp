@@ -26,31 +26,33 @@
 #include <engine/component.h>
 #include <engine/log.h>
 #include <python/python_engine.h>
+#include <python/pycomponent.h>
 #include <utility/file_utility.h>
 
 
 
-namespace sfge
-{
-
 PYBIND11_MODULE(SFGE, m)
 {
-	py::class_<Scene> scene(m, "Scene");
-	py::class_<GameObject> game_object(m, "GameObject");
-	py::class_<Component, PyComponent> component(m, "Component");
-	component.def(py::init<GameObject&>());
-	component.def("update", &Component::Update);
+	py::class_<sfge::Scene> scene(m, "Scene");
+	py::class_<sfge::GameObject> game_object(m, "GameObject");
+	py::class_<sfge::Component, sfge::PyComponent> component(m, "Component");
+	component.def(py::init<sfge::GameObject&>());
+		component.def("update", &sfge::Component::Update);
 }
 
-void PyComponent::Update(float dt)
+void sfge::PyComponent::Update(float dt)
 {
 	PYBIND11_OVERLOAD_PURE(
 		void,
-		Component,
+		sfge::Component,
 		Update,
 		dt
 	);
 }
+namespace sfge
+{
+
+
 
 
 
@@ -138,21 +140,6 @@ py::object PythonManager::GetPyComponent(unsigned int scriptId)
 	return py::none();
 }
 
-std::shared_ptr<PyComponent> PyComponent::LoadPythonScript(json& componentJson, GameObject& gameObject)
-{
-	auto pythonManager = std::dynamic_pointer_cast<PythonManager>(Engine::GetInstance()->GetModule(EngineModule::PYTHON_MANAGER));
-	if(CheckJsonParameter(componentJson, "script_path", json::value_t::string))
-	{
-		unsigned int scriptId = pythonManager->LoadPyComponentFile(componentJson["script_path"]);
-		if(scriptId != 0U)
-		{
-			auto classComponent = pythonManager->GetPyComponent(scriptId);
-			auto componentInstance = classComponent(gameObject);
-			auto pyComponent = std::shared_ptr<PyComponent>(componentInstance.cast<PyComponent*>());
 
-		}
-	}
-	return nullptr;
-}
 
 }

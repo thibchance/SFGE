@@ -24,6 +24,7 @@
 
 #include <engine/game_object.h>
 #include <engine/component.h>
+#include <engine/transform.h>
 #include <engine/log.h>
 #include <graphics/sprite.h>
 #include <python/python_engine.h>
@@ -38,7 +39,7 @@ void GameObject::Update(sf::Time dt)
 	}
 }
 
-std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
+std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
 {
 	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
 	if (CheckJsonParameter(gameObjectJson, "name", json::value_t::string))
@@ -60,29 +61,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(json& gameObjectJson)
 	{
 		for (json componentJson : gameObjectJson["components"])
 		{
-			std::shared_ptr<Component> component = nullptr;
-			if (CheckJsonParameter(componentJson, "type", json::value_t::string))
-			{
-				std::string componentType = componentJson["type"];
-				if (componentType == "Transform")
-				{
-					component = Transform::LoadTransform(componentJson, *gameObject);
-					gameObject->SetTransform(std::dynamic_pointer_cast<Transform>(component));
-				}
-				else if (componentType == "Sprite")
-				{
-					component = Sprite::LoadSprite(componentJson, *gameObject);
-				}
-				else if (componentType == "Python")
-				{
-					component = PyComponent::LoadPythonScript(componentJson, *gameObject);
-
-				}
-				if (component != nullptr)
-				{
-					gameObject->m_Components.push_back(component);
-				}
-			}
+			Component::LoadComponent(engine, componentJson, *gameObject);
 		}
 	}
 	return gameObject;

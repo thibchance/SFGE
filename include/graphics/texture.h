@@ -21,20 +21,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <iostream>
 
-#include <engine/engine.h>
-#include <engine/log.h>
+#ifndef SFGE_TEXTURE_H_
+#define SFGE_TEXTURE_H_
+
+//STL
+#include <map>
+#include <string>
+#include <memory>
 
 
-int main()
+//Externals
+#include <SFML/Graphics.hpp>
+
+namespace sfge
 {
-    sfge::Log::GetInstance()->Msg("SFGE 0.1 by SAE Institute Switzerland AG");
-    sfge::Engine engine;
-	engine.Init();
-	engine.Start();
-#ifdef WIN32
-	system("pause");
-#endif
-	return EXIT_SUCCESS;
+/**
+* \brief The Texture Manager is the cache of all the textures used for sprites or other objects
+*
+*/
+class TextureManager
+{
+public:
+
+	/**
+	* \brief load the texture from the disk or the texture cache
+	* \param filename The filename string of the texture
+	* \return The strictly positive texture id > 0, if equals 0 then the texture was not loaded
+	*/
+	unsigned int LoadTexture(std::string filename);
+	/**
+	* \brief Used after loading the texture in the texture cache to get the pointer to the texture
+	* \param text_id The texture id striclty positive
+	* \return The pointer to the texture in memory
+	*/
+	std::shared_ptr<sf::Texture> GetTexture(unsigned int text_id);
+
+private:
+
+	std::map<std::string, unsigned int> nameIdsMap;
+	std::map<unsigned int, std::shared_ptr<sf::Texture>> texturesMap;
+	unsigned int increment_id = 0;
+
+};
 }
+
+
+#endif /* INCLUDE_GRAPHICS_TEXTURE_H_ */

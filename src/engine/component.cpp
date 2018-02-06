@@ -23,6 +23,10 @@
  */
 
 #include <engine/component.h>
+#include <engine/transform.h>
+#include <graphics/sprite.h>
+#include <python/pycomponent.h>
+
 namespace sfge
 {
 
@@ -32,85 +36,33 @@ Component::Component(GameObject& parentObject) :
 
 }
 
-std::shared_ptr<Transform> Transform::LoadTransform(json& componentJson, GameObject& gameObject)
+std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject)
 {
-	std::shared_ptr<Transform> newTransform = std::make_shared<Transform>(gameObject);
-	if (CheckJsonParameter(componentJson, "position", json::value_t::array))
+	std::shared_ptr<Component> component = nullptr;
+	if (CheckJsonParameter(componentJson, "type", json::value_t::number_integer))
 	{
-		auto positionJson = componentJson["position"].array();
-		if (positionJson.size() == 2)
+		ComponentType componentType = (ComponentType)componentJson["type"];
+
+		switch(componentType)
 		{
-			sf::Vector2f newPosition;
-			if (IsJsonValueNumeric(positionJson[0]))
-			{
-				newPosition.x = positionJson[0];
-			}
-			if (IsJsonValueNumeric(positionJson[1]))
-			{
-				newPosition.y = positionJson[1];
-			}
-			newTransform->SetPosition(newPosition);
+		case ComponentType::TRANSFORM:
+			component = Transform::LoadTransform(componentJson, gameObject);
+			gameObject.SetTransform(std::dynamic_pointer_cast<Transform>(component));
+			break;
+		case ComponentType::SPRITE:
+			component = Sprite::LoadSprite(engine, componentJson, gameObject);
+			break;
+		case ComponentType::PYCOMPONENT:
+			component = PyComponent::LoadPythonScript(engine, componentJson, gameObject);
+			break;
+		}
+		if (component != nullptr)
+		{
+			gameObject.m_Components.push_back(component);
 		}
 	}
-	if (CheckJsonParameter(componentJson, "scale", json::value_t::array))
-	{
-		auto scaleJson = componentJson["scale"].array();
-		if (scaleJson.size() == 2)
-		{
-			sf::Vector2f newScale;
-			if (IsJsonValueNumeric(scaleJson[0]))
-			{
-				newScale.x = scaleJson[0];
-			}
-			if (IsJsonValueNumeric(scaleJson[1]))
-			{
-				newScale.y = scaleJson[1];
-			}
-			newTransform->SetScale(newScale);
-		}
-	}
-	if (CheckJsonExists(componentJson, "angle"))
-	{
-		if (IsJsonValueNumeric(componentJson["angle"]))
-		{
-			newTransform->SetEulerAngle(componentJson["angle"]);
-		}
-	}
-	return newTransform;
+	return component;
 }
 
-void Transform::Update(float dt)
-{
 
-}
-
-const float Transform::GetEulerAngle()
-{
-	return m_EulerAngle;
-}
-
-void Transform::SetEulerAngle(float eulerAngle)
-{
-	this->m_EulerAngle = eulerAngle;
-}
-
-const sf::Vector2f Transform::GetPosition()
-{
-	return m_Position;
-}
-
-void Transform::SetPosition(sf::Vector2f position)
-{
-	this->m_Position = position;
-}
-
-const sf::Vector2f Transform::GetScale()
-{
-	return m_Scale;
-}
-
-void Transform::SetScale(sf::Vector2f scale)
-{
-	this->m_Scale = scale;
-}
 }
