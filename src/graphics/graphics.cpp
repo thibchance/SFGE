@@ -40,7 +40,7 @@ GraphicsManager::GraphicsManager(bool enable, bool windowless) : Module(enable),
 {
 	
 }
-	void GraphicsManager::Init()
+void GraphicsManager::Init()
 {
 	auto config = Engine::GetInstance()->GetConfig();
 	if (config == nullptr)
@@ -58,9 +58,6 @@ GraphicsManager::GraphicsManager(bool enable, bool windowless) : Module(enable),
 			CheckVersion();
 		}
 	}
-	
-	
-
 	//Init Texture and Sprite Manager
 	m_TextureManager = std::make_shared<TextureManager>();
 	m_SpriteManager = std::make_shared<SpriteManager>(*this);

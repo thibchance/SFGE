@@ -40,7 +40,8 @@ class Sound;
 class AudioManager : public Module
 {
 public:
-	using Module::Module;
+	AudioManager();
+	~AudioManager();
 
 	void Init() override;
 	void Update(sf::Time dt) override;
@@ -57,8 +58,13 @@ protected:
 class SoundBuffer
 {
 public:
-
+	/**
+	* \brief load a buffer for the sound
+	*/
 	unsigned int LoadSoundBuffer(std::string filename);
+	/**
+	* \brief return the buffer 
+	*/
 	std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(unsigned int sound_buffer_id);
 
 private:
@@ -70,7 +76,13 @@ private:
 class Sound : public Singleton<Sound>
 {
 public:
+	/**
+	* \brief load a sf::sound and return
+	*/
 	static std::shared_ptr<sf::Sound> LoadSound(json& componentJson);
+	/**
+	* \brief set the buffer for the sound
+	*/
 	void SetSoundBuffer(std::shared_ptr<sf::SoundBuffer> newSoundBuffer);
 	void Play(sf::Sound& sound);
 
@@ -83,6 +95,9 @@ class SoundManager
 {
 public:
 	SoundManager(AudioManager& audioManager);
+	/**
+	* \brief load a sound from a path file
+	*/
 	void LoadSound(json& componentJson, std::shared_ptr<sf::Sound> newSound);
 	~SoundManager();
 protected:
@@ -93,9 +108,31 @@ protected:
 class MusicManager : public Singleton<MusicManager>
 {
 public:
+	/**
+	* \brief load a music from a path file
+	*/
 	unsigned int LoadMusic(std::string filename);
 	std::shared_ptr<sf::Music> GetMusic(unsigned int musicId);
+	/**
+	* \brief play the music
+	*/
 	void PlayMusic(sf::Music& music);
+	/**
+	* \brief pause the given music
+	*/
+	void PauseMusic(sf::Music& music);
+	/**
+	* \brief stop the music, if play it start from the beginning
+	*/
+	void StopMusic(sf::Music& music);
+	/**
+	* \brief choose if the music loop or not
+	*/
+	void SetLoop(sf::Music music, bool loop);
+	/**
+	* \brief Set the volume of the music from 0 (mute) to 100(normal)
+	*/
+	void SetVolume(sf::Music& music, int volume);
 
 protected:
 	sf::Music music;
