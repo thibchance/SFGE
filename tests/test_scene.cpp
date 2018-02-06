@@ -33,6 +33,7 @@ int main()
 	sceneManager->SetCurrentScene(sceneManager->LoadScene("data/scenes/test.scene"));
 
 	sfge::Engine::GetInstance()->Start();
+	sfge::Engine::GetInstance()->Destroy();
 #ifdef WIN32
 	system("pause");
 #endif

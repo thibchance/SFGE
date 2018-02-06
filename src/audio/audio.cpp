@@ -26,13 +26,17 @@ SOFTWARE.
 
 namespace sfge
 {
+
 void AudioManager::Init()
 {
-};
+}
+
 void AudioManager::Update(sf::Time dt)
 {
-};
+}
+
 void AudioManager::Destroy()
 {
-};
+}
+
 }

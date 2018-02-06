@@ -28,11 +28,7 @@
 #include <python/python_engine.h>
 #include <utility/file_utility.h>
 
-#include <pybind11/embed.h>// everything needed for embedding
 
-#include <iostream>
-
-namespace py = pybind11;
 
 namespace sfge
 {
@@ -41,45 +37,26 @@ PYBIND11_MODULE(SFGE, m)
 {
 	py::class_<Scene> scene(m, "Scene");
 	py::class_<GameObject> game_object(m, "GameObject");
-	py::class_<Component> component(m, "Component");
-
+	py::class_<Component, PyComponent> component(m, "Component");
+	component.def(py::init<GameObject&>());
+	component.def("update", &Component::Update);
 }
 
-py::object import(const std::string& module, const std::string& path, py::object& globals)
+void PyComponent::Update(float dt)
 {
-    py::dict locals;
-    locals["module_name"] = py::cast(module); // have to cast the std::string first
-    locals["path"]        = py::cast(path);
-
-    py::eval<py::eval_statements>(            // tell eval we're passing multiple statements
-        "import imp\n"
-        "new_module = imp.load_module(module_name, open(path), path, ('py', 'U', imp.PY_SOURCE))\n",
-        globals,
-        locals);
-
-    return locals["new_module"];
+	PYBIND11_OVERLOAD_PURE(
+		void,
+		Component,
+		Update,
+		dt
+	);
 }
 
-std::string module2class(std::string& module_name)
-{
 
-	std::istringstream iss(module_name);
-	std::string token;
-	std::string class_name;
-	while (std::getline(iss, token, '_'))
-	{
-		if(token.size() > 0)
-		{
-			char first = token.at(0);
-			class_name += std::toupper(first);
-			class_name += token.substr(1, token.size());
-		}
-	}
-	return class_name;
-}
 
 void PythonManager::Init()
 {
+	Log::GetInstance()->Msg("Initialise the python embed interpretor");
 	py::initialize_interpreter();
 }
 
@@ -100,29 +77,46 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path)
 	fs::path p = script_path;
 	if(fs::is_regular_file(p))
 	{
-		try
+		if(pythonScriptMap.find(script_path) != pythonScriptMap.end())
 		{
-			std::string module_name = p.filename().replace_extension("");
-			std::string class_name = module2class(module_name);
-			py::object globals  = py::globals();
-			py::object module   = import(module_name, script_path, globals);
+			unsigned int scriptId = pythonScriptMap[script_path];
+			if(scriptId == 0U)
+			{
+				std::ostringstream oss;
+				oss << "Python script: "<<script_path<<" has id 0";
+				Log::GetInstance()->Error(oss.str());
+				return 0U;
+			}
+			{
+				return scriptId;
+			}
+		}
+		else
+		{
+			try
+			{
+				std::string module_name = p.filename().replace_extension("");
+				std::string class_name = module2class(module_name);
+				py::object globals  = py::globals();
+				py::object module   = import(module_name, script_path, globals);
+				{
+					std::stringstream oss;
+					oss << "Module imported: "<< py::str(module).cast<std::string>();
+					Log::GetInstance()->Msg(oss.str());
+				}
+
+				py::object componentClass = module.attr(class_name.c_str());
+				incrementalScriptId++;
+				pythonScriptMap[script_path] = incrementalScriptId;
+				pythonObjectMap[incrementalScriptId] = componentClass;
+				return incrementalScriptId;
+			}
+			catch(const py::error_already_set& e)
 			{
 				std::stringstream oss;
-				oss << "Module imported: "<< py::str(module).cast<std::string>();
-				Log::GetInstance()->Msg(oss.str());
+				oss << "Python error on script file: "<<script_path<<"\n"<<e.what();
+				Log::GetInstance()->Error(oss.str());
 			}
-
-			py::object componentClass = module.attr(class_name.c_str());
-			incrementalScriptId++;
-			pythonScriptMap[script_path] = incrementalScriptId;
-			pythonObjectMap[incrementalScriptId] = componentClass;
-			return incrementalScriptId;
-		}
-		catch(const py::error_already_set& e)
-		{
-			std::stringstream oss;
-			oss << "Python error on script file: "<<script_path<<"\n"<<e.what();
-			Log::GetInstance()->Error(oss.str());
 		}
 	}
 	else
@@ -132,12 +126,16 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path)
 		Log::GetInstance()->Error(oss.str());
 	}
 
-	return 0;
+	return 0U;
 }
 
 py::object PythonManager::GetPyComponent(unsigned int scriptId)
 {
-
+	if(pythonObjectMap.find(scriptId) != pythonObjectMap.end())
+	{
+		return pythonObjectMap[scriptId];
+	}
+	return py::none();
 }
 
 std::shared_ptr<PyComponent> PyComponent::LoadPythonScript(json& componentJson, GameObject& gameObject)
@@ -146,9 +144,12 @@ std::shared_ptr<PyComponent> PyComponent::LoadPythonScript(json& componentJson, 
 	if(CheckJsonParameter(componentJson, "script_path", json::value_t::string))
 	{
 		unsigned int scriptId = pythonManager->LoadPyComponentFile(componentJson["script_path"]);
-		if(scriptId != 0)
+		if(scriptId != 0U)
 		{
-			pythonManager->GetPyComponent(scriptId);
+			auto classComponent = pythonManager->GetPyComponent(scriptId);
+			auto componentInstance = classComponent(gameObject);
+			auto pyComponent = std::shared_ptr<PyComponent>(componentInstance.cast<PyComponent*>());
+
 		}
 	}
 	return nullptr;

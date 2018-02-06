@@ -27,10 +27,7 @@
 
 #include <engine/engine.h>
 #include <engine/component.h>
-
-#include <python/python_engine.h>
-#include <pybind11/embed.h>// everything needed for embedding
-namespace py = pybind11;
+#include <utility/python_utility.h>
 
 namespace sfge
 {
@@ -43,15 +40,7 @@ class PyComponent : public Component
 public:
 	using Component::Component;
 
-	void Update(float dt) override
-	{
-		PYBIND11_OVERLOAD(
-			void,
-			Component,
-			Update,
-			dt
-		);
-	}
+	void Update(float dt) override;
 
 	static std::shared_ptr<PyComponent> LoadPythonScript(json& componentJson, GameObject& gameObject);
 };
