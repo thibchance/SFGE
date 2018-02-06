@@ -21,7 +21,7 @@ public:
 	~Transform();
 	static std::shared_ptr<Transform> LoadTransform(json& componentJson, GameObject& gameObject);
 
-	void Update(sf::Time dt) override;
+	void Update(float dt) override;
 
 	const float GetEulerAngle();
 	void SetEulerAngle(float eulerAngle);

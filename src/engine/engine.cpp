@@ -76,11 +76,6 @@ void Engine::Init(bool windowless, bool editor)
 	
 	for (auto module : modules)
 	{	
-		{
-			std::ostringstream oss;
-			oss << "Init Module: " << module;
-			Log::GetInstance()->Msg(oss.str());
-		}
 		module->Init();
 	}
 
@@ -122,6 +117,11 @@ void Engine::Start()
 		m_Editor->Draw();
 		m_GraphicsManager->Display();
 	}
+
+}
+
+void Engine::Destroy()
+{
 	for (auto module : modules)
 	{
 		module->Destroy();

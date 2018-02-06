@@ -72,6 +72,7 @@ int main()
 		// end the current frame
 		window.display();
 	}
+	engine.Destroy();
 #if WIN32
 	system("pause");
 #endif

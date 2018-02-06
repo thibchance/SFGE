@@ -53,7 +53,7 @@ std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& compon
 			component = Sprite::LoadSprite(engine, componentJson, gameObject);
 			break;
 		case ComponentType::PYCOMPONENT:
-			component = PythonScript::LoadPythonScript(componentJson, gameObject);
+			component = PyComponent::LoadPythonScript(engine, componentJson, gameObject);
 			break;
 		}
 		if (component != nullptr)

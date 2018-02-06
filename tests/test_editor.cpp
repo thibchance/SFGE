@@ -8,6 +8,7 @@ int main()
 	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
 		engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
 	sceneManager->SetCurrentScene( sceneManager->LoadScene("data/scenes/test.scene"));
+
 	engine.Start();
 #ifdef WIN32
 	system("pause");

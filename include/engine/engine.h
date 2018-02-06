@@ -78,6 +78,11 @@ public:
 	*/
 	void Start();
 
+	/**
+	 * \brief Destroy all the modules
+	 */
+	void Destroy();
+
 	~Engine();
 	/**
 	* \brief A getter of the Configuration

@@ -65,7 +65,7 @@ std::shared_ptr<Transform> Transform::LoadTransform(json& componentJson, GameObj
 	return newTransform;
 }
 
-void Transform::Update(sf::Time dt)
+void Transform::Update(float dt)
 {
 
 }

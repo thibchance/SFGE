@@ -112,7 +112,7 @@ set(PYBIND11_DIR ${EXTERNAL_DIR}/pybind11/)
 add_subdirectory(${PYBIND11_DIR})
 include_directories(${PYBIND11_DIR})
 LIST(APPEND SFGE_LIBRARIES
-  pybind11)
+  pybind11::embed)
 
 #SFGE_COMMON
 if(NOT WIN32)

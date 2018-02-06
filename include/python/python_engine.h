@@ -27,9 +27,13 @@
 
 #include <engine/engine.h>
 #include <engine/component.h>
-#include <SFML/System/Time.hpp>
+#include <utility/python_utility.h>
+
 namespace sfge
 {
+
+
+
 /**
 * \brief Manage the python interpreter
 */
@@ -46,14 +50,29 @@ public:
 	* \param dt The delta time since last frame
 	*/
 	void Update(sf::Time dt) override;
+
 	/**
 	* \brief Finalize the python interpreter
 	*/
 	void Destroy() override;
+
+	/**
+	 * \brief Load a python script and return a python object of it
+	 * \param script_name
+	 * \return scriptId
+	 */
+	unsigned int LoadPyComponentFile(std::string script_name);
+	/**
+	 * \brief Get a python component object
+	 * \param scriptId
+	 * \return python object of the python component class
+	 */
+	py::object GetPyComponent(unsigned int scriptId);
 private:
-
+	std::map<std::string, unsigned int> pythonScriptMap;
+	std::map<unsigned int, py::object> pythonObjectMap;
+	unsigned int incrementalScriptId = 0;
 };
-
 
 }
 #endif /* SFGE_PYENGINE_H */

@@ -35,7 +35,7 @@ void GameObject::Update(sf::Time dt)
 {
 	for(auto component : m_Components)
 	{
-		component->Update(dt);
+		component->Update(dt.asSeconds());
 	}
 }
 
