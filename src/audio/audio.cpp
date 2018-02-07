@@ -221,38 +221,6 @@ std::shared_ptr<sf::Music> MusicManager::GetMusic(unsigned int musicId)
 	return nullptr;
 }
 
-void MusicManager::PlayMusic(sf::Music& music)
-{
-	music.play();
 }
 
-void MusicManager::PauseMusic(sf::Music & music)
-{
-	music.pause();
-}
 
-void MusicManager::StopMusic(sf::Music & music)
-{
-	music.stop();
-}
-
-void MusicManager::SetLoop(sf::Music music, bool loop)
-{
-	music.setLoop(loop);
-}
-
-void MusicManager::SetVolume(sf::Music & music, int volume)
-{
-	music.setVolume(volume);
-	if (volume >= 100)
-	{
-		music.setVolume(100);
-	}
-	if (volume <= 0)
-	{
-		music.setVolume(01);
-	}
-	music.setVolume(volume);
-}
-
-}

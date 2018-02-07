@@ -113,26 +113,6 @@ public:
 	*/
 	unsigned int LoadMusic(std::string filename);
 	std::shared_ptr<sf::Music> GetMusic(unsigned int musicId);
-	/**
-	* \brief play the music
-	*/
-	void PlayMusic(sf::Music& music);
-	/**
-	* \brief pause the given music
-	*/
-	void PauseMusic(sf::Music& music);
-	/**
-	* \brief stop the music, if play it start from the beginning
-	*/
-	void StopMusic(sf::Music& music);
-	/**
-	* \brief choose if the music loop or not
-	*/
-	void SetLoop(sf::Music music, bool loop);
-	/**
-	* \brief Set the volume of the music from 0 (mute) to 100(normal)
-	*/
-	void SetVolume(sf::Music& music, int volume);
 
 protected:
 	sf::Music music;
