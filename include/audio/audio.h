@@ -40,8 +40,7 @@ class Sound;
 class AudioManager : public Module
 {
 public:
-	AudioManager();
-	~AudioManager();
+	AudioManager(bool enable);
 
 	void Init() override;
 	void Update(sf::Time dt) override;
@@ -99,6 +98,7 @@ public:
 	* \brief load a sound from a path file
 	*/
 	void LoadSound(json& componentJson, std::shared_ptr<sf::Sound> newSound);
+	sf::Sound GetSound();
 	~SoundManager();
 protected:
 	std::list<std::shared_ptr<sf::Sound>> m_Sounds;

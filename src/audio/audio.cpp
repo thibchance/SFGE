@@ -30,17 +30,13 @@ SOFTWARE.
 
 namespace sfge
 {
-	AudioManager::AudioManager()
-	{
-
-	}
-	AudioManager::~AudioManager()
-	{
-
-	}
-	void AudioManager::Init()
+AudioManager::AudioManager(bool enable = true) : Module(enable)
 {
-	m_SoundManager = std::make_shared<SoundManager>();
+	m_Enable = enable;
+}
+void AudioManager::Init()
+{
+	m_SoundManager = std::make_shared<SoundManager>(*this);
 	m_SoundBuffer = std::make_shared<SoundBuffer>();
 };
 void AudioManager::Update(sf::Time dt)
