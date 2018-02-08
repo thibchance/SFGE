@@ -25,14 +25,14 @@ SOFTWARE.
 #include <audio/audio.h>
 #include <iostream>
 #include <utility/file_utility.h>
-
 #include <engine/log.h>
 
 namespace sfge
 {
-AudioManager::AudioManager(bool enable = true) : Module(enable)
+AudioManager::AudioManager(Engine& engine, bool enable): Module(engine,enable)
 {
-	m_Enable = enable;
+	engine = m_Engine;
+	enable = m_Enable;
 }
 void AudioManager::Init()
 {
@@ -106,10 +106,10 @@ std::shared_ptr<sf::SoundBuffer> SoundBuffer::GetSoundBuffer(unsigned int sound_
 	return nullptr;
 	
 }
-std::shared_ptr<sf::Sound> Sound::LoadSound(json & componentJson)
+std::shared_ptr<sf::Sound> Sound::LoadSound(Engine& engine, json & componentJson)
 {
 	auto audioManager = std::dynamic_pointer_cast<AudioManager>(
-		Engine::GetInstance()->GetModule(sfge::EngineModule::AUDIO_MANAGER));
+		engine.GetModule(sfge::EngineModule::AUDIO_MANAGER));
 	auto soundManager = audioManager->GetSoundManager();
 	if (soundManager != nullptr)
 	{
@@ -164,8 +164,8 @@ void SoundManager::LoadSound(json & componentJson, std::shared_ptr<sf::Sound> ne
 
 SoundManager::~SoundManager()
 {
-}
 
+}
 unsigned int MusicManager::LoadMusic(std::string filename)
 {
 	if (musicPathId.find(filename) != musicPathId.end())

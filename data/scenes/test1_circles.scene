@@ -1,0 +1,37 @@
+{
+	"name": "SceneTest",
+	"game_objects": [
+		{
+			"name": "SpriteTest",
+			"components": [
+				{
+					"type": "Transform",
+					"position": [300, 300],
+					"scale" : [1.0,1.0],
+					"angle": 0.0
+				},
+				{
+					"type": "Sprite",
+					"path": "data/sprites/test.png",
+					"layer": 3
+				}
+			]
+		},
+		{
+			"name": "SpriteTest2",
+			"components": [
+				{
+					"type": "Transform",
+					"position": [200, 300],
+					"scale" : [1.0,1.0],
+					"angle": 0.0
+				},
+				{
+					"type": "Sprite",
+					"path": "data/sprites/test.png",
+					"layer": 2
+				}
+			]
+		}
+	]
+}

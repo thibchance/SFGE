@@ -40,8 +40,9 @@ namespace sfge
 void Editor::Init()
 {
 	m_GraphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
-		Engine::GetInstance()->GetModule(EngineModule::GRAPHICS_MANAGER));
-	m_SceneManager = std::dynamic_pointer_cast<SceneManager>(Engine::GetInstance()->GetModule(EngineModule::SCENE_MANAGER));
+		m_Engine.GetModule(EngineModule::GRAPHICS_MANAGER));
+	m_SceneManager = std::dynamic_pointer_cast<SceneManager>(
+		m_Engine.GetModule(EngineModule::SCENE_MANAGER));
 	if (m_Enable)
 	{
 		ImGui::SFML::Init(*m_GraphicsManager->GetWindow(), true);

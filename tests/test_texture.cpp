@@ -1,4 +1,5 @@
 #include <graphics/sprite.h>
+#include <graphics/texture.h>
 #include <engine/log.h>
 int main()
 {

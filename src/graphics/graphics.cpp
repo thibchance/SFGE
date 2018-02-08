@@ -24,6 +24,8 @@ SOFTWARE.
 
 #include <graphics/graphics.h>
 #include <graphics/sprite.h>
+#include <graphics/texture.h>
+#include <graphics/shape.h>
 #include <engine/log.h>
 #include <engine/config.h>
 
@@ -36,13 +38,14 @@ SOFTWARE.
 
 namespace sfge
 {
-GraphicsManager::GraphicsManager(bool enable, bool windowless) : Module(enable), m_Windowless(windowless)
+GraphicsManager::GraphicsManager(Engine& engine, bool enable, bool windowless) :
+		Module(engine, enable), m_Windowless(windowless)
 {
 	
 }
 void GraphicsManager::Init()
 {
-	auto config = Engine::GetInstance()->GetConfig();
+	auto config = m_Engine.GetConfig();
 	if (config == nullptr)
 	{
 		Log::GetInstance()->Error("[Error] Config is null from Graphics Manager");
@@ -61,6 +64,7 @@ void GraphicsManager::Init()
 	//Init Texture and Sprite Manager
 	m_TextureManager = std::make_shared<TextureManager>();
 	m_SpriteManager = std::make_shared<SpriteManager>(*this);
+	m_ShapeManager = std::make_shared<ShapeManager>(*this);
 }
 
 void GraphicsManager::Update(sf::Time dt)
@@ -71,6 +75,8 @@ void GraphicsManager::Update(sf::Time dt)
 
 		m_SpriteManager->Update(dt);
 		m_SpriteManager->Draw(*m_Window);
+
+		m_ShapeManager->Draw(*m_Window);
 	}
 }
 
@@ -80,6 +86,17 @@ void GraphicsManager::Display()
 	{
 		m_Window->display();
 	}
+}
+
+void GraphicsManager::DrawLine(sf::Vector2f from, sf::Vector2f to, sf::Color color)
+{
+	sf::Vertex vertices[2] =
+	{
+	    sf::Vertex(from, color),
+	    sf::Vertex(to, color)
+	};
+
+	m_Window->draw(vertices, 2, sf::Lines);
 }
 
 std::shared_ptr<sf::RenderWindow> GraphicsManager::GetWindow()
@@ -95,6 +112,11 @@ std::shared_ptr<SpriteManager> GraphicsManager::GetSpriteManager()
 std::shared_ptr<TextureManager> GraphicsManager::GetTextureManager()
 {
 	return m_TextureManager;
+}
+
+std::shared_ptr<ShapeManager> GraphicsManager::GetShapeManager()
+{
+	return m_ShapeManager;
 }
 
 void GraphicsManager::CheckVersion()

@@ -89,7 +89,7 @@ std::shared_ptr<Scene> SceneManager::LoadScene(json& sceneJson)
 	{
 		for (json gameObjectJson : sceneJson["game_objects"])
 		{
-			std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(gameObjectJson);
+			std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(m_Engine, gameObjectJson);
 			if (gameObject != nullptr)
 			{
 				scene->m_GameObjects.push_back(gameObject);

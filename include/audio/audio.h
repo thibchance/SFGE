@@ -40,7 +40,7 @@ class Sound;
 class AudioManager : public Module
 {
 public:
-	AudioManager(bool enable);
+	AudioManager(Engine& engine, bool enable = true);
 
 	void Init() override;
 	void Update(sf::Time dt) override;
@@ -78,7 +78,7 @@ public:
 	/**
 	* \brief load a sf::sound and return
 	*/
-	static std::shared_ptr<sf::Sound> LoadSound(json& componentJson);
+	static std::shared_ptr<sf::Sound> LoadSound(Engine& engine, json& componentJson);
 	/**
 	* \brief set the buffer for the sound
 	*/

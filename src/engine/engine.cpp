@@ -58,12 +58,12 @@ void Engine::Init(bool windowless, bool editor)
 		Log::GetInstance()->Msg("Game Engine Configuration Successfull");
 	}
 
-	m_GraphicsManager = std::make_shared<GraphicsManager>(true, windowless);
-	m_AudioManager = std::make_shared<AudioManager>(true);
-	m_SceneManager = std::make_shared<SceneManager>(true);
-	m_InputManager = std::make_shared<InputManager>(true);
-	m_PythonManager = std::make_shared<PythonManager>(true);
-	m_Editor = std::make_shared<Editor>(editor);
+	m_GraphicsManager = std::make_shared<GraphicsManager>(*this, true, windowless);
+	m_AudioManager = std::make_shared<AudioManager>(*this, true);
+	m_SceneManager = std::make_shared<SceneManager>(*this, true);
+	m_InputManager = std::make_shared<InputManager>(*this, true);
+	m_PythonManager = std::make_shared<PythonManager>(*this, true);
+	m_Editor = std::make_shared<Editor>(*this, editor);
 	modules =
 	{
 		std::dynamic_pointer_cast<Module>(m_GraphicsManager),
@@ -76,11 +76,6 @@ void Engine::Init(bool windowless, bool editor)
 	
 	for (auto module : modules)
 	{	
-		{
-			std::ostringstream oss;
-			oss << "Init Module: " << module;
-			Log::GetInstance()->Msg(oss.str());
-		}
 		module->Init();
 	}
 
@@ -122,6 +117,11 @@ void Engine::Start()
 		m_Editor->Draw();
 		m_GraphicsManager->Display();
 	}
+
+}
+
+void Engine::Destroy()
+{
 	for (auto module : modules)
 	{
 		module->Destroy();
@@ -142,9 +142,11 @@ std::shared_ptr<Module> Engine::GetModule(EngineModule engineModule)
 	return modules[(int)engineModule];
 }
 
-Module::Module(bool enable=true) 
+Module::Module(Engine& engine, bool enable=true) :
+		m_Engine(engine)
 {
 	m_Enable = enable;
+
 }
 
 void Module::SetEnable(bool enable)
