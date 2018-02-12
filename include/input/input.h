@@ -26,10 +26,12 @@ SOFTWARE.
 #define SFGE_INPUT_H
 
 #include <engine/engine.h>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 namespace sfge
 {
-
+class Keyboard;
 /**
 * \brief Handles Input like the Keyboard, the Joystick or the Mouse
 */
@@ -37,6 +39,8 @@ class InputManager : public Module
 {
 public:
 	using Module::Module;
+
+	InputManager(Engine& engine, bool enable = true);
 	/**
 	 * \brief Initialize the Input Manager
 	 */
@@ -46,9 +50,42 @@ public:
 	 * \param dt Delta time since last frame
 	 */
 	void Update(sf::Time dt) override;
-
 	void Destroy() override;
+
+	std::shared_ptr<InputManager> GetInputManager();
+	std::shared_ptr<Keyboard> GetKeyboard();
+
 private:
+
+protected:
+	std::shared_ptr<InputManager> m_InputManager = nullptr;
+	std::shared_ptr<Keyboard> m_Keyboard = nullptr;
 };
+
+class Keyboard : public Singleton<Keyboard>
+{
+public:
+	bool IsKeyHeld(sf::Keyboard::Key);
+	bool IsKeyDown(sf::Keyboard::Key);
+	bool IsKeyUp(sf::Keyboard::Key);
+
+private:
+	bool keyPressed = false;
+};
+
+class Mouse
+{
+public:
+private:
+
+};
+
+class Controller
+{
+public:
+private:
+
+};
+
 }
 #endif

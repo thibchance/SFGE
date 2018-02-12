@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
-
 #include <input/input.h>
 #include <engine/log.h>
 #include <SFML/Window.hpp>
@@ -32,10 +30,26 @@ SOFTWARE.
 
 namespace sfge
 {
+InputManager::InputManager(Engine & engine, bool enable): Module(engine,enable)
+{
+	engine = m_Engine;
+	enable = m_Enable;
+}
+
+std::shared_ptr<InputManager> InputManager::GetInputManager()
+{
+	return m_InputManager;
+}
+
+std::shared_ptr<Keyboard> InputManager::GetKeyboard()
+{
+	return m_Keyboard;
+}
 
 void InputManager::Init()
 {
-
+	m_InputManager = std::make_shared<InputManager>(*this);
+	m_Keyboard = std::make_shared<Keyboard>();
 }
 
 void InputManager::Update(sf::Time dt)
@@ -45,6 +59,38 @@ void InputManager::Update(sf::Time dt)
 
 void InputManager::Destroy()
 {
+
+}
+
+bool Keyboard::IsKeyHeld(sf::Keyboard::Key key)
+{
+	while (sf::Keyboard::isKeyPressed(key))
+	{
+		keyPressed = true;
+		return true;
+	}
+	return false;
+}
+
+bool Keyboard::IsKeyDown(sf::Keyboard::Key key)
+{
+	if (sf::Keyboard::isKeyPressed(key) && !keyPressed)
+	{
+		std::cout << "key pressed";
+		keyPressed = true;
+	}	
+	IsKeyUp(key);
+	return false;
+}
+
+bool Keyboard::IsKeyUp(sf::Keyboard::Key key)
+{
+	if (!sf::Keyboard::isKeyPressed(key) && keyPressed)
+	{
+		std::cout << "key released";
+		keyPressed = false;
+	}
+	return false;
 }
 
 }

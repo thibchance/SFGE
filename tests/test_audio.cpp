@@ -2,9 +2,12 @@
 #include <iostream>
 #include<SFML/Graphics.hpp>
 #include <engine/engine.h>
+#include <input/input.h>
+
 
 int main()
 {
+	sfge::Keyboard keyboard;
 	//SOUND BUFFER TEST !!!
 	/*sf::Sound sound;
 	sfge::SoundBuffer buffer;
@@ -13,18 +16,18 @@ int main()
 	//SOUND BUFFER TEST !!!
 
 	//SOUND TEST !!!
-	/*sfge::Engine* engine = sfge::Engine::GetInstance();
-	engine->Init(true);
+	sfge::Engine engine;
+	engine.Init();
 	sfge::Sound sound;
 	json objectJson;
 	objectJson["path"] = "C:/Users/guill/Music/Laser.wav";
-	auto sound1 = sound.GetInstance()->LoadSound(objectJson);*/
+	auto sound1 = sound.GetInstance()->LoadSound(engine, objectJson);
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
-	sfge::MusicManager musicManager;
+	/*sfge::MusicManager musicManager;
 	auto goodMusic = musicManager.GetMusic(musicManager.LoadMusic("C:/Users/guill/Music/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg"));
-	goodMusic->play();
+	goodMusic->play();*/
 	//MUSIC TEST !!!
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
@@ -32,9 +35,9 @@ int main()
 	while (window.isOpen())
 	{
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		if (keyboard.IsKeyHeld(sf::Keyboard::Space))
 		{
-			//sound1->play();
+			sound1->play();
 		}
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
