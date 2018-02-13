@@ -31,7 +31,8 @@ SOFTWARE.
 
 namespace sfge
 {
-class Keyboard;
+class KeyboardManager;
+
 /**
 * \brief Handles Input like the Keyboard, the Joystick or the Mouse
 */
@@ -53,24 +54,30 @@ public:
 	void Destroy() override;
 
 	std::shared_ptr<InputManager> GetInputManager();
-	std::shared_ptr<Keyboard> GetKeyboard();
+	std::shared_ptr<KeyboardManager> GetKeyboardManager();
 
 private:
 
 protected:
 	std::shared_ptr<InputManager> m_InputManager = nullptr;
-	std::shared_ptr<Keyboard> m_Keyboard = nullptr;
+	std::shared_ptr<KeyboardManager> m_Keyboard = nullptr;
 };
 
-class Keyboard : public Singleton<Keyboard>
+struct KeyPressedStatus { bool previousKeyPressed; bool keyPressed; };
+
+class KeyboardManager
 {
 public:
+	void Update(sf::Time dt);
 	bool IsKeyHeld(sf::Keyboard::Key key);
 	bool IsKeyDown(sf::Keyboard::Key key);
 	bool IsKeyUp(sf::Keyboard::Key key);
 
+protected:
+	
+
 private:
-	bool keyPressed = false;
+	KeyPressedStatus keyPressedStatusArray[sf::Keyboard::Key::KeyCount] ={};
 };
 
 class Mouse

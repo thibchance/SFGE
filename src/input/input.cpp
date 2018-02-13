@@ -41,7 +41,7 @@ std::shared_ptr<InputManager> InputManager::GetInputManager()
 	return m_InputManager;
 }
 
-std::shared_ptr<Keyboard> InputManager::GetKeyboard()
+std::shared_ptr<KeyboardManager> InputManager::GetKeyboardManager()
 {
 	return m_Keyboard;
 }
@@ -49,7 +49,7 @@ std::shared_ptr<Keyboard> InputManager::GetKeyboard()
 void InputManager::Init()
 {
 	m_InputManager = std::make_shared<InputManager>(*this);
-	m_Keyboard = std::make_shared<Keyboard>();
+	m_Keyboard = std::make_shared<KeyboardManager>();
 }
 
 void InputManager::Update(sf::Time dt)
@@ -62,41 +62,28 @@ void InputManager::Destroy()
 
 }
 
-bool Keyboard::IsKeyHeld(sf::Keyboard::Key key)
+void KeyboardManager::Update(sf::Time dt)
 {
-	while (sf::Keyboard::isKeyPressed(key))
+	for (int i = 0; i < sf::Keyboard::KeyCount; i++)
 	{
-		keyPressed = true;
-		return true;
+		keyPressedStatusArray[i].previousKeyPressed = keyPressedStatusArray[i].keyPressed;
+		keyPressedStatusArray[i].keyPressed = sf::Keyboard::isKeyPressed((sf::Keyboard::Key)i);
 	}
-	return false;
 }
 
-bool Keyboard::IsKeyDown(sf::Keyboard::Key key)
-{
-	if (sf::Keyboard::isKeyPressed(key) && !keyPressed)
-	{
-		std::cout << "key pressed";
-		keyPressed = true;
-		return true;
-	}
-	else
-	{
-		IsKeyUp(key);
-		return false;
-	}
+bool KeyboardManager::IsKeyHeld(sf::Keyboard::Key key)
+{	
+	return keyPressedStatusArray[(int) key].keyPressed;
 }
-bool Keyboard::IsKeyUp(sf::Keyboard::Key key)
+
+bool KeyboardManager::IsKeyDown(sf::Keyboard::Key key)
 {
-	if (!sf::Keyboard::isKeyPressed(key) && keyPressed)
-	{
-		std::cout << "key pressed";
-		keyPressed = false;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return !keyPressedStatusArray[(int)key].previousKeyPressed && keyPressedStatusArray[(int)key].keyPressed;
 }
+bool KeyboardManager::IsKeyUp(sf::Keyboard::Key key)
+{
+	return !keyPressedStatusArray[(int)key].keyPressed && keyPressedStatusArray[(int)key].previousKeyPressed;
+}
+
+
 }
