@@ -65,9 +65,9 @@ protected:
 class Keyboard : public Singleton<Keyboard>
 {
 public:
-	bool IsKeyHeld(sf::Keyboard::Key);
-	bool IsKeyDown(sf::Keyboard::Key);
-	bool IsKeyUp(sf::Keyboard::Key);
+	bool IsKeyHeld(sf::Keyboard::Key key);
+	bool IsKeyDown(sf::Keyboard::Key key);
+	bool IsKeyUp(sf::Keyboard::Key key);
 
 private:
 	bool keyPressed = false;

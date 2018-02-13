@@ -78,19 +78,25 @@ bool Keyboard::IsKeyDown(sf::Keyboard::Key key)
 	{
 		std::cout << "key pressed";
 		keyPressed = true;
-	}	
-	IsKeyUp(key);
-	return false;
+		return true;
+	}
+	else
+	{
+		IsKeyUp(key);
+		return false;
+	}
 }
-
 bool Keyboard::IsKeyUp(sf::Keyboard::Key key)
 {
 	if (!sf::Keyboard::isKeyPressed(key) && keyPressed)
 	{
-		std::cout << "key released";
+		std::cout << "key pressed";
 		keyPressed = false;
+		return true;
 	}
-	return false;
+	else
+	{
+		return false;
+	}
 }
-
 }

@@ -21,7 +21,13 @@ int main()
 	sfge::Sound sound;
 	json objectJson;
 	objectJson["path"] = "C:/Users/guill/Music/Laser.wav";
+	json objectJson2;
+	objectJson2["path"] = "C:/Users/guill/Music/BasicGun.wav";
 	auto sound1 = sound.GetInstance()->LoadSound(engine, objectJson);
+	auto sound2 = sound.GetInstance()->LoadSound(engine, objectJson);
+	auto sound3 = sound.GetInstance()->LoadSound(engine, objectJson2);
+	auto sound4 = sound.GetInstance()->LoadSound(engine, objectJson2);
+
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
@@ -34,11 +40,6 @@ int main()
 	// run the program as long as the window is open
 	while (window.isOpen())
 	{
-		
-		if (keyboard.IsKeyHeld(sf::Keyboard::Space))
-		{
-			sound1->play();
-		}
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -47,7 +48,23 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-
+		if (keyboard.IsKeyDown(sf::Keyboard::Space))
+		{
+			std::cout << "sound play";
+			sound1->play();
+		}
+		if (keyboard.IsKeyDown(sf::Keyboard::A))
+		{
+			sound2->play();
+		}
+		if (keyboard.IsKeyDown(sf::Keyboard::S))
+		{
+			sound3->play();
+		}
+		if (keyboard.IsKeyDown(sf::Keyboard::D))
+		{
+			sound4->play();
+		}
 		// clear the window with black color
 		window.clear(sf::Color::Black);
 		// end the current frame
