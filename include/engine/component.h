@@ -35,9 +35,7 @@
 namespace sfge
 {
 class Transform;
-/**
- * \brief A GameObject Component that can be anything
- */
+
 
 enum class ComponentType
 {
@@ -48,6 +46,9 @@ enum class ComponentType
 	PYCOMPONENT
 };
 
+/**
+ * \brief A Component is attached to a GameObject
+ */
 class Component
 {
 public:
@@ -56,7 +57,14 @@ public:
 	 * \param parentGameObject The parent GameObject
 	 */
 	Component(GameObject& parentGameObject);
-
+	/**
+	 *
+	 * \brief Static method to laod a generic Component. It calls more concrete known component types
+	 * \param engine Game engine reference to use other modules
+	 * \param componentJson Content of the component such as types, values
+	 * \param gameObject GameObject that the Component is going to be attached to
+	 * \return A pointer to the Component created
+	 */
 	static std::shared_ptr<Component> LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject);
 	/**
 	* \brief Update the Component
@@ -64,9 +72,17 @@ public:
 	*/
 	virtual void Update(float dt) = 0;
 
+	GameObject& GetGameObject();
 protected:
-	GameObject& gameObject;
+
+	/**
+	 * \brief The pointer to the Transform Component of the GameObject
+	 */
 	std::shared_ptr<Transform> transform = nullptr;
+	/**
+		 * \brief The reference to the GameObject the Component is attached to
+		 */
+		GameObject& gameObject;
 
 };
 }

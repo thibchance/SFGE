@@ -64,8 +64,13 @@ std::shared_ptr<PyComponent> PyComponent::LoadPythonScript(Engine& engine, json&
 			//componentInstance.attr("update")(0.2f);
 			auto pyComponent = std::shared_ptr<PyComponent>(componentInstance.cast<PyComponent*>());
 			pyComponent->SetInstance(componentInstance);
+			componentInstance = py::none();
 			return pyComponent;
 		}
+	}
+	else
+	{
+		Log::GetInstance()->Error("No script path given for the PyComponent");
 	}
 	return nullptr;
 }

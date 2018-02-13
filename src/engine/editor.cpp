@@ -52,6 +52,7 @@ void Editor::Update(sf::Time dt)
 {
 	if (m_Enable)
 	{
+
 		ImGui::SFML::Update(*m_GraphicsManager->GetWindow(), dt);
 
 		ImGui::Begin("GameObjects");
@@ -85,7 +86,10 @@ void Editor::ProcessEvent(sf::Event& event)
 
 void Editor::Draw()
 {
-	ImGui::SFML::Render(*m_GraphicsManager->GetWindow());
+	if(m_Enable)
+	{
+		ImGui::SFML::Render(*m_GraphicsManager->GetWindow());
+	}
 }
 
 

@@ -25,6 +25,13 @@ bool CheckJsonParameter(const json& jsonObject, std::string parameterName, json:
 	return CheckJsonExists(jsonObject, parameterName) && jsonObject[parameterName].type() == expectedType;
 }
 
+bool CheckJsonNumber(const json& jsonObject, std::string parameterName)
+{
+	return CheckJsonParameter(jsonObject, parameterName, json::value_t::number_float) or
+		   CheckJsonParameter(jsonObject, parameterName, json::value_t::number_integer) or
+		   CheckJsonParameter(jsonObject, parameterName, json::value_t::number_unsigned);
+}
+
 std::unique_ptr<json> LoadJson(std::string jsonPath)
 {
 	std::ifstream jsonFile(jsonPath.c_str());

@@ -1,4 +1,22 @@
 
+class Timer:
+    def __init__(self, time, period):
+        pass
+    
+    def reset(self):
+        pass
+    
+    def update(self, dt):
+        pass
+    
+    def get_current(self):
+        pass
+    
+    def get_current_time(self):
+        pass
+    
+    def is_over(self):
+        pass
 
 class Module:
     def init(self):
@@ -24,15 +42,10 @@ class GraphicsManager(Module):
 
 
 class Engine:
-    instance = None
 
     def __init__(self):
         self.modules = []
-        instance = Engine.instance
-
-    @staticmethod
-    def get_instance():
-        return Engine.instance
+    
 
 
 class GameObject:
@@ -46,4 +59,6 @@ class Component:
     
     def update(self, dt):
         pass
+    
+engine = Engine()
     

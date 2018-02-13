@@ -38,8 +38,17 @@ namespace sfge
 */
 struct Configuration
 {
+	/**
+	 * \brief The screen resolution used for the editor
+	 */
 	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
+	/**
+	 * \brief The limited framerate
+	 */
 	unsigned int maxFramerate = 60;
+	/**
+	 * \brief The list of Scene that can be loaded by the SceneManager
+	 */
 	std::list<std::string> scenesList;
 	/**
 	* \brief Used to load the overall Configuration of the GameEngine at start

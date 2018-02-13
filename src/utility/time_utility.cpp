@@ -21,48 +21,70 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-#ifndef SFGE_SINGLETON_H
-#define SFGE_SINGLETON_H
+
+#include <utility/time_utility.h>
 
 namespace sfge
 {
-/**
-* \brief Singleton template class used by the modules of the Engine
-*/
-template<typename T>
-class Singleton
+
+Timer::Timer(float time, float period):
+	m_Time(time), m_Period(period)
 {
-protected:
-	/* Here will be the instance stored. */
-	static T* instance;
-
-	/**
-	* \brief Private Constructor to prevent instancing.
-	*/
-	Singleton() {};
-	/**
-	* \brief Private destructor
-	*/
-	virtual ~Singleton() {};
-
-public:
-	/**
-	* \brief Static access method.
-	*/
-	static T* GetInstance()
-	{
-		{
-			if (instance == nullptr)
-			{
-				instance = new T();
-			}
-
-			return instance;
-		}
-	}
-};
-
-template<typename T>
-T* Singleton<T>::instance = nullptr;
 }
-#endif
+
+void Timer::Update(float dt)
+{
+	if(m_Time>0.0f)
+	{
+		m_Time -= dt;
+	}
+}
+bool Timer::IsOver()
+{
+	return !(m_Time > 0.0f);
+}
+
+void Timer::Reset()
+{
+	if(m_Time < 0.0f)
+	{
+		m_Time = m_Period + m_Time;
+	}
+	else
+	{
+		m_Time = m_Period;
+	}
+}
+
+float Timer::GetCurrent()
+{
+	return GetCurrentTime()/m_Period;
+}
+
+float Timer::GetCurrentTime()
+{
+	return m_Period-m_Time;
+}
+
+float Timer::GetPeriod() const
+{
+	return m_Period;
+}
+
+void Timer::SetPeriod(float period)
+{
+	m_Period = period;
+}
+
+float Timer::GetTime() const
+{
+	return m_Time;
+}
+
+void Timer::SetTime(float time)
+{
+	m_Time = time;
+}
+}
+
+

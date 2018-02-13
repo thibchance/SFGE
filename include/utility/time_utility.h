@@ -21,48 +21,33 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-#ifndef SFGE_SINGLETON_H
-#define SFGE_SINGLETON_H
+
+#ifndef SFGE_TIME_UTILITY_H_
+#define SFGE_TIME_UTILITY_H_
 
 namespace sfge
 {
-/**
-* \brief Singleton template class used by the modules of the Engine
-*/
-template<typename T>
-class Singleton
+
+class Timer
 {
-protected:
-	/* Here will be the instance stored. */
-	static T* instance;
-
-	/**
-	* \brief Private Constructor to prevent instancing.
-	*/
-	Singleton() {};
-	/**
-	* \brief Private destructor
-	*/
-	virtual ~Singleton() {};
-
 public:
-	/**
-	* \brief Static access method.
-	*/
-	static T* GetInstance()
-	{
-		{
-			if (instance == nullptr)
-			{
-				instance = new T();
-			}
+	Timer(float time, float period);
+	void Update(float dt);
+	bool IsOver();
+	void Reset();
 
-			return instance;
-		}
-	}
+	float GetCurrent();
+	float GetCurrentTime();
+	float GetPeriod() const;
+	void SetPeriod(float period);
+	float GetTime() const;
+	void SetTime(float time);
+
+
+private:
+	float m_Time;
+	float m_Period;
 };
-
-template<typename T>
-T* Singleton<T>::instance = nullptr;
 }
-#endif
+
+#endif /* INCLUDE_UTILITY_TIME_UTILITY_H_ */

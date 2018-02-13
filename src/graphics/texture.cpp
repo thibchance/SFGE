@@ -38,7 +38,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 	{
 		std::ostringstream oss;
 		oss << "Loading texture " << filename;
-		Log::GetInstance()->Error(oss.str());
+		Log::GetInstance()->Msg(oss.str());
 	}
 	if (nameIdsMap.find(filename) != nameIdsMap.end())
 	{

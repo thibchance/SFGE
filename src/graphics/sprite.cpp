@@ -59,10 +59,13 @@ std::shared_ptr<Sprite> Sprite::LoadSprite(Engine& engine, json& componentJson, 
 	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
 		engine.GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
 	auto spriteManager = graphicsManager->GetSpriteManager();
+
+
 	if (spriteManager != nullptr)
 	{
 		auto newSprite = std::make_shared<Sprite>(gameObject);
 		spriteManager->LoadSprite(componentJson, newSprite);
+
 		//To Ensure that we have a transform
 		gameObject.GetTransform();
 		return newSprite;
@@ -90,6 +93,7 @@ void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newS
 {
 	if (newSprite == nullptr)
 		return;
+
 	if(CheckJsonParameter(componentJson, "path", json::value_t::string))
 	{
 		std::string path = componentJson["path"].get<std::string>();

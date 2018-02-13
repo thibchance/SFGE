@@ -29,6 +29,8 @@
 #include <graphics/sprite.h>
 #include <python/python_engine.h>
 
+#include <memory>
+
 namespace sfge
 {
 void GameObject::Update(sf::Time dt)
@@ -59,10 +61,28 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gam
 
 	if (CheckJsonParameter(gameObjectJson, "components", json::value_t::array))
 	{
-		for (json componentJson : gameObjectJson["components"])
+		for (json& componentJson : gameObjectJson["components"])
 		{
-			Component::LoadComponent(engine, componentJson, *gameObject);
+			auto newComponent = Component::LoadComponent(engine, componentJson, *gameObject);
+			if(newComponent != nullptr)
+			{
+				gameObject->m_Components.push_back(newComponent);
+			}
+			else
+			{
+				std::ostringstream oss;
+				oss << "Component from: "<<componentJson<<" is nullptr";
+				Log::GetInstance()->Error(oss.str());
+			}
 		}
+	}
+
+	//if there is no transform, it is always at the beginning of the list
+	if(gameObject->m_Transform == nullptr)
+	{
+		auto transform = std::make_shared<Transform>(*gameObject);
+		gameObject->m_Components.push_front(transform);
+		gameObject->m_Transform = transform;
 	}
 	return gameObject;
 }
@@ -72,18 +92,31 @@ std::shared_ptr<Transform> GameObject::GetTransform()
 	if (m_Transform == nullptr)
 	{
 		m_Transform = std::make_shared<Transform>(*this);
-		m_Components.insert(m_Components.begin(),m_Transform);
+		m_Components.push_front(m_Transform);
 
 	}
 	return m_Transform;
 }
 
-void GameObject::SetTransform(std::shared_ptr<Transform> newTransform)
+void GameObject::SetTransform(std::shared_ptr<Transform> transform)
 {
-	m_Transform = newTransform;
+	m_Transform = transform;
+}
+template <typename T>
+std::shared_ptr<T> GameObject::GetComponent()
+{
+	for(auto component : m_Components)
+	{
+		auto castComponent = std::dynamic_pointer_cast<T>(component);
+		if(castComponent != nullptr)
+		{
+			return castComponent;
+		}
+	}
+	return nullptr;
 }
 
-std::string & GameObject::GetName()
+const std::string & GameObject::GetName()
 {
 	return m_Name;
 }

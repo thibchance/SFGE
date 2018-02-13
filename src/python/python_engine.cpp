@@ -24,11 +24,14 @@
 #include <engine/scene.h>
 #include <engine/game_object.h>
 #include <engine/component.h>
+#include <engine/transform.h>
 #include <engine/log.h>
 #include <python/python_engine.h>
 #include <python/pycomponent.h>
 #include <utility/file_utility.h>
+#include <utility/time_utility.h>
 
+#include <pybind11/operators.h>
 
 
 
@@ -37,12 +40,52 @@ namespace sfge
 
 PYBIND11_EMBEDDED_MODULE(SFGE, m)
 {
+	py::class_<Engine> engine(m, "Engine");
+
+	py::class_<Module> module(m, "Module");
+
+	py::class_<SceneManager> sceneManager(m, "SceneManager");
+
 	py::class_<Scene> scene(m, "Scene");
+
 	py::class_<GameObject> game_object(m, "GameObject");
+	game_object
+		.def(py::init<>())
+		.def_property_readonly("transform", &GameObject::GetTransform);
+
 	py::class_<Component, PyComponent> component(m, "Component");
 	component
 		.def(py::init<GameObject&>())
-		.def("update", &Component::Update);
+		.def("update", &Component::Update)
+		.def_property_readonly("game_object", &Component::GetGameObject);
+
+	py::class_<Transform> transform(m, "Transform");
+	transform
+		.def("get_euler_angle", &Transform::GetEulerAngle)
+		.def("set_euler_angle", &Transform::SetEulerAngle)
+		.def("get_position", &Transform::GetPosition)
+		.def("set_position", &Transform::SetPosition)
+		.def("get_scale", &Transform::GetScale)
+		.def("set_scale",&Transform::SetScale);
+
+	//Utility
+	py::class_<Timer> timer(m, "Timer");
+	timer
+		.def(py::init<float, float>())
+		.def("update", &Timer::Update)
+		.def("reset", &Timer::Reset)
+		.def("get_current", &Timer::GetCurrent)
+		.def("get_current_time", &Timer::GetCurrentTime)
+		.def("is_over", &Timer::IsOver);
+
+	py::class_<sf::Vector2f> vector2f(m, "Vector2f");
+	vector2f
+		.def(py::init<float, float>())
+		.def(py::self + py::self)
+		.def(py::self += py::self)
+		.def(py::self - py::self)
+		.def(py::self -= py::self)
+		.def(py::self * float());
 }
 
 

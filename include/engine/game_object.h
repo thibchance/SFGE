@@ -42,6 +42,7 @@ class Transform;
 
 /**
 * \brief The basic Game Object handler containing a list of Components
+* it always contains a Transform component
 */
 class GameObject
 {
@@ -57,15 +58,30 @@ public:
 	* \return the heap GameObject that will need to be destroyed
 	*/
 	static std::shared_ptr<GameObject> LoadGameObject(Engine& engine, json& gameObjectJson);
-
+	/**
+	 * \brief Get the Transform attached to the GameObject
+	 * \return Pointer to Transform
+	 */
 	std::shared_ptr<Transform> GetTransform();
 
-	void SetTransform(std::shared_ptr<Transform> newTransform);
+	void SetTransform(std::shared_ptr<Transform> transform);
 
-	std::string& GetName();
+	/**
+	 * \brief Get The Component of type given the T by template
+	 * \return Return the first Component of type T that is attached to the GameObject
+	 */
+	template <class T>
+	std::shared_ptr<T> GetComponent();
+
+	/**
+	 * \brief Get the name of the GameObject in the Scene
+	 * \return Return the const reference of the string name
+	 */
+	const std::string& GetName();
+
+
 protected:
 	friend class Component;
-	//if there is a transform, it is always at the beginning of the list
 	std::list<std::shared_ptr<Component>> m_Components;
 	std::string m_Name;
 	std::shared_ptr<Transform> m_Transform = nullptr;
