@@ -53,7 +53,7 @@ public:
 	
 	void Draw(sf::RenderWindow& window);
 
-	static Sprite* LoadSprite(Engine& engine, json& componentJson, GameObject& gameObject);
+	static Sprite* LoadSprite(Engine& engine, json& componentJson, GameObject* gameObject);
 
 	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
 

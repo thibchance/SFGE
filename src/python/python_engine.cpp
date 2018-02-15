@@ -48,17 +48,17 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 
 	py::class_<Scene> scene(m, "Scene");
 
-	py::class_<GameObject> game_object(m, "GameObject");
+	py::class_<GameObject, std::shared_ptr<GameObject>> game_object(m, "GameObject");
 	game_object
-		.def(py::init<>(), py::return_value_policy::reference)
+		.def(py::init<>())
 		.def_property_readonly("transform", &GameObject::GetTransform, py::return_value_policy::reference);
 
 	py::class_<Component, PyComponent> component(m, "Component");
 	component
-		.def(py::init<GameObject&>())
+		.def(py::init<GameObject*>(), py::return_value_policy::reference)
 		.def("init", &Component::Init)
 		.def("update", &Component::Update)
-		.def_property_readonly("game_object", &Component::GetGameObject, py::return_value_policy::automatic_reference);
+		.def_property_readonly("game_object", &Component::GetGameObject, py::return_value_policy::reference);
 
 	py::class_<Transform, Component> transform(m, "Transform");
 	transform
@@ -113,10 +113,10 @@ void PythonManager::Destroy()
 	py::finalize_interpreter();
 }
 
-unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObject& gameObject)
+unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObject* gameObject)
 {
 	fs::path p = script_path;
-	std::string module_name = p.filename().replace_extension("");
+	std::string module_name = p.filename().replace_extension("").string();
 	std::string class_name = module2class(module_name);
 	if(fs::is_regular_file(p))
 	{

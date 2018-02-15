@@ -46,9 +46,9 @@ void GameObject::Update(sf::Time dt)
 	}
 }
 
-std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
+GameObject* GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
 {
-	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
+	GameObject* gameObject = new GameObject();
 	if (CheckJsonParameter(gameObjectJson, "name", json::value_t::string))
 	{
 		gameObject->m_Name = gameObjectJson["name"].get<std::string>();
@@ -68,7 +68,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gam
 	{
 		for (json& componentJson : gameObjectJson["components"])
 		{
-			auto newComponent = Component::LoadComponent(engine, componentJson, *gameObject);
+			auto newComponent = Component::LoadComponent(engine, componentJson, gameObject);
 			if(newComponent != nullptr)
 			{
 				gameObject->m_Components.push_back(newComponent);
@@ -85,9 +85,9 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gam
 	//if there is no transform, it is always at the beginning of the list
 	if(gameObject->m_Transform == nullptr)
 	{
-		auto transform = new Transform(*gameObject);
+		auto transform = new Transform(gameObject);
 		gameObject->m_Components.push_front(transform);
-		gameObject->m_Transform = transform;
+		gameObject->SetTransform(transform);
 	}
 	return gameObject;
 }
@@ -115,25 +115,33 @@ T* GameObject::GetComponent()
 	return nullptr;
 }
 
+GameObject::GameObject()
+{
+}
+
 GameObject::~GameObject()
 {
-	/*for(auto c_itr = m_Components.begin(); c_itr != m_Components.end(); c_itr++)
+	while (!m_Components.empty())
 	{
-		if(dynamic_cast<PyComponent*>((*c_itr)) != nullptr)
+		if (dynamic_cast<PyComponent*>(m_Components.front()) == nullptr)
 		{
-
+			delete m_Components.front();
 		}
-		else
-		{
-			delete(*c_itr);
-		}
-	}*/
-	Log::GetInstance()->Error("DESTROY GAME OBJECT");
+		m_Components.pop_front();
+	}
+	{
+		Log::GetInstance()->Error("DESTROY GAME OBJECT "+m_Name);
+	}
 }
 
 const std::string & GameObject::GetName()
 {
 	return m_Name;
+}
+
+void GameObject::SetName(std::string name)
+{
+	m_Name = name;
 }
 
 }

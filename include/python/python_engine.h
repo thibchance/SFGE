@@ -59,7 +59,7 @@ public:
 	 * \param gameObject
 	 * \return scriptInstanceId The id of the loaded instance
 	 */
-	unsigned int LoadPyComponentFile(std::string script_path, GameObject& gameObject);
+	unsigned int LoadPyComponentFile(std::string script_path, GameObject* gameObject);
 	/**
 	 * \brief Get a python component object
 	 * \param scriptId

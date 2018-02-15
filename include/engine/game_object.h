@@ -47,6 +47,7 @@ class Transform;
 class GameObject
 {
 public:
+	GameObject();
 	~GameObject();
 	/**
 	* \brief Update the GameObject and its Components
@@ -58,7 +59,7 @@ public:
 	* \param gameObjectJson the sub json associated with the Game Object
 	* \return the heap GameObject that will need to be destroyed
 	*/
-	static std::shared_ptr<GameObject> LoadGameObject(Engine& engine, json& gameObjectJson);
+	static GameObject* LoadGameObject(Engine& engine, json& gameObjectJson);
 	/**
 	 * \brief Get the Transform attached to the GameObject
 	 * \return Pointer to Transform
@@ -80,11 +81,12 @@ public:
 	 */
 	const std::string& GetName();
 
+	void SetName(std::string name);
 
 protected:
 	friend class Component;
 	std::list<Component*> m_Components;
-	std::string m_Name;
+	std::string m_Name = "";
 	Transform* m_Transform = nullptr;
 };
 }

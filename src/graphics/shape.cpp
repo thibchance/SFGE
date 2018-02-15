@@ -30,7 +30,7 @@ SOFTWARE.
 namespace sfge
 {
 
-Shape::Shape(GameObject& gameObject, sf::Vector2f position):
+Shape::Shape(GameObject* gameObject, sf::Vector2f position):
 		Component(gameObject)
 {
 
@@ -52,7 +52,7 @@ void Shape::Init()
 {
 }
 
-Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject& gameObject)
+Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	Shape* shape = nullptr;
 	sf::Vector2f position;
@@ -90,7 +90,7 @@ Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject& gameObj
 	return shape;
 }
 
-Circle::Circle(GameObject& gameObject, sf::Vector2f position, float radius):
+Circle::Circle(GameObject* gameObject, sf::Vector2f position, float radius):
 		Shape(gameObject, position)
 {
 	m_Radius = radius;
@@ -100,7 +100,7 @@ Circle::Circle(GameObject& gameObject, sf::Vector2f position, float radius):
 }
 
 
-Circle* Circle::LoadCircle(json& componentJson, GameObject& gameObject, sf::Vector2f position)
+Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
 {
 	float radius = 1.0f;
 
@@ -112,7 +112,7 @@ Circle* Circle::LoadCircle(json& componentJson, GameObject& gameObject, sf::Vect
 	return new Circle(gameObject, position, radius);
 
 }
-Rectangle::Rectangle(GameObject& gameObject, sf::Vector2f position, sf::Vector2f size):
+Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f position, sf::Vector2f size):
 		Shape(gameObject, position)
 {
 	m_Size = size;
@@ -121,7 +121,7 @@ Rectangle::Rectangle(GameObject& gameObject, sf::Vector2f position, sf::Vector2f
 	m_Shape->setPosition(position);
 }
 
-Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject& gameObject, sf::Vector2f position)
+Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
 {
 
 	sf::Vector2f size;

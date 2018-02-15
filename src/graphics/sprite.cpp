@@ -37,9 +37,9 @@ void Sprite::Update(float dt)
 }
 void Sprite::Draw(sf::RenderWindow& window)
 {
-	sprite.setPosition(gameObject.GetTransform()->GetPosition());
-	sprite.setScale(gameObject.GetTransform()->GetScale());
-	sprite.setRotation(gameObject.GetTransform()->GetEulerAngle());
+	sprite.setPosition(gameObject->GetTransform()->GetPosition());
+	sprite.setScale(gameObject->GetTransform()->GetScale());
+	sprite.setRotation(gameObject->GetTransform()->GetEulerAngle());
 	window.draw(sprite);
 }
 void Sprite::SetTexture(std::shared_ptr<sf::Texture> newTexture)
@@ -59,7 +59,7 @@ bool Sprite::SpriteLayerComp(Sprite* s1, Sprite* s2)
 {
 	return s1->layer>s2->layer;
 }
-Sprite* Sprite::LoadSprite(Engine& engine, json& componentJson, GameObject& gameObject)
+Sprite* Sprite::LoadSprite(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
 		engine.GetModule(sfge::EngineModule::GRAPHICS_MANAGER));

@@ -20,7 +20,7 @@ namespace sfge
 
 
 
-Transform* Transform::LoadTransform(json& componentJson, GameObject& gameObject)
+Transform* Transform::LoadTransform(json& componentJson, GameObject* gameObject)
 {
 	Transform* newTransform = new Transform(gameObject);
 	Log::GetInstance()->Msg("Loading Transform");

@@ -45,7 +45,7 @@ int main()
 	spriteJson["type"] = (int)sfge::ComponentType::SPRITE;
 	std::cout << spriteJson["path"]<<"\n";
 	sfge::GameObject gameObject;
-	auto sprite = dynamic_cast<sfge::Sprite*>(sfge::Sprite::LoadComponent(engine, spriteJson, gameObject));
+	auto sprite = dynamic_cast<sfge::Sprite*>(sfge::Sprite::LoadComponent(engine, spriteJson, &gameObject));
 
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Sprite");

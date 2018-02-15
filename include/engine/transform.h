@@ -19,7 +19,7 @@ class Transform : public Component
 public:
 	using Component::Component;
 	~Transform();
-	static Transform* LoadTransform(json& componentJson, GameObject& gameObject);
+	static Transform* LoadTransform(json& componentJson, GameObject* gameObject);
 	void Init() override;
 	void Update(float dt) override;
 

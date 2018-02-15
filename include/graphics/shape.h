@@ -47,11 +47,11 @@ enum class ShapeType
 class Shape : public Component
 {
 public:
-	Shape(GameObject& gameObject, sf::Vector2f position);
+	Shape(GameObject* gameObject, sf::Vector2f position);
 	void Init() override;
 	void Update(float time) override;
 	void Draw(sf::RenderWindow& window);
-	static Shape* LoadShape(Engine& engine, json& componentJson, GameObject& gameObject);
+	static Shape* LoadShape(Engine& engine, json& componentJson, GameObject* gameObject);
 protected:
 	sf::Vector2f m_Position;
 	std::shared_ptr<sf::Shape> m_Shape = nullptr;
@@ -60,8 +60,8 @@ protected:
 class Circle : public Shape
 {
 public:
-	Circle(GameObject& gameObject, sf::Vector2f position, float radius);
-	static Circle* LoadCircle(json& componentJson, GameObject& gameObject, sf::Vector2f position);
+	Circle(GameObject* gameObject, sf::Vector2f position, float radius);
+	static Circle* LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f position);
 protected:
 	float m_Radius;
 };
@@ -69,9 +69,9 @@ protected:
 class Rectangle : public Shape
 {
 public:
-	Rectangle(GameObject& gameObject, sf::Vector2f position, sf::Vector2f size);
+	Rectangle(GameObject* gameObject, sf::Vector2f position, sf::Vector2f size);
 
-	static Rectangle* LoadRectangle(json& componentJson, GameObject& gameObject, sf::Vector2f position);
+	static Rectangle* LoadRectangle(json& componentJson, GameObject* gameObject, sf::Vector2f position);
 protected:
 	sf::Vector2f m_Size;
 

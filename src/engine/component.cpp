@@ -32,13 +32,13 @@
 namespace sfge
 {
 
-Component::Component(GameObject& parentObject) :
-	gameObject(parentObject)
+Component::Component(GameObject* gameObject) :
+	gameObject(gameObject)
 {
 
 }
 
-Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject)
+Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	Component* component = nullptr;
 	if(CheckJsonParameter(componentJson, "name", json::value_t::string))
@@ -54,8 +54,8 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 		switch(componentType)
 		{
 		case ComponentType::TRANSFORM:
-			gameObject.SetTransform(Transform::LoadTransform(componentJson, gameObject));
-			component = gameObject.GetTransform();
+			gameObject->SetTransform(Transform::LoadTransform(componentJson, gameObject));
+			component = gameObject->GetTransform();
 			break;
 		case ComponentType::SPRITE:
 			component = Sprite::LoadSprite(engine, componentJson, gameObject);
@@ -72,7 +72,7 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 		if (component != nullptr)
 		{
 			component->Init();
-			gameObject.m_Components.push_back(component);
+			gameObject->m_Components.push_back(component);
 		}
 		else
 		{
@@ -86,7 +86,7 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 	return component;
 }
 
-GameObject& Component::GetGameObject()
+GameObject* Component::GetGameObject()
 {
 	return gameObject;
 }

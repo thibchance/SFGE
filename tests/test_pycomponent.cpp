@@ -28,6 +28,7 @@ SOFTWARE.
 #include <engine/game_object.h>
 #include <utility/json_utility.h>
 #include <memory>
+#include "test_pycomponent.h"
 
 int main()
 {
@@ -38,18 +39,19 @@ int main()
 			engine.GetModule(sfge::EngineModule::PYTHON_MANAGER));
 
 	sfge::GameObject* gameObject = new sfge::GameObject();
+	gameObject->SetName("PyGameObject");
 	{
 		json componentJson;
 
 		componentJson["type"] = (int)sfge::ComponentType::TRANSFORM;
-		sfge::Component::LoadComponent(engine, componentJson, *gameObject);
+		sfge::Component::LoadComponent(engine, componentJson, gameObject);
 
 		componentJson["type"] = (int)sfge::ComponentType::PYCOMPONENT;
 		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, *gameObject);
+		sfge::Component::LoadComponent(engine, componentJson, gameObject);
 
 		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, *gameObject);
+		sfge::Component::LoadComponent(engine, componentJson, gameObject);
 
 
 		for(int i = 0; i < 10; i++)

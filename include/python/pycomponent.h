@@ -40,12 +40,11 @@ class PyComponent : public Component
 {
 public:
 	using Component::Component;
-
-	virtual ~PyComponent();
+	~PyComponent();
 
 	void Init() override;
 	void Update(float dt) override;
-	static PyComponent* LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject);
+	static PyComponent* LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject);
 
 	unsigned int GetInstanceId() const;
 	void SetInstanceId(unsigned int instanceId = 0U);

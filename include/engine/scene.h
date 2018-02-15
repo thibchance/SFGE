@@ -99,10 +99,10 @@ public:
 	*/
 	~Scene();
 
-	std::list<std::shared_ptr<GameObject>>& GetGameObjects();
+	std::list<GameObject*>& GetGameObjects();
 protected:
 	std::string name;
-	std::list<std::shared_ptr<GameObject>> m_GameObjects;
+	std::list<GameObject*> m_GameObjects;
 	friend class SceneManager;
 };
 }

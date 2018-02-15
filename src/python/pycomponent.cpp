@@ -46,7 +46,7 @@ void PyComponent::Init()
 	catch(std::runtime_error& e)
 	{
 		std::stringstream oss;
-		oss << "Python error on PyComponent Update\n"<<e.what();
+		oss << "Python error on PyComponent Init\n"<<e.what();
 		Log::GetInstance()->Error(oss.str());
 	}
 }
@@ -76,6 +76,7 @@ void PyComponent::Update(float dt)
 	}
 }
 
+
 PyComponent::~PyComponent()
 {
 	Log::GetInstance()->Msg("Destroying PyComponent");
@@ -83,7 +84,7 @@ PyComponent::~PyComponent()
 }
 
 
-PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject)
+PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	auto pythonManager = std::dynamic_pointer_cast<PythonManager>(engine.GetModule(EngineModule::PYTHON_MANAGER));
 	if(CheckJsonParameter(componentJson, "script_path", json::value_t::string))

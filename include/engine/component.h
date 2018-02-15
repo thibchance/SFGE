@@ -56,7 +56,7 @@ public:
 	 * \brief Constructor of Component takes the parent GameObject as reference
 	 * \param gameObject The parent GameObject
 	 */
-	Component(GameObject& gameObject);
+	Component(GameObject* gameObject);
 
 	virtual ~Component() { }
 	/**
@@ -67,7 +67,7 @@ public:
 	 * \param gameObject GameObject that the Component is going to be attached to
 	 * \return A pointer to the Component created
 	 */
-	static Component* LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject);
+	static Component* LoadComponent(Engine& engine, json& componentJson, GameObject* gameObject);
 	virtual void Init() = 0;
 	/**
 	* \brief Update the Component
@@ -75,7 +75,7 @@ public:
 	*/
 	virtual void Update(float dt) = 0;
 
-	GameObject& GetGameObject();
+	GameObject* GetGameObject();
 protected:
 
 	/**
@@ -83,9 +83,9 @@ protected:
 	 */
 	std::shared_ptr<Transform> transform = nullptr;
 	/**
-		 * \brief The reference to the GameObject the Component is attached to
-		 */
-		GameObject& gameObject;
+	* \brief The reference to the GameObject the Component is attached to
+	*/
+	GameObject* gameObject;
 
 };
 }
