@@ -99,6 +99,7 @@ PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, 
 			}
 			auto pyComponent = pythonManager->GetPyComponent(componentInstanceId);
 			pyComponent->SetInstanceId(componentInstanceId);
+			
 			return pyComponent;
 
 		}

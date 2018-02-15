@@ -58,7 +58,8 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def(py::init<GameObject*>(), py::return_value_policy::reference)
 		.def("init", &Component::Init)
 		.def("update", &Component::Update)
-		.def_property_readonly("game_object", &Component::GetGameObject, py::return_value_policy::reference);
+		.def_property_readonly("game_object", &Component::GetGameObject, py::return_value_policy::reference)
+		.def_property_readonly("name", &Component::GetName, py::return_value_policy::reference);
 
 	py::class_<Transform, Component> transform(m, "Transform");
 	transform
@@ -138,7 +139,8 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObj
 				}
 				try
 				{
-					pythonInstanceMap[incrementalInstanceId] = pythonModuleObjectMap[scriptId].attr(class_name.c_str())(gameObject);
+					pythonInstanceMap[incrementalInstanceId] = pythonModuleObjectMap[scriptId]
+						.attr(class_name.c_str())(gameObject);
 					incrementalInstanceId++;
 					return incrementalInstanceId-1;
 				}

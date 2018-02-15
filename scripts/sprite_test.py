@@ -3,9 +3,6 @@ import sys
 
 
 class SpriteTest(Component):
-    def __init__(self, game_object):
-        Component.__init__(self, game_object)
-        print("__init__ SpriteTest with gameObject: "+str(game_object))
 
     def init(self):
         #print("Init SpriteTest with "+str(self.game_object))

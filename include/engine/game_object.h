@@ -76,6 +76,11 @@ public:
 	T* GetComponent();
 
 	/**
+	* \brief Return the reference to all the Component in the GameObject
+	*/
+	std::list<Component*>& GetComponents();
+
+	/**
 	 * \brief Get the name of the GameObject in the Scene
 	 * \return Return the const reference of the string name
 	 */

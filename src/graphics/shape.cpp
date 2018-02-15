@@ -90,8 +90,8 @@ Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObj
 	return shape;
 }
 
-Circle::Circle(GameObject* gameObject, sf::Vector2f position, float radius):
-		Shape(gameObject, position)
+Circle::Circle(GameObject* gameObject,  sf::Vector2f position, float radius):
+		Shape(gameObject,  position)
 {
 	m_Radius = radius;
 	m_Shape = std::make_shared<sf::CircleShape>(radius);
@@ -104,7 +104,7 @@ Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vect
 {
 	float radius = 1.0f;
 
-	if(CheckJsonParameter(componentJson, "radius", json::value_t::number_float))
+	if(CheckJsonNumber(componentJson, "radius"))
 	{
 		radius = componentJson["radius"];
 	}
@@ -132,7 +132,7 @@ Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject,
 			size = sf::Vector2f(componentJson["size"][0], componentJson["size"][1]);
 		}
 	}
-	return new Rectangle(gameObject, position, size);
+	return new Rectangle(gameObject,  position, size);
 }
 
 

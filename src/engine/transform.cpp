@@ -22,6 +22,11 @@ namespace sfge
 
 Transform* Transform::LoadTransform(json& componentJson, GameObject* gameObject)
 {
+	if (gameObject->GetTransform() != nullptr)
+	{
+		Log::GetInstance()->Error("[LOADING ERROR] GameObject " + gameObject->GetName() + " already has a Transform");
+		return nullptr;
+	}
 	Transform* newTransform = new Transform(gameObject);
 	Log::GetInstance()->Msg("Loading Transform");
 	if (CheckJsonParameter(componentJson, "position", json::value_t::array))

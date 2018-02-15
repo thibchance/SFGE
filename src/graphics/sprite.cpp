@@ -37,9 +37,9 @@ void Sprite::Update(float dt)
 }
 void Sprite::Draw(sf::RenderWindow& window)
 {
-	sprite.setPosition(gameObject->GetTransform()->GetPosition());
-	sprite.setScale(gameObject->GetTransform()->GetScale());
-	sprite.setRotation(gameObject->GetTransform()->GetEulerAngle());
+	sprite.setPosition(m_GameObject->GetTransform()->GetPosition());
+	sprite.setScale(m_GameObject->GetTransform()->GetScale());
+	sprite.setRotation(m_GameObject->GetTransform()->GetEulerAngle());
 	window.draw(sprite);
 }
 void Sprite::SetTexture(std::shared_ptr<sf::Texture> newTexture)

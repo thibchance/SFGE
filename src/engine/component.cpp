@@ -32,21 +32,33 @@
 namespace sfge
 {
 
-Component::Component(GameObject* gameObject) :
-	gameObject(gameObject)
-{
 
+unsigned int Component::incrementalComponentId = 1U;
+
+Component::Component(GameObject* gameObject) :
+	m_GameObject(gameObject)
+{
 }
 
 Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	Component* component = nullptr;
+	std::string componentName = "";
+	unsigned int componentId = incrementalComponentId;
 	if(CheckJsonParameter(componentJson, "name", json::value_t::string))
 	{
 		std::ostringstream oss;
-		oss << "Loading component: "<<componentJson["name"];
-		Log::GetInstance()->Msg(oss.str());
+		oss << componentJson["name"];
+		componentName = oss.str();
 	}
+	else
+	{
+		std::ostringstream oss;
+		oss << "Component " << componentId;
+		componentName = oss.str();
+	}
+
+	Log::GetInstance()->Msg("Loading component: " + componentName);
 	if (CheckJsonNumber(componentJson, "type"))
 	{
 		ComponentType componentType = (ComponentType)componentJson["type"];
@@ -54,14 +66,18 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 		switch(componentType)
 		{
 		case ComponentType::TRANSFORM:
-			gameObject->SetTransform(Transform::LoadTransform(componentJson, gameObject));
-			component = gameObject->GetTransform();
+			component = Transform::LoadTransform(componentJson, gameObject);
+			if (component != nullptr)
+			{
+				componentName = "Transform";
+				gameObject->SetTransform(dynamic_cast<Transform*>(component));
+			}
 			break;
 		case ComponentType::SPRITE:
-			component = Sprite::LoadSprite(engine, componentJson, gameObject);
+			component = Sprite::LoadSprite(engine,  componentJson, gameObject);
 			break;
 		case ComponentType::PYCOMPONENT:
-			component = PyComponent::LoadPythonScript(engine, componentJson, gameObject);
+			component = PyComponent::LoadPythonScript(engine,  componentJson, gameObject);
 			break;
 		case ComponentType::SHAPE:
 			component = Shape::LoadShape(engine, componentJson, gameObject);
@@ -71,8 +87,12 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 		}
 		if (component != nullptr)
 		{
+			component->SetName(componentName);
+			component->m_ComponentId = incrementalComponentId;
+			component->m_ComponentType = componentType;
 			component->Init();
-			gameObject->m_Components.push_back(component);
+
+			incrementalComponentId++;
 		}
 		else
 		{
@@ -88,7 +108,22 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 
 GameObject* Component::GetGameObject()
 {
-	return gameObject;
+	return m_GameObject;
+}
+
+const std::string & Component::GetName()
+{
+	return m_Name;
+}
+
+void Component::SetName(const std::string & name)
+{
+	m_Name = name;
+}
+
+ComponentType Component::GetComponentType()
+{
+	return m_ComponentType;
 }
 
 }

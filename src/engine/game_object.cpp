@@ -86,6 +86,7 @@ GameObject* GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
 	if(gameObject->m_Transform == nullptr)
 	{
 		auto transform = new Transform(gameObject);
+		transform->SetName("Transform");
 		gameObject->m_Components.push_front(transform);
 		gameObject->SetTransform(transform);
 	}
@@ -132,6 +133,11 @@ GameObject::~GameObject()
 	{
 		Log::GetInstance()->Error("DESTROY GAME OBJECT "+m_Name);
 	}
+}
+
+std::list<Component*>& GameObject::GetComponents()
+{
+	return m_Components;
 }
 
 const std::string & GameObject::GetName()

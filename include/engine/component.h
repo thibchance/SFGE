@@ -76,16 +76,22 @@ public:
 	virtual void Update(float dt) = 0;
 
 	GameObject* GetGameObject();
+
+	const std::string& GetName();
+	void SetName(const std::string& name);
+
+	ComponentType GetComponentType();
+
+	static unsigned int incrementalComponentId;
 protected:
 
+	ComponentType m_ComponentType = ComponentType::NONE;
+	unsigned int m_ComponentId = 0U;
+	std::string m_Name = "";
 	/**
-	 * \brief The pointer to the Transform Component of the GameObject
-	 */
-	std::shared_ptr<Transform> transform = nullptr;
-	/**
-	* \brief The reference to the GameObject the Component is attached to
+	* \brief The pointer to the GameObject the Component is attached to
 	*/
-	GameObject* gameObject;
+	GameObject* m_GameObject;
 
 };
 }
