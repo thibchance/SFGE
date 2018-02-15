@@ -27,6 +27,8 @@
 #include <graphics/sprite.h>
 #include <graphics/shape.h>
 #include <python/pycomponent.h>
+#include <physics/body2d.h>
+
 #include <engine/log.h>
 
 namespace sfge
@@ -72,6 +74,10 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 				componentName = "Transform";
 				gameObject->SetTransform(dynamic_cast<Transform*>(component));
 			}
+			else
+			{
+				Log::GetInstance()->Error("Loaded Transform was nullptr");
+			}
 			break;
 		case ComponentType::SPRITE:
 			component = Sprite::LoadSprite(engine,  componentJson, gameObject);
@@ -81,6 +87,9 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 			break;
 		case ComponentType::SHAPE:
 			component = Shape::LoadShape(engine, componentJson, gameObject);
+			break;
+		case ComponentType::BODY2D:
+			component = Body2d::LoadBody2d(engine, gameObject, componentJson);
 			break;
 		default:
 			break;
@@ -124,6 +133,14 @@ void Component::SetName(const std::string & name)
 ComponentType Component::GetComponentType()
 {
 	return m_ComponentType;
+}
+
+void Component::OnTriggerEnter(Collider * collider)
+{
+}
+
+void Component::OnCollisionEnter(Collider * collider)
+{
 }
 
 }

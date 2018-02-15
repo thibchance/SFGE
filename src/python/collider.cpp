@@ -21,50 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-//STL includes
-#include <fstream>
-//SFGE includes
-#include <engine/config.h>
-#include <engine/log.h>
-#include <utility/json_utility.h>
-
-
+#include <physics/collider.h>
 namespace sfge
 {
-
-std::unique_ptr<Configuration> Configuration::LoadConfig(std::string configFilename)
+void Collider::OnColliderEnter(Collider * collider)
 {
+	if (collider->m_Fixture->IsSensor() or m_Fixture->IsSensor())
 	{
-		std::ostringstream oss;
-		oss << "Creating Configuration from " << configFilename;
-		Log::GetInstance()->Msg(oss.str());
+		m_GameObject->OnTriggerEnter(collider);
 	}
-	
-	auto jsonConfigPtr = LoadJson(configFilename);
-	if (jsonConfigPtr == nullptr)
+	else
 	{
-		std::ostringstream oss;
-		oss << "[Error] Config JSON file: " << configFilename << " failed to open or did not parse as JSON";
-		Log::GetInstance()->Error(oss.str());
-		return nullptr;
+		m_GameObject->OnCollisionEnter(collider);
 	}
-	json jsonConfig = *jsonConfigPtr;
-	auto newConfig = std::make_unique<Configuration>();
-	newConfig->screenResolution = sf::Vector2i(
-		jsonConfig["screenResolution"]["x"],
-		jsonConfig["screenResolution"]["y"]);
-	newConfig->gravity = b2Vec2(
-		jsonConfig["gravity"]["x"],
-		jsonConfig["gravity"]["y"]
-	);
-	newConfig->maxFramerate = jsonConfig["maxFramerate"];
-	for(const std::string& scene : jsonConfig["scenesList"])
-	{
-		newConfig->scenesList.push_back(scene);
-	}
+}
 
-	return newConfig;
+void Collider::OnColliderExit(Collider * collider)
+{
+}
+
+Collider* Collider::LoadCollider(Engine & engine, GameObject & gameObject, json & componentJson)
+{
+	return nullptr;
 }
 
 }

@@ -39,6 +39,7 @@ SOFTWARE.
 #include <audio/audio.h>
 #include <engine/editor.h>
 #include <graphics/sprite.h>
+#include <physics/physics.h>
 #include <engine/log.h>
 
 
@@ -64,6 +65,7 @@ void Engine::Init(bool windowless, bool editor)
 	m_InputManager = std::make_shared<InputManager>(*this, true);
 	m_PythonManager = std::make_shared<PythonManager>(*this, true);
 	m_Editor = std::make_shared<Editor>(*this, editor);
+	m_PhysicsManager = std::make_shared<PhysicsManager>(*this, true);
 	modules =
 	{
 		std::dynamic_pointer_cast<Module>(m_GraphicsManager),
@@ -71,7 +73,8 @@ void Engine::Init(bool windowless, bool editor)
 		std::dynamic_pointer_cast<Module>(m_InputManager),
 		std::dynamic_pointer_cast<Module>(m_PythonManager),
 		std::dynamic_pointer_cast<Module>(m_SceneManager),
-		std::dynamic_pointer_cast<Module>(m_Editor)
+		std::dynamic_pointer_cast<Module>(m_Editor),
+		std::dynamic_pointer_cast<Module>(m_PhysicsManager)
 	};
 	
 	for (auto module : modules)
@@ -108,7 +111,7 @@ void Engine::Start()
 				}
 			}
 		}
-		
+		m_PhysicsManager->Update(dt);
 		m_InputManager->Update(dt);
 		m_PythonManager->Update(dt);
 		m_Editor->Update(dt);

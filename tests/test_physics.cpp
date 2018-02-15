@@ -21,42 +21,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include<engine/engine.h>
+#include <engine/scene.h>
 
-#ifndef SFGE_CONFIG_H
-#define SFGE_CONFIG_H
-//Externals include
-#include <SFML/System/Vector2.hpp>
-#include <Box2D/Box2D.h>
-//STL includes
-#include <list>
-#include <memory>
-
-
-namespace sfge
+int main()
 {
-/**
-* \brief Used by the Engine to get a Configuration.
-*/
-struct Configuration
-{
-	/**
-	 * \brief The screen resolution used for the editor
-	 */
-	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
+	sfge::Engine engine;
+	engine.Init(false, true);
 
-	b2Vec2 gravity = b2Vec2(0.0, 9.81);
-	/**
-	 * \brief The limited framerate
-	 */
-	unsigned int maxFramerate = 60;
-	/**
-	 * \brief The list of Scene that can be loaded by the SceneManager
-	 */
-	std::list<std::string> scenesList;
-	/**
-	* \brief Used to load the overall Configuration of the GameEngine at start
-	*/
-	static std::unique_ptr<Configuration> LoadConfig(std::string configFilename = "data/config.json");
-};
+	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
+		engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
+	sceneManager->SetCurrentScene(sceneManager->LoadScene("data/scenes/test_physics.scene"));
+
+
+	engine.Start();
+	return EXIT_SUCCESS;
 }
-#endif // !CONFIG_H

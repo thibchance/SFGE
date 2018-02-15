@@ -24,6 +24,8 @@
 #ifndef SFGE_JSON_UTILIY_H
 #define SFGE_JSON_UTILIY_H
 
+#include <SFML/System/Vector2.hpp>
+
 //Externals includes
 #include "json.hpp"
 using json = nlohmann::json;
@@ -34,6 +36,7 @@ namespace sfge
 	bool CheckJsonExists(const json& jsonObject, std::string parameterName);
 	bool CheckJsonParameter(const json& jsonObject, std::string parameterName, json::value_t expectedType);
 	bool CheckJsonNumber(const json& jsonObject, std::string parameterName);
+	sf::Vector2f GetVectorFromJson(const json& jsonObject, std::string parameterName);
 	std::unique_ptr<json> LoadJson(std::string jsonPath);
 }
 #endif

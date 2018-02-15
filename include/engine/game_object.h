@@ -39,6 +39,7 @@ namespace sfge
 
 class Component;
 class Transform;
+class Collider;
 
 /**
 * \brief The basic Game Object handler containing a list of Components
@@ -87,6 +88,9 @@ public:
 	const std::string& GetName();
 
 	void SetName(std::string name);
+
+	void OnTriggerEnter(Collider* collider);
+	void OnCollisionEnter(Collider* collider);
 
 protected:
 	friend class Component;

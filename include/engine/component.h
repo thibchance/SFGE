@@ -43,7 +43,9 @@ enum class ComponentType
 	TRANSFORM,
 	SPRITE,
 	SHAPE,
-	PYCOMPONENT
+	PYCOMPONENT,
+	BODY2D,
+	COLLIDER
 };
 
 /**
@@ -81,6 +83,9 @@ public:
 	void SetName(const std::string& name);
 
 	ComponentType GetComponentType();
+
+	void OnTriggerEnter(Collider* collider);
+	void OnCollisionEnter(Collider* collider);
 
 	static unsigned int incrementalComponentId;
 protected:

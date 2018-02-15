@@ -28,7 +28,6 @@ SOFTWARE.
 #include <engine/game_object.h>
 #include <utility/json_utility.h>
 #include <memory>
-#include "test_pycomponent.h"
 
 int main()
 {
