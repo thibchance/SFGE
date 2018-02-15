@@ -26,18 +26,27 @@ SOFTWARE.
 #include <graphics/shape.h>
 #include <utility/json_utility.h>
 #include <engine/log.h>
+#include <engine/transform.h>
 
 namespace sfge
 {
 
-Shape::Shape(GameObject* gameObject, sf::Vector2f position):
+Shape::Shape(GameObject* gameObject, sf::Vector2f offset):
 		Component(gameObject)
 {
+	m_Offset = offset;
+}
 
+void Shape::Init()
+{
 }
 
 void Shape::Update(float time)
 {
+	if (m_Shape != nullptr)
+	{
+		m_Shape->setPosition(m_GameObject->GetTransform()->GetPosition() + m_Offset);
+	}
 }
 
 void Shape::Draw(sf::RenderWindow& window)
@@ -48,32 +57,29 @@ void Shape::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Shape::Init()
-{
-}
 
 Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	Shape* shape = nullptr;
-	sf::Vector2f position;
-	if(CheckJsonParameter(componentJson, "position", json::value_t::array))
+	sf::Vector2f offset;
+	if(CheckJsonParameter(componentJson, "offset", json::value_t::array))
 	{
-		if(componentJson["position"].size() == 2)
+		if(componentJson["offset"].size() == 2)
 		{
-			position = sf::Vector2f(componentJson["position"][0], componentJson["position"][1]);
+			offset = sf::Vector2f(componentJson["offset"][0], componentJson["offset"][1]);
 		}
 	}
 
-	if(CheckJsonParameter(componentJson, "shape_type", json::value_t::number_integer))
+	if(CheckJsonNumber(componentJson, "shape_type"))
 	{
 		ShapeType shapeType = (ShapeType)componentJson["shape_type"];
 		switch(shapeType)
 		{
 		case ShapeType::CIRCLE:
-			shape = Circle::LoadCircle(componentJson, gameObject, position);
+			shape = Circle::LoadCircle(componentJson, gameObject, offset);
 			break;
 		case ShapeType::RECTANGLE:
-			shape = Rectangle::LoadRectangle(componentJson, gameObject, position);
+			shape = Rectangle::LoadRectangle(componentJson, gameObject, offset);
 			break;
 
 		}
@@ -100,7 +106,8 @@ Circle::Circle(GameObject* gameObject,  sf::Vector2f position, float radius):
 }
 
 
-Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
+
+Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f offset)
 {
 	float radius = 1.0f;
 
@@ -109,7 +116,7 @@ Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vect
 		radius = componentJson["radius"];
 	}
 
-	return new Circle(gameObject, position, radius);
+	return new Circle(gameObject, offset, radius);
 
 }
 Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f position, sf::Vector2f size):

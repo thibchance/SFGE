@@ -150,4 +150,20 @@ void GameObject::SetName(std::string name)
 	m_Name = name;
 }
 
+void GameObject::OnTriggerEnter(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnTriggerEnter(collider);
+	}
+}
+
+void GameObject::OnCollisionEnter(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnCollisionEnter(collider);
+	}
+}
+
 }

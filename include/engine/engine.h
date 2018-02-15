@@ -49,6 +49,7 @@ class InputManager;
 class SceneManager;
 class SpriteManager;
 class TextureManager;
+class PhysicsManager;
 class Editor;
 
 enum class EngineModule
@@ -59,6 +60,7 @@ enum class EngineModule
 	PYTHON_MANAGER,
 	SCENE_MANAGER,
 	EDITOR,
+	PHYSICS_MANAGER,
 	LENGTH
 };
 
@@ -108,6 +110,7 @@ protected:
 	std::shared_ptr<SceneManager> m_SceneManager;
 	std::shared_ptr<InputManager> m_InputManager;
 	std::shared_ptr<PythonManager> m_PythonManager;
+	std::shared_ptr<PhysicsManager> m_PhysicsManager;
 	std::shared_ptr<Editor> m_Editor;
 };
 

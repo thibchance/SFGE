@@ -22,49 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-//STL includes
-#include <fstream>
-//SFGE includes
-#include <engine/config.h>
+#ifndef SFGE_BODY2D_H
+#define SFGE_BODY2D_G
+
 #include <engine/log.h>
+#include <engine/component.h>
 #include <utility/json_utility.h>
 
+#include <Box2D/Box2D.h>
 
 namespace sfge
 {
 
-std::unique_ptr<Configuration> Configuration::LoadConfig(std::string configFilename)
+class Body2d : public Component
 {
-	{
-		std::ostringstream oss;
-		oss << "Creating Configuration from " << configFilename;
-		Log::GetInstance()->Msg(oss.str());
-	}
-	
-	auto jsonConfigPtr = LoadJson(configFilename);
-	if (jsonConfigPtr == nullptr)
-	{
-		std::ostringstream oss;
-		oss << "[Error] Config JSON file: " << configFilename << " failed to open or did not parse as JSON";
-		Log::GetInstance()->Error(oss.str());
-		return nullptr;
-	}
-	json jsonConfig = *jsonConfigPtr;
-	auto newConfig = std::make_unique<Configuration>();
-	newConfig->screenResolution = sf::Vector2i(
-		jsonConfig["screenResolution"]["x"],
-		jsonConfig["screenResolution"]["y"]);
-	newConfig->gravity = b2Vec2(
-		jsonConfig["gravity"]["x"],
-		jsonConfig["gravity"]["y"]
-	);
-	newConfig->maxFramerate = jsonConfig["maxFramerate"];
-	for(const std::string& scene : jsonConfig["scenesList"])
-	{
-		newConfig->scenesList.push_back(scene);
-	}
+public:
+	using Component::Component;
+	void Init() override;
+	void Update(float dt) override;
 
-	return newConfig;
-}
+	static Body2d* LoadBody2d(Engine& engine, GameObject* gameObject, json& componentJson);
+protected:
+	b2Body * m_Body = nullptr;
+};
 
 }
+
+#endif

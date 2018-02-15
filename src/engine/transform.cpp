@@ -31,7 +31,7 @@ Transform* Transform::LoadTransform(json& componentJson, GameObject* gameObject)
 	Log::GetInstance()->Msg("Loading Transform");
 	if (CheckJsonParameter(componentJson, "position", json::value_t::array))
 	{
-		auto positionJson = componentJson["position"].array();
+		auto positionJson = componentJson["position"];
 		if (positionJson.size() == 2)
 		{
 			sf::Vector2f newPosition;
@@ -48,7 +48,7 @@ Transform* Transform::LoadTransform(json& componentJson, GameObject* gameObject)
 	}
 	if (CheckJsonParameter(componentJson, "scale", json::value_t::array))
 	{
-		auto scaleJson = componentJson["scale"].array();
+		auto scaleJson = componentJson["scale"];
 		if (scaleJson.size() == 2)
 		{
 			sf::Vector2f newScale;
@@ -69,6 +69,11 @@ Transform* Transform::LoadTransform(json& componentJson, GameObject* gameObject)
 		{
 			newTransform->SetEulerAngle(componentJson["angle"]);
 		}
+	}
+	{
+		std::ostringstream oss;
+		oss << "New Transform with position: " << newTransform->GetPosition().x << ", " << newTransform->GetPosition().y<< " from: "<<componentJson;
+		Log::GetInstance()->Msg(oss.str());
 	}
 	return newTransform;
 }

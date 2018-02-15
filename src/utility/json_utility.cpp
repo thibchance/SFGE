@@ -32,6 +32,39 @@ bool CheckJsonNumber(const json& jsonObject, std::string parameterName)
 		   CheckJsonParameter(jsonObject, parameterName, json::value_t::number_unsigned);
 }
 
+sf::Vector2f GetVectorFromJson(const json & jsonObject, std::string parameterName)
+{
+	sf::Vector2f vector;
+	if (CheckJsonParameter(jsonObject, parameterName, json::value_t::array))
+	{
+		if (jsonObject[parameterName].size() == 2)
+		{
+			auto vectorJson = jsonObject[parameterName];
+			if (IsJsonValueNumeric(vectorJson[0]))
+			{
+				vector.x = vectorJson[0];
+			}
+			if (IsJsonValueNumeric(vectorJson[1]))
+			{
+				vector.y = vectorJson[1];
+			}
+		}
+	}
+	else if (CheckJsonParameter(jsonObject, parameterName, json::value_t::object))
+	{
+		auto vectorJson = jsonObject[parameterName];
+		if (IsJsonValueNumeric(vectorJson["x"]))
+		{
+			vector.x = vectorJson["x"];
+		}
+		if (IsJsonValueNumeric(vectorJson["y"]))
+		{
+			vector.y = vectorJson["y"];
+		}
+	}
+	return vector;
+}
+
 std::unique_ptr<json> LoadJson(std::string jsonPath)
 {
 	std::ifstream jsonFile(jsonPath.c_str());
