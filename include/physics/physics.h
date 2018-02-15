@@ -79,6 +79,8 @@ private:
 
 class Rigidbody : public Component
 {
+	void Init() override;
+	void Update(float dt) override;
 protected:
 	b2Body* m_Body = nullptr;
 };

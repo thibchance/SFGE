@@ -30,44 +30,96 @@
 namespace sfge
 {
 
+void PyComponent::Init()
+{
+	Log::GetInstance()->Msg("Init PyComponent from C++");
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"init",
+			Init,
+
+		);
+	}
+	catch(std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent Init\n"<<e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
+}
+
 void PyComponent::Update(float dt)
 {
-	PYBIND11_OVERLOAD_PURE_NAME(
-		void,
-		Component,
-		"update",
-		Update,
-		dt
-	);
+	{
+		std::ostringstream oss;
+		oss << "Update PyComponent with dt:  " << dt;
+		Log::GetInstance()->Msg(oss.str());
+	}
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"update",
+			Update,
+			dt
+		);
+	}
+	catch(std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent Update\n"<<e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
 }
+
 
 PyComponent::~PyComponent()
 {
 	Log::GetInstance()->Msg("Destroying PyComponent");
+
 }
 
-void PyComponent::SetInstance(py::object& instance)
-{
-	m_Instance = instance;
-}
 
-std::shared_ptr<PyComponent> PyComponent::LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject)
+PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	auto pythonManager = std::dynamic_pointer_cast<PythonManager>(engine.GetModule(EngineModule::PYTHON_MANAGER));
 	if(CheckJsonParameter(componentJson, "script_path", json::value_t::string))
 	{
-		unsigned int scriptId = pythonManager->LoadPyComponentFile(componentJson["script_path"]);
-		if(scriptId != 0U)
+		unsigned int componentInstanceId = pythonManager->LoadPyComponentFile(componentJson["script_path"], gameObject);
+		if(componentInstanceId != 0U)
 		{
-			auto classComponent = pythonManager->GetPyComponent(scriptId);
-			auto componentInstance = classComponent(gameObject);
-			//componentInstance.attr("update")(0.2f);
-			auto pyComponent = std::shared_ptr<PyComponent>(componentInstance.cast<PyComponent*>());
-			pyComponent->SetInstance(componentInstance);
+			{
+				std::ostringstream oss;
+				oss << "PyComponent instance has id: " << componentInstanceId;
+				Log::GetInstance()->Msg(oss.str());
+			}
+			auto pyComponent = pythonManager->GetPyComponent(componentInstanceId);
+			pyComponent->SetInstanceId(componentInstanceId);
 			return pyComponent;
+
 		}
+		else
+		{
+			Log::GetInstance()->Error("Loaded python script has no script ID");
+		}
+	}
+	else
+	{
+		Log::GetInstance()->Error("No script path given for the PyComponent");
 	}
 	return nullptr;
 }
+unsigned int PyComponent::GetInstanceId() const
+{
+	return instanceId;
+}
 
+void PyComponent::SetInstanceId(unsigned int instanceId)
+{
+	this->instanceId = instanceId;
+}
 }

@@ -44,6 +44,7 @@ class Sprite : public Component
 {
 public:
 	using Component::Component;
+	void Init() override;
 	/**
 	* \brief Update the Component
 	* \param dt Delta time since last frame
@@ -52,12 +53,12 @@ public:
 	
 	void Draw(sf::RenderWindow& window);
 
-	static std::shared_ptr<Sprite> LoadSprite(Engine& engine, json& componentJson, GameObject& gameObject);
+	static Sprite* LoadSprite(Engine& engine, json& componentJson, GameObject* gameObject);
 
 	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
 
 	void SetLayer(int layer);
-	static bool SpriteLayerComp(std::shared_ptr<Sprite> s1, std::shared_ptr<Sprite> s2);
+	static bool SpriteLayerComp(Sprite* s1, Sprite* s2);
 protected:
 	std::string filename;
 	int textureId;
@@ -74,9 +75,9 @@ public:
 	SpriteManager(GraphicsManager& graphicsManager);
 	void Update(sf::Time dt);
 	void Draw(sf::RenderWindow& window);
-	void LoadSprite(json& componentJson, std::shared_ptr<Sprite> sprite);
+	void LoadSprite(json& componentJson, Sprite* sprite);
 protected:
-	std::list<std::shared_ptr<sfge::Sprite>> m_Sprites;
+	std::list<Sprite*> m_Sprites;
 	GraphicsManager& m_GraphicsManager;
 };
 

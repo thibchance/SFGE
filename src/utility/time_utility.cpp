@@ -22,38 +22,69 @@
  SOFTWARE.
  */
 
-#ifndef SFGE_PYCOMPONENT_H_
-#define SFGE_PYCOMPONENT_H_
-
-#include <engine/component.h>
-#include <utility/python_utility.h>
-//STL
-#include <memory>
+#include <utility/time_utility.h>
 
 namespace sfge
 {
 
-/**
- * \brief Python abstraction of Component
- */
-class PyComponent : public Component
+Timer::Timer(float time, float period):
+	m_Time(time), m_Period(period)
 {
-public:
-	using Component::Component;
-	~PyComponent();
+}
 
-	void Init() override;
-	void Update(float dt) override;
-	static PyComponent* LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject);
+void Timer::Update(float dt)
+{
+	if(m_Time>0.0f)
+	{
+		m_Time -= dt;
+	}
+}
+bool Timer::IsOver()
+{
+	return !(m_Time > 0.0f);
+}
 
-	unsigned int GetInstanceId() const;
-	void SetInstanceId(unsigned int instanceId = 0U);
+void Timer::Reset()
+{
+	if(m_Time < 0.0f)
+	{
+		m_Time = m_Period + m_Time;
+	}
+	else
+	{
+		m_Time = m_Period;
+	}
+}
 
-private:
-	unsigned int instanceId = 0U;
-};
+float Timer::GetCurrent()
+{
+	return GetCurrentTime()/m_Period;
+}
 
+float Timer::GetCurrentTime()
+{
+	return m_Period-m_Time;
+}
+
+float Timer::GetPeriod() const
+{
+	return m_Period;
+}
+
+void Timer::SetPeriod(float period)
+{
+	m_Period = period;
+}
+
+float Timer::GetTime() const
+{
+	return m_Time;
+}
+
+void Timer::SetTime(float time)
+{
+	m_Time = time;
+}
 }
 
 
-#endif /* INCLUDE_PYTHON_PYCOMPONENT_H_ */

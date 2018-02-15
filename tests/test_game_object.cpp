@@ -21,39 +21,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include <engine/game_object.h>
+#include <engine/log.h>
+#include <python/pycomponent.h>
 
-#ifndef SFGE_CONFIG_H
-#define SFGE_CONFIG_H
-//Externals include
-#include <SFML/System/Vector2.hpp>
-//STL includes
-#include <list>
-#include <memory>
-
-
-namespace sfge
+class FakeComponent : sfge::Component
 {
-/**
-* \brief Used by the Engine to get a Configuration.
-*/
-struct Configuration
-{
-	/**
-	 * \brief The screen resolution used for the editor
-	 */
-	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
-	/**
-	 * \brief The limited framerate
-	 */
-	unsigned int maxFramerate = 60;
-	/**
-	 * \brief The list of Scene that can be loaded by the SceneManager
-	 */
-	std::list<std::string> scenesList;
-	/**
-	* \brief Used to load the overall Configuration of the GameEngine at start
-	*/
-	static std::unique_ptr<Configuration> LoadConfig(std::string configFilename = "data/config.json");
+public:
+	using sfge::Component::Component;
+
+	~FakeComponent() 
+	{
+		sfge::Log::GetInstance()->Msg("DESTROY FAKE COMPONENT");
+	}
+	void Init() override {}
+	void Update(float dt) override {}
 };
+
+int main()
+{
+
+
+	sfge::GameObject g1;
+	g1.SetName("G1");
+	{
+		FakeComponent fake(&g1);
+		FakeComponent fake2 = fake;
+	}
+#ifdef WIN32
+	system("pause");
+#endif
+	return EXIT_SUCCESS;
 }
-#endif // !CONFIG_H

@@ -1,4 +1,27 @@
 
+print("Python SFGE")
+
+class Vector2f:
+    pass
+
+class Timer:
+    def __init__(self, time, period):
+        pass
+    
+    def reset(self):
+        pass
+    
+    def update(self, dt):
+        pass
+    
+    def get_current(self):
+        pass
+    
+    def get_current_time(self):
+        pass
+    
+    def is_over(self):
+        pass
 
 class Module:
     def init(self):
@@ -24,15 +47,8 @@ class GraphicsManager(Module):
 
 
 class Engine:
-    instance = None
-
     def __init__(self):
         self.modules = []
-        instance = Engine.instance
-
-    @staticmethod
-    def get_instance():
-        return Engine.instance
 
 
 class GameObject:
@@ -41,9 +57,15 @@ class GameObject:
 
 
 class Component:
-    def __init__(self, gameObject):
-        self.gameObject = gameObject
+    def __init__(self, game_object):
+        self.gameObject = game_object
     
     def update(self, dt):
         pass
+
+class Transform(Component):
+    def __init__(self, game_object):
+        pass
+
+engine = Engine()
     

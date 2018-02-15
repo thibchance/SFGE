@@ -28,12 +28,9 @@
 #include <engine/engine.h>
 #include <engine/component.h>
 #include <utility/python_utility.h>
-
 namespace sfge
 {
-
-
-
+class PyComponent;
 /**
 * \brief Manage the python interpreter
 */
@@ -59,19 +56,24 @@ public:
 	/**
 	 * \brief Load a python script and return a python object of it
 	 * \param script_name
-	 * \return scriptId
+	 * \param gameObject
+	 * \return scriptInstanceId The id of the loaded instance
 	 */
-	unsigned int LoadPyComponentFile(std::string script_name);
+	unsigned int LoadPyComponentFile(std::string script_path, GameObject* gameObject);
 	/**
 	 * \brief Get a python component object
 	 * \param scriptId
-	 * \return python object of the python component class
+	 * \return pyComponent PyComponent pointer that interacts with the python
 	 */
-	py::object GetPyComponent(unsigned int scriptId);
+	PyComponent* GetPyComponent(unsigned int scriptInstanceId);
 private:
-	std::map<std::string, unsigned int> pythonScriptMap;
-	std::map<unsigned int, py::object> pythonObjectMap;
-	unsigned int incrementalScriptId = 0;
+	std::map<std::string, unsigned int> pythonModuleIdMap;
+	std::map<unsigned int, py::object> pythonModuleObjectMap;
+	unsigned int incrementalScriptId = 1U;
+
+	std::map<unsigned int, py::object> pythonInstanceMap;
+	unsigned int incrementalInstanceId = 1U;
+
 };
 
 }

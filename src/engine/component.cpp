@@ -27,28 +27,35 @@
 #include <graphics/sprite.h>
 #include <graphics/shape.h>
 #include <python/pycomponent.h>
+#include <engine/log.h>
 
 namespace sfge
 {
 
-Component::Component(GameObject& parentObject) :
-	gameObject(parentObject)
+Component::Component(GameObject* gameObject) :
+	gameObject(gameObject)
 {
 
 }
 
-std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject)
+Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObject* gameObject)
 {
-	std::shared_ptr<Component> component = nullptr;
-	if (CheckJsonParameter(componentJson, "type", json::value_t::number_integer))
+	Component* component = nullptr;
+	if(CheckJsonParameter(componentJson, "name", json::value_t::string))
+	{
+		std::ostringstream oss;
+		oss << "Loading component: "<<componentJson["name"];
+		Log::GetInstance()->Msg(oss.str());
+	}
+	if (CheckJsonNumber(componentJson, "type"))
 	{
 		ComponentType componentType = (ComponentType)componentJson["type"];
 
 		switch(componentType)
 		{
 		case ComponentType::TRANSFORM:
-			component = Transform::LoadTransform(componentJson, gameObject);
-			gameObject.SetTransform(std::dynamic_pointer_cast<Transform>(component));
+			gameObject->SetTransform(Transform::LoadTransform(componentJson, gameObject));
+			component = gameObject->GetTransform();
 			break;
 		case ComponentType::SPRITE:
 			component = Sprite::LoadSprite(engine, componentJson, gameObject);
@@ -58,14 +65,30 @@ std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& compon
 			break;
 		case ComponentType::SHAPE:
 			component = Shape::LoadShape(engine, componentJson, gameObject);
+			break;
+		default:
+			break;
 		}
 		if (component != nullptr)
 		{
-			gameObject.m_Components.push_back(component);
+			component->Init();
+			gameObject->m_Components.push_back(component);
 		}
+		else
+		{
+			Log::GetInstance()->Error("Undefined type for component");
+		}
+	}
+	else
+	{
+		Log::GetInstance()->Error("No type defined for component");
 	}
 	return component;
 }
 
+GameObject* Component::GetGameObject()
+{
+	return gameObject;
+}
 
 }

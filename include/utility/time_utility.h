@@ -22,38 +22,32 @@
  SOFTWARE.
  */
 
-#ifndef SFGE_PYCOMPONENT_H_
-#define SFGE_PYCOMPONENT_H_
-
-#include <engine/component.h>
-#include <utility/python_utility.h>
-//STL
-#include <memory>
+#ifndef SFGE_TIME_UTILITY_H_
+#define SFGE_TIME_UTILITY_H_
 
 namespace sfge
 {
 
-/**
- * \brief Python abstraction of Component
- */
-class PyComponent : public Component
+class Timer
 {
 public:
-	using Component::Component;
-	~PyComponent();
+	Timer(float time, float period);
+	void Update(float dt);
+	bool IsOver();
+	void Reset();
 
-	void Init() override;
-	void Update(float dt) override;
-	static PyComponent* LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject);
+	float GetCurrent();
+	float GetCurrentTime();
+	float GetPeriod() const;
+	void SetPeriod(float period);
+	float GetTime() const;
+	void SetTime(float time);
 
-	unsigned int GetInstanceId() const;
-	void SetInstanceId(unsigned int instanceId = 0U);
 
 private:
-	unsigned int instanceId = 0U;
+	float m_Time;
+	float m_Period;
 };
-
 }
 
-
-#endif /* INCLUDE_PYTHON_PYCOMPONENT_H_ */
+#endif /* INCLUDE_UTILITY_TIME_UTILITY_H_ */
