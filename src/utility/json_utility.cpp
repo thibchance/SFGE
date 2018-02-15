@@ -25,12 +25,23 @@ bool CheckJsonParameter(const json& jsonObject, std::string parameterName, json:
 	return CheckJsonExists(jsonObject, parameterName) && jsonObject[parameterName].type() == expectedType;
 }
 
+bool CheckJsonNumber(const json& jsonObject, std::string parameterName)
+{
+	return CheckJsonParameter(jsonObject, parameterName, json::value_t::number_float) or
+		   CheckJsonParameter(jsonObject, parameterName, json::value_t::number_integer) or
+		   CheckJsonParameter(jsonObject, parameterName, json::value_t::number_unsigned);
+}
+
 std::unique_ptr<json> LoadJson(std::string jsonPath)
 {
 	std::ifstream jsonFile(jsonPath.c_str());
 	if (jsonFile.peek() == std::ifstream::traits_type::eof())
 	{
-		Log::GetInstance()->Error("EMPTY SCENE FILE");
+		{
+			std::ostringstream oss;
+			oss << "[JSON ERROR] EMPTY SCENE FILE at: " << jsonPath;
+			Log::GetInstance()->Error(oss.str());
+		}
 		return nullptr;
 	}
 	std::unique_ptr<json> jsonContent = std::make_unique<json>();
@@ -40,7 +51,11 @@ std::unique_ptr<json> LoadJson(std::string jsonPath)
 	}
 	catch (json::parse_error& e)
 	{
-		Log::GetInstance()->Error("THE SCENE FILE IS NOT JSON");
+		{
+			std::ostringstream oss;
+			oss << "THE SCENE FILE: " << jsonPath << " IS NOT JSON\n" << e.what();
+			Log::GetInstance()->Error(oss.str());
+		}
 		return nullptr;
 	}
 	return jsonContent;

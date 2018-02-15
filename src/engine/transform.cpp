@@ -9,6 +9,7 @@
 #include <engine/game_object.h>
 #include <utility/file_utility.h>
 #include <utility/json_utility.h>
+#include <engine/log.h>
 //STL
 #include <memory>
 //Externals
@@ -18,9 +19,16 @@ namespace sfge
 {
 
 
-std::shared_ptr<Transform> Transform::LoadTransform(json& componentJson, GameObject& gameObject)
+
+Transform* Transform::LoadTransform(json& componentJson, GameObject* gameObject)
 {
-	std::shared_ptr<Transform> newTransform = std::make_shared<Transform>(gameObject);
+	if (gameObject->GetTransform() != nullptr)
+	{
+		Log::GetInstance()->Error("[LOADING ERROR] GameObject " + gameObject->GetName() + " already has a Transform");
+		return nullptr;
+	}
+	Transform* newTransform = new Transform(gameObject);
+	Log::GetInstance()->Msg("Loading Transform");
 	if (CheckJsonParameter(componentJson, "position", json::value_t::array))
 	{
 		auto positionJson = componentJson["position"].array();
@@ -63,6 +71,11 @@ std::shared_ptr<Transform> Transform::LoadTransform(json& componentJson, GameObj
 		}
 	}
 	return newTransform;
+}
+
+void Transform::Init()
+{
+
 }
 
 void Transform::Update(float dt)

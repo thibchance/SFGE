@@ -27,20 +27,39 @@
 #include <graphics/sprite.h>
 #include <graphics/shape.h>
 #include <python/pycomponent.h>
+#include <engine/log.h>
 
 namespace sfge
 {
 
-Component::Component(GameObject& parentObject) :
-	gameObject(parentObject)
-{
 
+unsigned int Component::incrementalComponentId = 1U;
+
+Component::Component(GameObject* gameObject) :
+	m_GameObject(gameObject)
+{
 }
 
-std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject)
+Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObject* gameObject)
 {
-	std::shared_ptr<Component> component = nullptr;
-	if (CheckJsonParameter(componentJson, "type", json::value_t::number_integer))
+	Component* component = nullptr;
+	std::string componentName = "";
+	unsigned int componentId = incrementalComponentId;
+	if(CheckJsonParameter(componentJson, "name", json::value_t::string))
+	{
+		std::ostringstream oss;
+		oss << componentJson["name"];
+		componentName = oss.str();
+	}
+	else
+	{
+		std::ostringstream oss;
+		oss << "Component " << componentId;
+		componentName = oss.str();
+	}
+
+	Log::GetInstance()->Msg("Loading component: " + componentName);
+	if (CheckJsonNumber(componentJson, "type"))
 	{
 		ComponentType componentType = (ComponentType)componentJson["type"];
 
@@ -48,24 +67,63 @@ std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& compon
 		{
 		case ComponentType::TRANSFORM:
 			component = Transform::LoadTransform(componentJson, gameObject);
-			gameObject.SetTransform(std::dynamic_pointer_cast<Transform>(component));
+			if (component != nullptr)
+			{
+				componentName = "Transform";
+				gameObject->SetTransform(dynamic_cast<Transform*>(component));
+			}
 			break;
 		case ComponentType::SPRITE:
-			component = Sprite::LoadSprite(engine, componentJson, gameObject);
+			component = Sprite::LoadSprite(engine,  componentJson, gameObject);
 			break;
 		case ComponentType::PYCOMPONENT:
-			component = PyComponent::LoadPythonScript(engine, componentJson, gameObject);
+			component = PyComponent::LoadPythonScript(engine,  componentJson, gameObject);
 			break;
 		case ComponentType::SHAPE:
 			component = Shape::LoadShape(engine, componentJson, gameObject);
+			break;
+		default:
+			break;
 		}
 		if (component != nullptr)
 		{
-			gameObject.m_Components.push_back(component);
+			component->SetName(componentName);
+			component->m_ComponentId = incrementalComponentId;
+			component->m_ComponentType = componentType;
+			component->Init();
+
+			incrementalComponentId++;
 		}
+		else
+		{
+			Log::GetInstance()->Error("Undefined type for component");
+		}
+	}
+	else
+	{
+		Log::GetInstance()->Error("No type defined for component");
 	}
 	return component;
 }
 
+GameObject* Component::GetGameObject()
+{
+	return m_GameObject;
+}
+
+const std::string & Component::GetName()
+{
+	return m_Name;
+}
+
+void Component::SetName(const std::string & name)
+{
+	m_Name = name;
+}
+
+ComponentType Component::GetComponentType()
+{
+	return m_ComponentType;
+}
 
 }

@@ -89,7 +89,7 @@ std::shared_ptr<Scene> SceneManager::LoadScene(json& sceneJson)
 	{
 		for (json gameObjectJson : sceneJson["game_objects"])
 		{
-			std::shared_ptr<GameObject> gameObject = GameObject::LoadGameObject(m_Engine, gameObjectJson);
+			GameObject* gameObject = GameObject::LoadGameObject(m_Engine, gameObjectJson);
 			if (gameObject != nullptr)
 			{
 				scene->m_GameObjects.push_back(gameObject);
@@ -132,6 +132,16 @@ std::shared_ptr<Scene> SceneManager::GetCurrentScene()
 
 void SceneManager::Destroy()
 {
+	if (m_CurrentScene)
+	{
+		auto gameObjectList = m_CurrentScene->GetGameObjects();
+		while (!gameObjectList.empty())
+		{
+			delete gameObjectList.front();
+			gameObjectList.pop_front();
+		}
+		
+	}
 }
 
 
@@ -150,7 +160,7 @@ Scene::~Scene()
 		m_GameObjects.pop_front();
 	}
 }
-std::list<std::shared_ptr<GameObject>>& Scene::GetGameObjects()
+std::list<GameObject*>& Scene::GetGameObjects()
 {
 	return m_GameObjects;
 }

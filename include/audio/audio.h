@@ -72,9 +72,11 @@ private:
 	unsigned int increment_id = 0;
 };
 
-class Sound : public Singleton<Sound>
+class Sound : public Component
 {
 public:
+
+	using Component::Component;
 	/**
 	* \brief load a sf::sound and return
 	*/
@@ -105,7 +107,7 @@ protected:
 	AudioManager& m_AudioManager;
 };
 
-class MusicManager : public Singleton<MusicManager>
+class MusicManager 
 {
 public:
 	/**

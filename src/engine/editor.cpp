@@ -29,6 +29,8 @@ SOFTWARE.
 #include <graphics/graphics.h>
 #include <engine/scene.h>
 #include <engine/game_object.h>
+#include <engine/component.h>
+#include <engine/transform.h>
 #include <engine/log.h>
 
 
@@ -52,19 +54,70 @@ void Editor::Update(sf::Time dt)
 {
 	if (m_Enable)
 	{
-		ImGui::SFML::Update(*m_GraphicsManager->GetWindow(), dt);
 
+		ImGui::SFML::Update(*m_GraphicsManager->GetWindow(), dt);
+		static GameObject* selectedGameObject = nullptr;
+		//GameObject window
+		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(150, m_Engine.GetConfig()->screenResolution.y), ImGuiCond_FirstUseEver);
 		ImGui::Begin("GameObjects");
 		if (m_SceneManager->GetCurrentScene() != nullptr)
 		{
+			static int selected = -1;
+			int n = 0;
 			for (auto gameObject : m_SceneManager->GetCurrentScene()->GetGameObjects())
 			{
-				ImGui::Selectable(gameObject->GetName().c_str());
+				if (ImGui::Selectable(gameObject->GetName().c_str(), selected == n))
+				{
+					selected = n;
+					selectedGameObject = gameObject;
+				}
+				n++;
 			}
 		}
 		else
 		{
 			Log::GetInstance()->Error("No Current Scene for editor");
+		}
+		ImGui::End();
+		//Component inspector window
+		ImGui::SetNextWindowPos(ImVec2(m_Engine.GetConfig()->screenResolution.x - 50, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(150, m_Engine.GetConfig()->screenResolution.y), ImGuiCond_FirstUseEver);
+		ImGui::Begin("Inspector");
+		if (selectedGameObject != nullptr)
+		{
+			for (auto component : selectedGameObject->GetComponents())
+			{
+				if (ImGui::CollapsingHeader(component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					switch (component->GetComponentType())
+					{
+					case ComponentType::TRANSFORM:
+						{
+							Transform * transform = dynamic_cast<Transform*>(component);
+							if (transform != nullptr)
+							{
+
+								ImGui::Separator();
+								float pos[2] = { transform->GetPosition().x, transform->GetPosition().y };
+								ImGui::InputFloat2("Position", pos);
+							}
+						}
+
+						break;
+					case ComponentType::SHAPE:
+						break;
+					case ComponentType::SPRITE:
+						break;
+					case ComponentType::PYCOMPONENT:
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			ImGui::Text("No selected game object");
 		}
 		ImGui::End();
 
@@ -85,7 +138,10 @@ void Editor::ProcessEvent(sf::Event& event)
 
 void Editor::Draw()
 {
-	ImGui::SFML::Render(*m_GraphicsManager->GetWindow());
+	if(m_Enable)
+	{
+		ImGui::SFML::Render(*m_GraphicsManager->GetWindow());
+	}
 }
 
 

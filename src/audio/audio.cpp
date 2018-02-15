@@ -29,6 +29,7 @@ SOFTWARE.
 
 namespace sfge
 {
+
 AudioManager::AudioManager(Engine& engine, bool enable): Module(engine,enable)
 {
 	engine = m_Engine;
@@ -126,6 +127,7 @@ void Sound::SetSoundBuffer(std::shared_ptr<sf::SoundBuffer> newSoundBuffer)
 void Sound::Play(sf::Sound& sound)
 {
 	sound.play();
+
 }
 SoundManager::SoundManager(AudioManager & audioManager): m_AudioManager(audioManager)
 {
