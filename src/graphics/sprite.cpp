@@ -50,11 +50,16 @@ void Sprite::SetLayer(int layer)
 {
 	
 }
-bool Sprite::SpriteLayerComp(std::shared_ptr<Sprite> s1, std::shared_ptr<Sprite> s2)
+
+void Sprite::Init()
+{
+}
+
+bool Sprite::SpriteLayerComp(Sprite* s1, Sprite* s2)
 {
 	return s1->layer>s2->layer;
 }
-std::shared_ptr<Sprite> Sprite::LoadSprite(Engine& engine, json& componentJson, GameObject& gameObject)
+Sprite* Sprite::LoadSprite(Engine& engine, json& componentJson, GameObject& gameObject)
 {
 	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
 		engine.GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
@@ -63,11 +68,8 @@ std::shared_ptr<Sprite> Sprite::LoadSprite(Engine& engine, json& componentJson, 
 
 	if (spriteManager != nullptr)
 	{
-		auto newSprite = std::make_shared<Sprite>(gameObject);
+		auto newSprite = new Sprite(gameObject);
 		spriteManager->LoadSprite(componentJson, newSprite);
-
-		//To Ensure that we have a transform
-		gameObject.GetTransform();
 		return newSprite;
 	}
 	return nullptr;
@@ -89,7 +91,7 @@ void SpriteManager::Draw(sf::RenderWindow& window)
 	}
 }
 
-void SpriteManager::LoadSprite(json& componentJson, std::shared_ptr<Sprite> newSprite)
+void SpriteManager::LoadSprite(json& componentJson, Sprite* newSprite)
 {
 	if (newSprite == nullptr)
 		return;

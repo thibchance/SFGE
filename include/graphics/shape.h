@@ -48,10 +48,10 @@ class Shape : public Component
 {
 public:
 	Shape(GameObject& gameObject, sf::Vector2f position);
-
+	void Init() override;
 	void Update(float time) override;
 	void Draw(sf::RenderWindow& window);
-	static std::shared_ptr<Shape> LoadShape(Engine& engine, json& componentJson, GameObject& gameObject);
+	static Shape* LoadShape(Engine& engine, json& componentJson, GameObject& gameObject);
 protected:
 	sf::Vector2f m_Position;
 	std::shared_ptr<sf::Shape> m_Shape = nullptr;
@@ -61,7 +61,7 @@ class Circle : public Shape
 {
 public:
 	Circle(GameObject& gameObject, sf::Vector2f position, float radius);
-	static std::shared_ptr<Circle> LoadCircle(json& componentJson, GameObject& gameObject, sf::Vector2f position);
+	static Circle* LoadCircle(json& componentJson, GameObject& gameObject, sf::Vector2f position);
 protected:
 	float m_Radius;
 };
@@ -71,7 +71,7 @@ class Rectangle : public Shape
 public:
 	Rectangle(GameObject& gameObject, sf::Vector2f position, sf::Vector2f size);
 
-	static std::shared_ptr<Rectangle> LoadRectangle(json& componentJson, GameObject& gameObject, sf::Vector2f position);
+	static Rectangle* LoadRectangle(json& componentJson, GameObject& gameObject, sf::Vector2f position);
 protected:
 	sf::Vector2f m_Size;
 
@@ -82,10 +82,10 @@ class ShapeManager
 
 public:
 	ShapeManager(GraphicsManager& graphicsManager);
-	void AddShape(std::shared_ptr<Shape> shape);
+	void AddShape(Shape* shape);
 	void Draw(sf::RenderWindow& window);
 protected:
-	std::list<std::shared_ptr<Shape>> m_Shapes;
+	std::list<Shape*> m_Shapes;
 	GraphicsManager& m_GraphicsManager;
 };
 

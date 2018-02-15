@@ -19,8 +19,8 @@ class Transform : public Component
 public:
 	using Component::Component;
 	~Transform();
-	static std::shared_ptr<Transform> LoadTransform(json& componentJson, GameObject& gameObject);
-
+	static Transform* LoadTransform(json& componentJson, GameObject& gameObject);
+	void Init() override;
 	void Update(float dt) override;
 
 	const float GetEulerAngle();

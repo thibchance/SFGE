@@ -25,6 +25,7 @@ SOFTWARE.
 #include <engine/log.h>
 #include <python/python_engine.h>
 #include <python/pycomponent.h>
+#include <engine/game_object.h>
 #include <utility/json_utility.h>
 #include <memory>
 
@@ -35,25 +36,33 @@ int main()
 
 	auto pythonManager = std::dynamic_pointer_cast<std::shared_ptr<sfge::PythonManager>>(
 			engine.GetModule(sfge::EngineModule::PYTHON_MANAGER));
+
+	sfge::GameObject* gameObject = new sfge::GameObject();
 	{
-		sfge::GameObject gameObject;
 		json componentJson;
+
+		componentJson["type"] = (int)sfge::ComponentType::TRANSFORM;
+		sfge::Component::LoadComponent(engine, componentJson, *gameObject);
 
 		componentJson["type"] = (int)sfge::ComponentType::PYCOMPONENT;
 		componentJson["script_path"] = "scripts/component_test.py";
-
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-		componentJson["script_path"] = "scripts/sprite_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
+		sfge::Component::LoadComponent(engine, componentJson, *gameObject);
 
 		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-		for(int i = 0; i<10; i++)
+		sfge::Component::LoadComponent(engine, componentJson, *gameObject);
+
+
+		for(int i = 0; i < 10; i++)
 		{
-			gameObject.Update(sf::seconds(0.4));
+			sfge::Log::GetInstance()->Msg("GAME OBJECT UPDATE");
+			gameObject->Update(sf::seconds(0.4));
 		}
 	}
+	delete(gameObject);
 	engine.Destroy();
+
+#ifdef WIN32
+	system("pause");
+#endif
 	return EXIT_SUCCESS;
 }

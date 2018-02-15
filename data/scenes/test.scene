@@ -18,7 +18,7 @@
 				},
 				{
 					"type": 4,
-					"script_path": "scripts/sprite_test.py"
+					"script_path": "scripts/component_test.py"
 				}
 			]
 		},
@@ -36,6 +36,14 @@
 					"type": 2,
 					"path": "data/sprites/test.png",
 					"layer": 2
+				},
+				{
+					"type": 4,
+					"script_path": "scripts/component_test.py"
+				},
+				{
+					"type": 4,
+					"script_path": "scripts/sprite_test.py"
 				}
 			]
 		}

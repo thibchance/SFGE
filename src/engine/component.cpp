@@ -38,9 +38,9 @@ Component::Component(GameObject& parentObject) :
 
 }
 
-std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject)
+Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject)
 {
-	std::shared_ptr<Component> component = nullptr;
+	Component* component = nullptr;
 	if(CheckJsonParameter(componentJson, "name", json::value_t::string))
 	{
 		std::ostringstream oss;
@@ -54,8 +54,8 @@ std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& compon
 		switch(componentType)
 		{
 		case ComponentType::TRANSFORM:
-			component = Transform::LoadTransform(componentJson, gameObject);
-			gameObject.m_Transform = (std::dynamic_pointer_cast<Transform>(component));
+			gameObject.SetTransform(Transform::LoadTransform(componentJson, gameObject));
+			component = gameObject.GetTransform();
 			break;
 		case ComponentType::SPRITE:
 			component = Sprite::LoadSprite(engine, componentJson, gameObject);
@@ -71,7 +71,12 @@ std::shared_ptr<Component> Component::LoadComponent(Engine& engine, json& compon
 		}
 		if (component != nullptr)
 		{
+			component->Init();
 			gameObject.m_Components.push_back(component);
+		}
+		else
+		{
+			Log::GetInstance()->Error("Undefined type for component");
 		}
 	}
 	else

@@ -36,18 +36,22 @@ namespace sfge
 /**
  * \brief Python abstraction of Component
  */
-class PyComponent final : public Component
+class PyComponent : public Component
 {
 public:
 	using Component::Component;
 
-	~PyComponent();
+	virtual ~PyComponent();
 
+	void Init() override;
 	void Update(float dt) override;
-	void SetInstance(py::object& instance);
-	static std::shared_ptr<PyComponent> LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject);
-protected:
-	py::object m_Instance;
+	static PyComponent* LoadPythonScript(Engine& engine, json& componentJson, GameObject& gameObject);
+
+	unsigned int GetInstanceId() const;
+	void SetInstanceId(unsigned int instanceId = 0U);
+
+private:
+	unsigned int instanceId = 0U;
 };
 
 }

@@ -54,9 +54,11 @@ class Component
 public:
 	/**
 	 * \brief Constructor of Component takes the parent GameObject as reference
-	 * \param parentGameObject The parent GameObject
+	 * \param gameObject The parent GameObject
 	 */
-	Component(GameObject& parentGameObject);
+	Component(GameObject& gameObject);
+
+	virtual ~Component() { }
 	/**
 	 *
 	 * \brief Static method to laod a generic Component. It calls more concrete known component types
@@ -65,7 +67,8 @@ public:
 	 * \param gameObject GameObject that the Component is going to be attached to
 	 * \return A pointer to the Component created
 	 */
-	static std::shared_ptr<Component> LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject);
+	static Component* LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject);
+	virtual void Init() = 0;
 	/**
 	* \brief Update the Component
 	* \param dt Delta time since last frame

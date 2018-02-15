@@ -1,4 +1,6 @@
 
+print("Python SFGE")
+
 class Timer:
     def __init__(self, time, period):
         pass
@@ -42,10 +44,8 @@ class GraphicsManager(Module):
 
 
 class Engine:
-
     def __init__(self):
         self.modules = []
-    
 
 
 class GameObject:
@@ -54,11 +54,15 @@ class GameObject:
 
 
 class Component:
-    def __init__(self, gameObject):
-        self.gameObject = gameObject
+    def __init__(self, game_object):
+        self.gameObject = game_object
     
     def update(self, dt):
         pass
-    
+
+class Transform(Component):
+    def __init__(self, game_object):
+        pass
+
 engine = Engine()
     

@@ -47,6 +47,7 @@ class Transform;
 class GameObject
 {
 public:
+	~GameObject();
 	/**
 	* \brief Update the GameObject and its Components
 	* \param dt Delta time since last frame
@@ -62,16 +63,16 @@ public:
 	 * \brief Get the Transform attached to the GameObject
 	 * \return Pointer to Transform
 	 */
-	std::shared_ptr<Transform> GetTransform();
+	Transform* GetTransform();
 
-	void SetTransform(std::shared_ptr<Transform> transform);
+	void SetTransform(Transform* transform);
 
 	/**
 	 * \brief Get The Component of type given the T by template
 	 * \return Return the first Component of type T that is attached to the GameObject
 	 */
 	template <class T>
-	std::shared_ptr<T> GetComponent();
+	T* GetComponent();
 
 	/**
 	 * \brief Get the name of the GameObject in the Scene
@@ -82,9 +83,9 @@ public:
 
 protected:
 	friend class Component;
-	std::list<std::shared_ptr<Component>> m_Components;
+	std::list<Component*> m_Components;
 	std::string m_Name;
-	std::shared_ptr<Transform> m_Transform = nullptr;
+	Transform* m_Transform = nullptr;
 };
 }
 #endif

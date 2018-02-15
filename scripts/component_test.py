@@ -1,9 +1,10 @@
 from SFGE import *
-
+import sys
+import random
 
 class ComponentTest(Component):
-    def __init__(self, gameObject):
-        print("Init Component Test with "+str(gameObject))
+    def init(self):
+        print("Init ComponentTest with "+str(game_object))
         self.timer = Timer(1.0,1.0)
         
         
@@ -13,6 +14,8 @@ class ComponentTest(Component):
         if(self.timer.is_over()):
             print("Timer over, reset")
             self.timer.reset()
-            
+    
     def __del__(self):
-        print("Delete ComponentTest"+str(self))
+        sys.stderr.write("DELETING COMPONENT TEST PYTHON\n")
+        sys.stderr.flush()
+            

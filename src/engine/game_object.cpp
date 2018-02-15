@@ -26,7 +26,7 @@
 #include <engine/component.h>
 #include <engine/transform.h>
 #include <engine/log.h>
-#include <graphics/sprite.h>
+#include <python/pycomponent.h>
 #include <python/python_engine.h>
 
 #include <memory>
@@ -37,6 +37,11 @@ void GameObject::Update(sf::Time dt)
 {
 	for(auto component : m_Components)
 	{
+		if(component == nullptr)
+		{
+			Log::GetInstance()->Error("Component in GameObject is null");
+			continue;
+		}
 		component->Update(dt.asSeconds());
 	}
 }
@@ -71,7 +76,7 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gam
 			else
 			{
 				std::ostringstream oss;
-				oss << "Component from: "<<componentJson<<" is nullptr";
+				oss << "Component from: " << componentJson << " is nullptr";
 				Log::GetInstance()->Error(oss.str());
 			}
 		}
@@ -80,30 +85,24 @@ std::shared_ptr<GameObject> GameObject::LoadGameObject(Engine& engine, json& gam
 	//if there is no transform, it is always at the beginning of the list
 	if(gameObject->m_Transform == nullptr)
 	{
-		auto transform = std::make_shared<Transform>(*gameObject);
+		auto transform = new Transform(*gameObject);
 		gameObject->m_Components.push_front(transform);
 		gameObject->m_Transform = transform;
 	}
 	return gameObject;
 }
 
-std::shared_ptr<Transform> GameObject::GetTransform()
+Transform* GameObject::GetTransform()
 {
-	if (m_Transform == nullptr)
-	{
-		m_Transform = std::make_shared<Transform>(*this);
-		m_Components.push_front(m_Transform);
-
-	}
 	return m_Transform;
 }
 
-void GameObject::SetTransform(std::shared_ptr<Transform> transform)
+void GameObject::SetTransform(Transform* transform)
 {
 	m_Transform = transform;
 }
 template <typename T>
-std::shared_ptr<T> GameObject::GetComponent()
+T* GameObject::GetComponent()
 {
 	for(auto component : m_Components)
 	{
@@ -114,6 +113,22 @@ std::shared_ptr<T> GameObject::GetComponent()
 		}
 	}
 	return nullptr;
+}
+
+GameObject::~GameObject()
+{
+	/*for(auto c_itr = m_Components.begin(); c_itr != m_Components.end(); c_itr++)
+	{
+		if(dynamic_cast<PyComponent*>((*c_itr)) != nullptr)
+		{
+
+		}
+		else
+		{
+			delete(*c_itr);
+		}
+	}*/
+	Log::GetInstance()->Error("DESTROY GAME OBJECT");
 }
 
 const std::string & GameObject::GetName()
