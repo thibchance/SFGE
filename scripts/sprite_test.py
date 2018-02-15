@@ -3,7 +3,6 @@ import sys
 
 
 class SpriteTest(Component):
-
     def init(self):
         #print("Init SpriteTest with "+str(self.game_object))
         self.speed = 4.0

@@ -44,7 +44,7 @@ struct Configuration
 	 */
 	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
 
-	b2Vec2 gravity = b2Vec2(0.0, 9.81);
+	b2Vec2 gravity = b2Vec2(0.0f, 9.81f);
 	/**
 	 * \brief The limited framerate
 	 */
