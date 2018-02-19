@@ -43,13 +43,19 @@ std::shared_ptr<InputManager> InputManager::GetInputManager()
 
 std::shared_ptr<KeyboardManager> InputManager::GetKeyboardManager()
 {
-	return m_Keyboard;
+	return m_KeyboardManager;
+}
+
+std::shared_ptr<MouseManager> InputManager::GetMouseManager()
+{
+	return m_MouseManager;
 }
 
 void InputManager::Init()
 {
 	m_InputManager = std::make_shared<InputManager>(*this);
-	m_Keyboard = std::make_shared<KeyboardManager>();
+	m_KeyboardManager = std::make_shared<KeyboardManager>();
+	m_MouseManager = std::make_shared<MouseManager>();
 }
 
 void InputManager::Update(sf::Time dt)
@@ -84,6 +90,8 @@ bool KeyboardManager::IsKeyUp(sf::Keyboard::Key key)
 {
 	return !keyPressedStatusArray[(int)key].keyPressed && keyPressedStatusArray[(int)key].previousKeyPressed;
 }
-
-
+sf::Vector2i MouseManager::localPosition(sf::Window& window)
+{
+	return sf::Mouse::getPosition(window);
+}
 }
