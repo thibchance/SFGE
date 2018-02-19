@@ -74,7 +74,7 @@ private:
 	unsigned int increment_id = 0;
 };
 
-class Sound : public Singleton<Sound>
+class Sound
 {
 public:
 	/**
@@ -84,7 +84,6 @@ public:
 	/**
 	* \brief set the buffer for the sound
 	*/
-	void SetSoundBuffer(std::shared_ptr<sf::SoundBuffer> newSoundBuffer);
 	void Play(sf::Sound& sound);
 
 protected:
@@ -106,7 +105,7 @@ protected:
 	AudioManager& m_AudioManager;
 };
 
-class MusicManager : public Singleton<MusicManager>
+class MusicManager
 {
 public:
 	/**

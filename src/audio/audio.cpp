@@ -119,10 +119,7 @@ std::shared_ptr<sf::Sound> Sound::LoadSound(Engine& engine, json & componentJson
 	}
 	return nullptr;
 }
-void Sound::SetSoundBuffer(std::shared_ptr<sf::SoundBuffer> newSoundBuffer)
-{
-	sound.setBuffer(*newSoundBuffer);
-}
+
 void Sound::Play(sf::Sound& sound)
 {
 	sound.play();

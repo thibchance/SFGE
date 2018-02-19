@@ -8,31 +8,24 @@
 int main()
 {
 	sfge::KeyboardManager keyboardManager;
-	//SOUND BUFFER TEST !!!
-	/*sf::Sound sound;
-	sfge::SoundBuffer buffer;
-	auto soundID = buffer.LoadSoundBuffer("C:/Users/guill/Music/Laser.wav");
-	sound.setBuffer(*buffer.GetSoundBuffer(soundID));*/
-	//SOUND BUFFER TEST !!!
 
 	//SOUND TEST !!!
 	sfge::Engine engine;
 	engine.Init();
 	sfge::Sound sound;
+	sfge::SoundBuffer buffer;
 	json objectJson;
 	objectJson["path"] = "C:/Users/guill/Music/Laser.wav";
 	json objectJson2;
 	objectJson2["path"] = "C:/Users/guill/Music/BasicGun.wav";
-	auto sound1 = sound.GetInstance()->LoadSound(engine, objectJson);
-	auto sound2 = sound.GetInstance()->LoadSound(engine, objectJson);
-	auto sound3 = sound.GetInstance()->LoadSound(engine, objectJson2);
-	auto sound4 = sound.GetInstance()->LoadSound(engine, objectJson2);
+	auto sound1 = sound.LoadSound(engine, objectJson);
+	auto sound3 = sound.LoadSound(engine, objectJson2);
+	auto sound4 = sound.LoadSound(engine, objectJson2);
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
-	/*sfge::MusicManager musicManager;
+	sfge::MusicManager musicManager;
 	auto goodMusic = musicManager.GetMusic(musicManager.LoadMusic("C:/Users/guill/Music/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg"));
-	goodMusic->play();*/
 	//MUSIC TEST !!!
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
@@ -57,16 +50,16 @@ int main()
 		}
 		if (keyboardManager.IsKeyUp(sf::Keyboard::Q))
 		{
-			sound2->play();
+			goodMusic->play();
 		}
-		/*if (keyboard.IsKeyDown(sf::Keyboard::S))
+		if (keyboardManager.IsKeyDown(sf::Keyboard::S))
 		{
 			sound3->play();
 		}
-		if (keyboard.IsKeyDown(sf::Keyboard::D))
+		if (keyboardManager.IsKeyDown(sf::Keyboard::D))
 		{
 			sound4->play();
-		}*/
+		}
 		// clear the window with black color
 		window.clear(sf::Color::Black);
 		// end the current frame
