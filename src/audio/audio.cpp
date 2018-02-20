@@ -120,10 +120,6 @@ std::shared_ptr<sf::Sound> Sound::LoadSound(Engine& engine, json & componentJson
 	return nullptr;
 }
 
-void Sound::Play(sf::Sound& sound)
-{
-	sound.play();
-}
 SoundManager::SoundManager(AudioManager & audioManager): m_AudioManager(audioManager)
 {
 

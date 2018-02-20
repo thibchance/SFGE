@@ -81,14 +81,6 @@ public:
 	* \brief load a sf::sound and return
 	*/
 	static std::shared_ptr<sf::Sound> LoadSound(Engine& engine, json& componentJson);
-	/**
-	* \brief set the buffer for the sound
-	*/
-	void Play(sf::Sound& sound);
-
-protected:
-	std::string filename;
-	sf::Sound sound;
 };
 
 class SoundManager
@@ -115,10 +107,8 @@ public:
 	std::shared_ptr<sf::Music> GetMusic(unsigned int musicId);
 
 protected:
-	sf::Music music;
 	std::map< std::string , unsigned int> musicPathId;
 	std::map<unsigned int, std::shared_ptr<sf::Music>> musicMap;
-	std::string filename;
 	unsigned int increment_id = 0;
 };
 }

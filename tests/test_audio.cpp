@@ -25,9 +25,10 @@ int main()
 
 	//MUSIC TEST !!!
 	sfge::MusicManager musicManager;
-	auto goodMusic = musicManager.GetMusic(musicManager.LoadMusic("C:/Users/guill/Music/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg"));
+	unsigned int musicId = musicManager.LoadMusic("C:/Users/guill/Music/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg");
+	std::shared_ptr<sf::Music> musictest = musicManager.GetMusic(musicId);
 	//MUSIC TEST !!!
-
+	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
 	sf::Time dt;
 	// run the program as long as the window is open
@@ -50,7 +51,7 @@ int main()
 		}
 		if (keyboardManager.IsKeyUp(sf::Keyboard::Q))
 		{
-			goodMusic->play();
+			musictest->play();
 		}
 		if (keyboardManager.IsKeyDown(sf::Keyboard::S))
 		{
