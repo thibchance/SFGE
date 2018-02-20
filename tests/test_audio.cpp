@@ -67,9 +67,6 @@ int main()
 		// end the current frame
 		window.display();
 	}
-#if WIN32
-	system("pause");
-#endif
-	return EXIT_SUCCESS;
+
 	return 0;
 }
