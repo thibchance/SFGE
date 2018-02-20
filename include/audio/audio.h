@@ -74,13 +74,17 @@ private:
 	unsigned int increment_id = 0;
 };
 
-class Sound
+class Sound : public Component
 {
 public:
+	
+	using Component::Component;
+	void Init() override;
+	void Update(float dt) override;
 	/**
 	* \brief load a sf::sound and return
 	*/
-	static std::shared_ptr<sf::Sound> LoadSound(Engine& engine, json& componentJson);
+	static std::shared_ptr<sf::Sound> LoadSound(Engine& engine, json& componentJson, GameObject* gameObject);
 };
 
 class SoundManager
@@ -97,7 +101,7 @@ protected:
 	AudioManager& m_AudioManager;
 };
 
-class MusicManager
+class MusicManager 
 {
 public:
 	/**

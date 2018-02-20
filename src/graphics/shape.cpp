@@ -30,7 +30,7 @@ SOFTWARE.
 namespace sfge
 {
 
-Shape::Shape(GameObject& gameObject, sf::Vector2f position):
+Shape::Shape(GameObject* gameObject, sf::Vector2f position):
 		Component(gameObject)
 {
 
@@ -48,10 +48,13 @@ void Shape::Draw(sf::RenderWindow& window)
 	}
 }
 
-
-std::shared_ptr<Shape> Shape::LoadShape(Engine& engine, json& componentJson, GameObject& gameObject)
+void Shape::Init()
 {
-	std::shared_ptr<Shape> shape = nullptr;
+}
+
+Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObject)
+{
+	Shape* shape = nullptr;
 	sf::Vector2f position;
 	if(CheckJsonParameter(componentJson, "position", json::value_t::array))
 	{
@@ -87,8 +90,8 @@ std::shared_ptr<Shape> Shape::LoadShape(Engine& engine, json& componentJson, Gam
 	return shape;
 }
 
-Circle::Circle(GameObject& gameObject, sf::Vector2f position, float radius):
-		Shape(gameObject, position)
+Circle::Circle(GameObject* gameObject,  sf::Vector2f position, float radius):
+		Shape(gameObject,  position)
 {
 	m_Radius = radius;
 	m_Shape = std::make_shared<sf::CircleShape>(radius);
@@ -97,19 +100,19 @@ Circle::Circle(GameObject& gameObject, sf::Vector2f position, float radius):
 }
 
 
-std::shared_ptr<Circle> Circle::LoadCircle(json& componentJson, GameObject& gameObject, sf::Vector2f position)
+Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
 {
 	float radius = 1.0f;
 
-	if(CheckJsonParameter(componentJson, "radius", json::value_t::number_float))
+	if(CheckJsonNumber(componentJson, "radius"))
 	{
 		radius = componentJson["radius"];
 	}
 
-	return std::make_shared<Circle>(gameObject, position, radius);
+	return new Circle(gameObject, position, radius);
 
 }
-Rectangle::Rectangle(GameObject& gameObject, sf::Vector2f position, sf::Vector2f size):
+Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f position, sf::Vector2f size):
 		Shape(gameObject, position)
 {
 	m_Size = size;
@@ -118,7 +121,7 @@ Rectangle::Rectangle(GameObject& gameObject, sf::Vector2f position, sf::Vector2f
 	m_Shape->setPosition(position);
 }
 
-std::shared_ptr<Rectangle> Rectangle::LoadRectangle(json& componentJson, GameObject& gameObject, sf::Vector2f position)
+Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
 {
 
 	sf::Vector2f size;
@@ -129,7 +132,7 @@ std::shared_ptr<Rectangle> Rectangle::LoadRectangle(json& componentJson, GameObj
 			size = sf::Vector2f(componentJson["size"][0], componentJson["size"][1]);
 		}
 	}
-	return std::make_shared<Rectangle>(gameObject, position, size);
+	return new Rectangle(gameObject,  position, size);
 }
 
 
@@ -148,7 +151,7 @@ void ShapeManager::Draw(sf::RenderWindow& window)
 	}
 }
 
-void ShapeManager::AddShape(std::shared_ptr<Shape> shape)
+void ShapeManager::AddShape(Shape* shape)
 {
 	m_Shapes.push_back(shape);
 }

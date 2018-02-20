@@ -12,15 +12,16 @@ int main()
 	//SOUND TEST !!!
 	sfge::Engine engine;
 	engine.Init();
-	sfge::Sound sound;
 	sfge::SoundBuffer buffer;
 	json objectJson;
 	objectJson["path"] = "C:/Users/guill/Music/Laser.wav";
 	json objectJson2;
 	objectJson2["path"] = "C:/Users/guill/Music/BasicGun.wav";
-	auto sound1 = sound.LoadSound(engine, objectJson);
-	auto sound3 = sound.LoadSound(engine, objectJson2);
-	auto sound4 = sound.LoadSound(engine, objectJson2);
+	sfge::GameObject gameObject;
+	auto sound = dynamic_cast<sfge::Sound*>(sfge::Sound::LoadComponent(engine,objectJson,&gameObject));
+	auto sound1 = sound->LoadSound(engine, objectJson,&gameObject);
+	auto sound3 = sound->LoadSound(engine, objectJson2, &gameObject);
+	auto sound4 = sound->LoadSound(engine, objectJson2, &gameObject);
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
@@ -66,5 +67,9 @@ int main()
 		// end the current frame
 		window.display();
 	}
+#if WIN32
+	system("pause");
+#endif
+	return EXIT_SUCCESS;
 	return 0;
 }

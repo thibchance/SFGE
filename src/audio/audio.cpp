@@ -29,6 +29,7 @@ SOFTWARE.
 
 namespace sfge
 {
+
 AudioManager::AudioManager(Engine& engine, bool enable): Module(engine,enable)
 {
 	engine = m_Engine;
@@ -106,7 +107,13 @@ std::shared_ptr<sf::SoundBuffer> SoundBuffer::GetSoundBuffer(unsigned int sound_
 	return nullptr;
 	
 }
-std::shared_ptr<sf::Sound> Sound::LoadSound(Engine& engine, json & componentJson)
+void Sound::Init()
+{
+}
+void Sound::Update(float dt)
+{
+}
+std::shared_ptr<sf::Sound> Sound::LoadSound(Engine& engine, json & componentJson, GameObject* gameObject)
 {
 	auto audioManager = std::dynamic_pointer_cast<AudioManager>(
 		engine.GetModule(sfge::EngineModule::AUDIO_MANAGER));
@@ -119,7 +126,6 @@ std::shared_ptr<sf::Sound> Sound::LoadSound(Engine& engine, json & componentJson
 	}
 	return nullptr;
 }
-
 SoundManager::SoundManager(AudioManager & audioManager): m_AudioManager(audioManager)
 {
 

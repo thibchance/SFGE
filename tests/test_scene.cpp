@@ -27,7 +27,7 @@ SOFTWARE.
 int main()
 {
 	sfge::Engine engine;
-	engine.Init();
+	engine.Init(false, true);
 
 	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
 		engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
@@ -35,6 +35,7 @@ int main()
 
 
 	engine.Start();
+
 #ifdef WIN32
 	system("pause");
 #endif

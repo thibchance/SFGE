@@ -29,13 +29,14 @@ namespace sfge
 
 void Log::Msg(const std::string & text)
 {
-	std::cout << text << "\n";
+	std::cout << text << "\n" << std::flush;
+
 
 }
 
 void Log::Error(const std::string & text)
 {
-	std::cerr << text << "\n";
+	std::cerr << text << "\n"<<std::flush;
 }
 
 }

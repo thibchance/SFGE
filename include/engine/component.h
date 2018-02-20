@@ -35,9 +35,7 @@
 namespace sfge
 {
 class Transform;
-/**
- * \brief A GameObject Component that can be anything
- */
+
 
 enum class ComponentType
 {
@@ -48,25 +46,52 @@ enum class ComponentType
 	PYCOMPONENT
 };
 
+/**
+ * \brief A Component is attached to a GameObject
+ */
 class Component
 {
 public:
 	/**
 	 * \brief Constructor of Component takes the parent GameObject as reference
-	 * \param parentGameObject The parent GameObject
+	 * \param gameObject The parent GameObject
 	 */
-	Component(GameObject& parentGameObject);
+	Component(GameObject* gameObject);
 
-	static std::shared_ptr<Component> LoadComponent(Engine& engine, json& componentJson, GameObject& gameObject);
+	virtual ~Component() { }
+	/**
+	 *
+	 * \brief Static method to laod a generic Component. It calls more concrete known component types
+	 * \param engine Game engine reference to use other modules
+	 * \param componentJson Content of the component such as types, values
+	 * \param gameObject GameObject that the Component is going to be attached to
+	 * \return A pointer to the Component created
+	 */
+	static Component* LoadComponent(Engine& engine, json& componentJson, GameObject* gameObject);
+	virtual void Init() = 0;
 	/**
 	* \brief Update the Component
 	* \param dt Delta time since last frame
 	*/
 	virtual void Update(float dt) = 0;
 
+	GameObject* GetGameObject();
+
+	const std::string& GetName();
+	void SetName(const std::string& name);
+
+	ComponentType GetComponentType();
+
+	static unsigned int incrementalComponentId;
 protected:
-	GameObject& gameObject;
-	std::shared_ptr<Transform> transform = nullptr;
+
+	ComponentType m_ComponentType = ComponentType::NONE;
+	unsigned int m_ComponentId = 0U;
+	std::string m_Name = "";
+	/**
+	* \brief The pointer to the GameObject the Component is attached to
+	*/
+	GameObject* m_GameObject;
 
 };
 }
