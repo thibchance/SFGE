@@ -9,7 +9,7 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Test Mouse");
 	sf::Font font;
-	if (font.loadFromFile("C:/Users/guill/OneDrive/Documents/CHEESEBU.TTF"))
+	if (font.loadFromFile("data/font/CHEESEBU.TTF"))
 	{
 		std::cout << "font load";
 	}
@@ -23,14 +23,39 @@ int main()
 	
 	std::ostringstream oss;
 	
+	sfge::MouseManager mouseManager;
+	sfge::KeyboardManager keyboardManager;
+	sf::Time dt;
 	// run the program as long as the window is open
 	while (window.isOpen())
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
-		oss << " Mouse Position is " << mouse.getPosition().x << " , " << mouse.getPosition().y;
-		mouseText.setString(oss.str());
 
+		oss << " Mouse Position is " << mouseManager.localPosition(window).x << " , " << mouseManager.localPosition(window).y;
+		std::string mousePos = oss.str();
+		mouseText.setString(mousePos);
+		oss.str("");
+		oss.clear();
+
+		keyboardManager.Update(dt);
+		mouseManager.Update(dt);
+		if (keyboardManager.IsKeyDown(sf::Keyboard::Space))
+		{
+			std::cout << " is key down ";
+		}
+		if (mouseManager.IsButtonDown(sf::Mouse::Left))
+		{
+			std::cout << " is button down ";
+		}
+		if (mouseManager.IsButtonUp(sf::Mouse::Middle))
+		{
+			std::cout << " is button up ";
+		}
+		if (mouseManager.IsButtonHeld(sf::Mouse::Left))
+		{
+			std::cout << " is button held ";
+		}
 		while (window.pollEvent(event))
 		{
 			// "close requested" event: we close the window
@@ -42,7 +67,6 @@ int main()
 		window.draw(mouseText);
 		// end the current frame
 		window.display();
-		
 	}
 	system("pause");
 	return 0;

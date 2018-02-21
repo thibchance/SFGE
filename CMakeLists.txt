@@ -86,28 +86,29 @@ LIST(APPEND SFGE_LIBRARIES
 	nlohmann_json)
 
 #PYTHON
-IF(NOT WIN32)
-	add_definitions(-Wall -Wextra -pedantic -std=c++11)
+#IF(NOT WIN32)
+#	add_definitions(-Wall -Wextra -pedantic -std=c++11)
+#
+#	IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+#		add_definitions(-g -O0)
+#	ELSE()
+#		add_definitions(-O3)
+#	ENDIF()
+#
+#	LIST(APPEND SFGE_LIBRARIES resolv)
+#ELSE()
+#	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+#ENDIF()
 
-	IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
-		add_definitions(-g -O0)
-	ELSE()
-		add_definitions(-O3)
-	ENDIF()
 
-	LIST(APPEND SFGE_LIBRARIES resolv)
-ELSE()
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-ENDIF()
+#find_package(PythonLibs 3 EXACT REQUIRED)
 
+#include_directories(${PYTHON_INCLUDE_DIR})
 
-find_package(PythonLibs 3 EXACT REQUIRED)
-
-include_directories(${PYTHON_INCLUDE_DIR})
-
-LIST(APPEND SFGE_LIBRARIES ${PYTHON_LIBRARY})
+#LIST(APPEND SFGE_LIBRARIES ${PYTHON_LIBRARY})
 
 #PYBIND11
+set(PYBIND11_PYTHON_VERSION 3.6)
 set(PYBIND11_DIR ${EXTERNAL_DIR}/pybind11/)
 add_subdirectory(${PYBIND11_DIR})
 include_directories(${PYBIND11_DIR})

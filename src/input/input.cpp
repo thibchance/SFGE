@@ -94,4 +94,24 @@ sf::Vector2i MouseManager::localPosition(sf::Window& window)
 {
 	return sf::Mouse::getPosition(window);
 }
+void MouseManager::Update(sf::Time dt)
+{
+	for (int i = 0; i < sf::Mouse::ButtonCount; i++)
+	{
+		mouseKeyPressesStatusArray[i].previousMouseKeyPressed = mouseKeyPressesStatusArray[i].mouseKeyPressed;
+		mouseKeyPressesStatusArray[i].mouseKeyPressed = sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
+	}
+}
+bool MouseManager::IsButtonDown(sf::Mouse::Button button)
+{
+	return !mouseKeyPressesStatusArray[(int)button].previousMouseKeyPressed && mouseKeyPressesStatusArray[(int)button].mouseKeyPressed;
+}
+bool MouseManager::IsButtonUp(sf::Mouse::Button button)
+{
+	return !mouseKeyPressesStatusArray[(int)button].mouseKeyPressed && mouseKeyPressesStatusArray[(int)button].previousMouseKeyPressed;
+}
+bool MouseManager::IsButtonHeld(sf::Mouse::Button button)
+{
+	return mouseKeyPressesStatusArray[(int)button].mouseKeyPressed;
+}
 }
