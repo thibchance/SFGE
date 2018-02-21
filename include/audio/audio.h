@@ -36,6 +36,7 @@ namespace sfge
 class SoundBuffer;
 class SoundManager;
 class Sound;
+class MusicManager;
 
 class AudioManager : public Module
 {
@@ -50,10 +51,12 @@ public:
 
 	std::shared_ptr<SoundManager> GetSoundManager();
 	std::shared_ptr<SoundBuffer> GetSoundBuffer();
+	std::shared_ptr<MusicManager> GetMusicManager();
 
 protected:
 	std::shared_ptr<SoundManager> m_SoundManager = nullptr;
 	std::shared_ptr<SoundBuffer> m_SoundBuffer = nullptr;
+	std::shared_ptr<MusicManager> m_MusicManager = nullptr;
 };
 
 class SoundBuffer

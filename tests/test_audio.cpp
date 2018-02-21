@@ -14,9 +14,9 @@ int main()
 	engine.Init();
 	sfge::SoundBuffer buffer;
 	json objectJson;
-	objectJson["path"] = "C:/Users/guill/Music/Laser.wav";
+	objectJson["path"] = "data/audio/sounds/Laser.wav";
 	json objectJson2;
-	objectJson2["path"] = "C:/Users/guill/Music/BasicGun.wav";
+	objectJson2["path"] = "data/audio/sounds/BasicGun.wav";
 	sfge::GameObject gameObject;
 	auto sound = dynamic_cast<sfge::Sound*>(sfge::Sound::LoadComponent(engine,objectJson,&gameObject));
 	auto sound1 = sound->LoadSound(engine, objectJson,&gameObject);
@@ -26,8 +26,7 @@ int main()
 
 	//MUSIC TEST !!!
 	sfge::MusicManager musicManager;
-	unsigned int musicId = musicManager.LoadMusic("C:/Users/guill/Music/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg");
-	std::shared_ptr<sf::Music> musictest = musicManager.GetMusic(musicId);
+	auto goodMusic = musicManager.GetMusic(musicManager.LoadMusic("data/audio/musics/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg"));
 	//MUSIC TEST !!!
 	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
@@ -52,7 +51,7 @@ int main()
 		}
 		if (keyboardManager.IsKeyUp(sf::Keyboard::Q))
 		{
-			musictest->play();
+			goodMusic->play();
 		}
 		if (keyboardManager.IsKeyDown(sf::Keyboard::S))
 		{

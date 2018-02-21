@@ -39,6 +39,7 @@ void AudioManager::Init()
 {
 	m_SoundManager = std::make_shared<SoundManager>(*this);
 	m_SoundBuffer = std::make_shared<SoundBuffer>();
+	m_MusicManager = std::make_shared<MusicManager>();
 };
 void AudioManager::Update(sf::Time dt)
 {
@@ -55,6 +56,10 @@ std::shared_ptr<SoundManager> AudioManager::GetSoundManager()
 std::shared_ptr<SoundBuffer> AudioManager::GetSoundBuffer()
 {
 	return m_SoundBuffer;
+}
+std::shared_ptr<MusicManager> AudioManager::GetMusicManager()
+{
+	return m_MusicManager;
 }
 ;
 unsigned int SoundBuffer::LoadSoundBuffer(std::string filename)
@@ -174,6 +179,7 @@ unsigned int MusicManager::LoadMusic(std::string filename)
 
 		if (checkMusic != musicMap.end())
 		{
+			std::cout << "music return";
 			return musicPathId[filename];
 		}
 		else
@@ -181,6 +187,7 @@ unsigned int MusicManager::LoadMusic(std::string filename)
 			std::shared_ptr<sf::Music> music = std::make_shared<sf::Music>();
 			if (!music->openFromFile(filename))
 			{
+				std::cout << "music not open from file";
 				return 0U;
 			}
 			musicPathId[filename] = increment_id;
@@ -197,6 +204,7 @@ unsigned int MusicManager::LoadMusic(std::string filename)
 
 			if (!music->openFromFile(filename))
 			{
+				std::cout << "music not open from file but exist";
 				return 0U;
 			}
 			musicPathId[filename] = increment_id;
@@ -213,7 +221,6 @@ std::shared_ptr<sf::Music> MusicManager::GetMusic(unsigned int musicId)
 	{
 		return musicMap[musicId];
 	}
-	return nullptr;
 }
 
 }
