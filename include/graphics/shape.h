@@ -44,25 +44,24 @@ enum class ShapeType
 	CONVEX,
 };
 
-class Shape : public Component
+class Shape : public Component, Offsetable
 {
 public:
-	Shape(GameObject* gameObject, sf::Vector2f offset);
+	Shape(GameObject* gameObject);
 	void Init() override;
 	void Update(float time) override;
 	void Draw(sf::RenderWindow& window);
 	static Shape* LoadShape(Engine& engine, json& componentJson, GameObject* gameObject);
 protected:
-	sf::Vector2f m_Offset;
 	std::shared_ptr<sf::Shape> m_Shape = nullptr;
 };
 
 class Circle : public Shape
 {
 public:
-	Circle(GameObject* gameObject, sf::Vector2f offset, float radius);
+	Circle(GameObject* gameObject,  float radius);
 	
-	static Circle* LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f position);
+	static Circle* LoadCircle(json& componentJson, GameObject* gameObject);
 protected:
 	float m_Radius;
 };
@@ -70,9 +69,9 @@ protected:
 class Rectangle : public Shape
 {
 public:
-	Rectangle(GameObject* gameObject, sf::Vector2f offset, sf::Vector2f size);
+	Rectangle(GameObject* gameObject, sf::Vector2f size);
 
-	static Rectangle* LoadRectangle(json& componentJson, GameObject* gameObject, sf::Vector2f position);
+	static Rectangle* LoadRectangle(json& componentJson, GameObject* gameObject);
 protected:
 	sf::Vector2f m_Size;
 
@@ -85,6 +84,9 @@ public:
 	ShapeManager(GraphicsManager& graphicsManager);
 	void AddShape(Shape* shape);
 	void Draw(sf::RenderWindow& window);
+
+	void Reset();
+	void Reload();
 protected:
 	std::list<Shape*> m_Shapes;
 	GraphicsManager& m_GraphicsManager;

@@ -39,4 +39,12 @@ void AudioManager::Destroy()
 {
 }
 
+void AudioManager::Reset()
+{
+}
+
+void AudioManager::Reload()
+{
+}
+
 }

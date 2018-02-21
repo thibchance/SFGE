@@ -143,4 +143,17 @@ void GraphicsManager::Destroy()
 	ImGui::SFML::Shutdown();
 }
 
+void GraphicsManager::Reset()
+{
+	m_TextureManager->Reset();
+	m_SpriteManager->Reset();
+}
+
+void GraphicsManager::Reload()
+{
+
+	m_TextureManager->Reload();
+	m_SpriteManager->Reload();
+}
+
 }

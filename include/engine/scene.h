@@ -58,22 +58,26 @@ public:
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
+	void LoadScene(std::string sceneName);
 	/**
 	* \brief Load a Scene and create all its GameObject
 	* \param sceneName the scene path given by the configuration
 	* \return the heap Scene that is automatically destroyed when not used
 	*/
-	std::shared_ptr<Scene> LoadScene(std::string sceneName);
+	std::shared_ptr<Scene> LoadSceneFromName(std::string sceneName);
 	/**
 	* \brief Load a Scene and create all its GameObject
 	* \param sceneName the scene path given by the configuration
 	* \return the heap Scene that is automatically destroyed when not used
 	*/
-	std::shared_ptr<Scene> LoadScene(json& sceneJson);
+	std::shared_ptr<Scene> LoadSceneFromJson(json& sceneJson);
 
 	void SetCurrentScene(std::string sceneName);
 
 	void SetCurrentScene(std::shared_ptr<Scene> scene);
+
+	void Reset() override;
+	void Reload() override;
 
 	std::shared_ptr<Scene> GetCurrentScene();
 private:

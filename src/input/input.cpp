@@ -47,4 +47,12 @@ void InputManager::Destroy()
 {
 }
 
+void InputManager::Reload()
+{
+}
+
+void InputManager::Reset()
+{
+}
+
 }

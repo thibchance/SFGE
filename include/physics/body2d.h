@@ -41,6 +41,9 @@ public:
 	void Init() override;
 	void Update(float dt) override;
 
+	b2Body* GetBody();
+
+
 	static Body2d* LoadBody2d(Engine& engine, GameObject* gameObject, json& componentJson);
 protected:
 	b2Body * m_Body = nullptr;

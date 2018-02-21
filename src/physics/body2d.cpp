@@ -39,10 +39,14 @@ void Body2d::Update(float dt)
 	m_GameObject->GetTransform()->SetPosition(meter2pixel(m_Body->GetPosition()));
 }
 
+b2Body * Body2d::GetBody()
+{
+	return m_Body;
+}
+
 Body2d * Body2d::LoadBody2d(Engine & engine, GameObject * gameObject, json& componentJson)
 {
-	auto physicsManager = std::dynamic_pointer_cast<PhysicsManager>(
-		engine.GetModule(EngineModule::PHYSICS_MANAGER));
+	auto physicsManager = engine.GetPhysicsManager();
 	if (physicsManager->GetWorld() == nullptr)
 	{
 		return nullptr;
@@ -68,6 +72,7 @@ Body2d * Body2d::LoadBody2d(Engine & engine, GameObject * gameObject, json& comp
 	b2Body* body = world->CreateBody(&bodyDef);
 	Body2d* bodyComponent = new Body2d(gameObject);
 	bodyComponent->m_Body = body;
+	physicsManager->m_Bodies.push_back(bodyComponent);
 	return bodyComponent;
 }
 

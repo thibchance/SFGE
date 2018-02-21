@@ -45,7 +45,8 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	py::class_<Module> module(m, "Module");
 
 	py::class_<SceneManager> sceneManager(m, "SceneManager");
-
+		sceneManager
+			.def("load_scene", &SceneManager::LoadScene);
 	py::class_<Scene> scene(m, "Scene");
 
 	py::class_<GameObject, std::shared_ptr<GameObject>> game_object(m, "GameObject");
@@ -98,7 +99,9 @@ void PythonManager::Init()
 {
 	Log::GetInstance()->Msg("Initialise the python embed interpretor");
 	py::initialize_interpreter();
-
+	py::module sfgeModule = py::module::import("SFGE");
+	sfgeModule.attr("engine")=  py::cast(&m_Engine);
+	sfgeModule.attr("scene_manager") = py::cast(m_Engine.GetSceneManager());
 }
 
 void PythonManager::Update(sf::Time)
@@ -112,6 +115,14 @@ void PythonManager::Destroy()
 	pythonModuleObjectMap.clear();
 	Log::GetInstance()->Msg("Finalize the python embed interpretor");
 	py::finalize_interpreter();
+}
+
+void PythonManager::Reload()
+{
+}
+
+void PythonManager::Reset()
+{
 }
 
 unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObject* gameObject)

@@ -77,12 +77,20 @@ public:
 	*/
 	void Destroy() override;
 
+	void Reset() override;
+	void Reload() override;
+
 	const static float pixelPerMeter;
 private:
+	friend class Body2d;
+	friend class Collider;
 	b2World* m_World = nullptr;
 	const int32 m_VelocityIterations = 8;  
 	const int32 m_PositionIterations = 3;
 	ContactListener* m_ContactListener = nullptr;
+
+	std::list<Body2d*> m_Bodies;
+	std::list<Collider*> m_Colliders;
 
 };
 

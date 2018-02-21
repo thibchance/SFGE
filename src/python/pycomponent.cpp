@@ -86,7 +86,7 @@ PyComponent::~PyComponent()
 
 PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject)
 {
-	auto pythonManager = std::dynamic_pointer_cast<PythonManager>(engine.GetModule(EngineModule::PYTHON_MANAGER));
+	auto pythonManager = engine.GetPythonManager();
 	if(CheckJsonParameter(componentJson, "script_path", json::value_t::string))
 	{
 		unsigned int componentInstanceId = pythonManager->LoadPyComponentFile(componentJson["script_path"], gameObject);

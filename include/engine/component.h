@@ -36,7 +36,6 @@ namespace sfge
 {
 class Transform;
 
-
 enum class ComponentType
 {
 	NONE,
@@ -98,6 +97,16 @@ protected:
 	*/
 	GameObject* m_GameObject;
 
+};
+
+class Offsetable
+{
+public:
+	Offsetable();
+	sf::Vector2f GetOffset();
+	void SetOffset(sf::Vector2f newOffset);
+protected:
+	sf::Vector2f m_Offset = sf::Vector2f();
 };
 }
 #endif

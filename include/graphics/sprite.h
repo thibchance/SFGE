@@ -40,7 +40,7 @@ class GraphicsManager;
 /**
 * \brief Sprite component used in the GameObject
 */
-class Sprite : public Component
+class Sprite : public Component, Offsetable
 {
 public:
 	using Component::Component;
@@ -57,11 +57,15 @@ public:
 
 	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
 
+	void SetTextureId(unsigned int textureId);
+
 	void SetLayer(int layer);
+
 	static bool SpriteLayerComp(Sprite* s1, Sprite* s2);
 protected:
+	sf::Vector2f offset = sf::Vector2f();
 	std::string filename;
-	int textureId;
+	unsigned int m_TextureId;
 	int layer;
 	sf::Sprite sprite;
 };
@@ -76,10 +80,14 @@ public:
 	void Update(sf::Time dt);
 	void Draw(sf::RenderWindow& window);
 	void LoadSprite(json& componentJson, Sprite* sprite);
+
+	void Reset();
+	void Reload();
 protected:
 	std::list<Sprite*> m_Sprites;
 	GraphicsManager& m_GraphicsManager;
 };
+
 
 
 

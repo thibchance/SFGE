@@ -84,6 +84,11 @@ public:
 	 * \brief Destroy all the modules
 	 */
 	void Destroy();
+	void Reset();
+	/**
+	* \brief Reload is used after loading a new scene
+	*/
+	void Reload();
 
 	~Engine();
 	/**
@@ -91,27 +96,27 @@ public:
 	* \return The Configuration struct got by the Engine
 	*/
 	std::shared_ptr<Configuration> GetConfig();
-	/**
-	* \brief return the the pointer to an engine module
-	* \parameter engineModule The Engine Module asked
-	* \return the c++14 pointer of the module
-	*/
-	std::shared_ptr<Module> GetModule(EngineModule engineModule);
+	
+	GraphicsManager* GetGraphicsManager();
+	AudioManager* GetAudioManager();
+	SceneManager* GetSceneManager();
+	InputManager* GetInputManager();
+	PythonManager* GetPythonManager();
+	PhysicsManager* GetPhysicsManager();
 
 	bool running = false;
 protected:
 	std::shared_ptr<sf::RenderWindow> m_Window = nullptr;
 	std::shared_ptr<Configuration> m_Config = nullptr;
 	
-	//modules
-	std::array<std::shared_ptr<Module>, (int)EngineModule::LENGTH> modules;
-	std::shared_ptr<GraphicsManager> m_GraphicsManager;
-	std::shared_ptr<AudioManager> m_AudioManager;
-	std::shared_ptr<SceneManager> m_SceneManager;
-	std::shared_ptr<InputManager> m_InputManager;
-	std::shared_ptr<PythonManager> m_PythonManager;
-	std::shared_ptr<PhysicsManager> m_PhysicsManager;
-	std::shared_ptr<Editor> m_Editor;
+	//module
+	GraphicsManager* m_GraphicsManager;
+	AudioManager* m_AudioManager;
+	SceneManager* m_SceneManager;
+	InputManager* m_InputManager;
+	PythonManager* m_PythonManager;
+	PhysicsManager* m_PhysicsManager;
+	Editor* m_Editor;
 };
 
 /**
@@ -136,6 +141,14 @@ public:
 	* \brief Used instead of the destructor to delete all heap created structure and finalize
 	*/
 	virtual void Destroy() = 0;
+	/**
+	* \brief Called before we load a scene
+	*/
+	virtual void Reset() = 0;
+	/**
+	* \brief Called after we load a scene
+	*/
+	virtual void Reload() = 0;
 
 	void SetEnable(bool enable);
 	bool GetEnable();

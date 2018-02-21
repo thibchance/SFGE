@@ -34,8 +34,7 @@ int main()
 	sfge::Engine engine;
 	engine.Init(true);
 
-	auto pythonManager = std::dynamic_pointer_cast<std::shared_ptr<sfge::PythonManager>>(
-			engine.GetModule(sfge::EngineModule::PYTHON_MANAGER));
+	auto pythonManager = engine.GetPythonManager();
 
 	sfge::GameObject* gameObject = new sfge::GameObject();
 	gameObject->SetName("PyGameObject");

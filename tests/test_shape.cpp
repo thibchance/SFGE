@@ -32,8 +32,7 @@ int main()
 	sfge::Engine engine;
 	engine.Init(true);
 
-	auto graphicsManager = std::dynamic_pointer_cast<sfge::GraphicsManager>(
-			engine.GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
+	auto graphicsManager = engine.GetGraphicsManager();
 
 	json gameObjectJson =
 	{

@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include<engine/engine.h>
+#include <engine/engine.h>
 #include <engine/scene.h>
 
 int main()
@@ -29,9 +29,8 @@ int main()
 	sfge::Engine engine;
 	engine.Init(false, true);
 
-	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
-		engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
-	sceneManager->SetCurrentScene(sceneManager->LoadScene("data/scenes/test_physics.scene"));
+	auto sceneManager = engine.GetSceneManager();
+	sceneManager->SetCurrentScene(sceneManager->LoadSceneFromName("data/scenes/test_physics.scene"));
 
 
 	engine.Start();

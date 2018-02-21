@@ -48,6 +48,9 @@ public:
 	void Update(sf::Time dt) override;
 
 	void Destroy() override;
+
+	void Reload() override;
+	void Reset() override;
 private:
 };
 }

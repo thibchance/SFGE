@@ -52,7 +52,7 @@ void SceneManager::Update(sf::Time dt)
 	}
 }
 
-std::shared_ptr<Scene> SceneManager::LoadScene(std::string sceneName)
+std::shared_ptr<Scene> SceneManager::LoadSceneFromName(std::string sceneName)
 {
 	{
 		std::ostringstream oss;
@@ -63,13 +63,13 @@ std::shared_ptr<Scene> SceneManager::LoadScene(std::string sceneName)
 	
 	if(sceneJsonPtr != nullptr)
 	{
-		return LoadScene(*sceneJsonPtr);
+		return LoadSceneFromJson(*sceneJsonPtr);
 	}
 	return nullptr;
 	
 }
 
-std::shared_ptr<Scene> SceneManager::LoadScene(json& sceneJson)
+std::shared_ptr<Scene> SceneManager::LoadSceneFromJson(json& sceneJson)
 {
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 	if (CheckJsonParameter(sceneJson, "name", json::value_t::string))
@@ -123,6 +123,14 @@ void SceneManager::SetCurrentScene(std::shared_ptr<Scene> scene)
 	m_CurrentScene = scene;
 }
 
+void SceneManager::Reset()
+{
+}
+
+void SceneManager::Reload()
+{
+}
+
 std::shared_ptr<Scene> SceneManager::GetCurrentScene()
 {
 	return m_CurrentScene;
@@ -144,6 +152,13 @@ void SceneManager::Destroy()
 	}
 }
 
+void SceneManager::LoadScene(std::string sceneName)
+{
+	m_Engine.Reset();
+	SetCurrentScene(LoadSceneFromName(sceneName));
+	m_Engine.Reload();
+}
+
 
 void Scene::Update(sf::Time dt)
 {
@@ -157,6 +172,7 @@ Scene::~Scene()
 {
 	while(!m_GameObjects.empty())
 	{
+		delete(m_GameObjects.front());
 		m_GameObjects.pop_front();
 	}
 }

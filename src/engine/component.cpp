@@ -80,6 +80,7 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 			}
 			break;
 		case ComponentType::SPRITE:
+			Log::GetInstance()->Msg("Loading Sprite Component");
 			component = Sprite::LoadSprite(engine,  componentJson, gameObject);
 			break;
 		case ComponentType::PYCOMPONENT:
@@ -141,6 +142,20 @@ void Component::OnTriggerEnter(Collider * collider)
 
 void Component::OnCollisionEnter(Collider * collider)
 {
+}
+
+Offsetable::Offsetable()
+{
+}
+
+sf::Vector2f Offsetable::GetOffset()
+{
+	return m_Offset;
+}
+
+void Offsetable::SetOffset(sf::Vector2f newOffset)
+{
+	m_Offset = newOffset;
 }
 
 }

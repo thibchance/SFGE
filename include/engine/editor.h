@@ -47,9 +47,12 @@ public:
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
+
+	void Reload() override;
+	void Reset() override;
 protected:
-	std::shared_ptr<GraphicsManager> m_GraphicsManager;
-	std::shared_ptr<SceneManager> m_SceneManager;
+	GraphicsManager* m_GraphicsManager;
+	SceneManager* m_SceneManager;
 	
 
 

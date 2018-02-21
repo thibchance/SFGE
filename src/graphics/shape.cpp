@@ -31,10 +31,9 @@ SOFTWARE.
 namespace sfge
 {
 
-Shape::Shape(GameObject* gameObject, sf::Vector2f offset):
+Shape::Shape(GameObject* gameObject):
 		Component(gameObject)
 {
-	m_Offset = offset;
 }
 
 void Shape::Init()
@@ -62,13 +61,7 @@ Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObj
 {
 	Shape* shape = nullptr;
 	sf::Vector2f offset;
-	if(CheckJsonParameter(componentJson, "offset", json::value_t::array))
-	{
-		if(componentJson["offset"].size() == 2)
-		{
-			offset = sf::Vector2f(componentJson["offset"][0], componentJson["offset"][1]);
-		}
-	}
+	
 
 	if(CheckJsonNumber(componentJson, "shape_type"))
 	{
@@ -76,12 +69,19 @@ Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObj
 		switch(shapeType)
 		{
 		case ShapeType::CIRCLE:
-			shape = Circle::LoadCircle(componentJson, gameObject, offset);
+			shape = Circle::LoadCircle(componentJson, gameObject);
 			break;
 		case ShapeType::RECTANGLE:
-			shape = Rectangle::LoadRectangle(componentJson, gameObject, offset);
+			shape = Rectangle::LoadRectangle(componentJson, gameObject);
 			break;
 
+		}
+	}
+	if (CheckJsonParameter(componentJson, "offset", json::value_t::array))
+	{
+		if (componentJson["offset"].size() == 2)
+		{
+			offset = sf::Vector2f(componentJson["offset"][0], componentJson["offset"][1]);
 		}
 	}
 	if(shape != nullptr)
@@ -89,25 +89,24 @@ Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObj
 		{
 			Log::GetInstance()->Msg("Load shape");
 		}
-		auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
-				engine.GetModule(EngineModule::GRAPHICS_MANAGER));
+		shape->SetOffset(offset);
+		auto graphicsManager = engine.GetGraphicsManager();
 		graphicsManager->GetShapeManager()->AddShape(shape);
 	}
 	return shape;
 }
 
-Circle::Circle(GameObject* gameObject,  sf::Vector2f position, float radius):
-		Shape(gameObject,  position)
+Circle::Circle(GameObject* gameObject,   float radius):
+		Shape(gameObject)
 {
 	m_Radius = radius;
 	m_Shape = std::make_shared<sf::CircleShape>(radius);
 	m_Shape->setFillColor(sf::Color::Green);
-	m_Shape->setPosition(position);
 }
 
 
 
-Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f offset)
+Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject)
 {
 	float radius = 1.0f;
 
@@ -116,19 +115,18 @@ Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vect
 		radius = componentJson["radius"];
 	}
 
-	return new Circle(gameObject, offset, radius);
+	return new Circle(gameObject, radius);
 
 }
-Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f position, sf::Vector2f size):
-		Shape(gameObject, position)
+Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f size):
+		Shape(gameObject)
 {
 	m_Size = size;
 	m_Shape = std::make_shared<sf::RectangleShape>(size);
 	m_Shape->setFillColor(sf::Color::Red);
-	m_Shape->setPosition(position);
 }
 
-Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
+Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject)
 {
 
 	sf::Vector2f size;
@@ -139,7 +137,7 @@ Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject,
 			size = sf::Vector2f(componentJson["size"][0], componentJson["size"][1]);
 		}
 	}
-	return new Rectangle(gameObject,  position, size);
+	return new Rectangle(gameObject,   size);
 }
 
 
@@ -156,6 +154,19 @@ void ShapeManager::Draw(sf::RenderWindow& window)
 	{
 		shape->Draw(window);
 	}
+}
+
+void ShapeManager::Reset()
+{
+	for (auto shape : m_Shapes)
+	{
+		delete(shape);
+	}
+	m_Shapes.clear();
+}
+
+void ShapeManager::Reload()
+{
 }
 
 void ShapeManager::AddShape(Shape* shape)

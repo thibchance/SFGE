@@ -36,7 +36,6 @@
 
 namespace sfge
 {
-
 class Component;
 class Transform;
 class Collider;
@@ -74,7 +73,20 @@ public:
 	 * \return Return the first Component of type T that is attached to the GameObject
 	 */
 	template <class T>
-	T* GetComponent();
+	T* GetComponent()
+	{
+		for (auto component : m_Components)
+		{
+			auto castComponent = dynamic_cast<T*>(component);
+			if (castComponent != nullptr)
+			{
+				return castComponent;
+			}
+		}
+		return nullptr;
+	}
+
+	template<> Component* GetComponent<Component>();
 
 	/**
 	* \brief Return the reference to all the Component in the GameObject

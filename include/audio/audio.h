@@ -35,6 +35,9 @@ public:
 	void Update(sf::Time dt) override;
 	void Destroy() override;
 
+	void Reset() override;
+	void Reload() override;
+
 	using Module::Module;
 
 };

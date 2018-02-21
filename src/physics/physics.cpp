@@ -63,6 +63,28 @@ void PhysicsManager::Destroy()
 	{
 		delete(m_World);
 	}
+
+	for (Body2d* body : m_Bodies)
+	{
+		delete(body);
+	}
+	m_Bodies.clear();
+
+	for (Collider* collider : m_Colliders)
+	{
+		delete(collider);
+	}
+	m_Colliders.clear();
+}
+
+void PhysicsManager::Reset()
+{
+	Destroy();
+	Init();
+}
+
+void PhysicsManager::Reload()
+{
 }
 
 void ContactListener::BeginContact(b2Contact* contact) 
