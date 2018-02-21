@@ -53,6 +53,7 @@ void Editor::Init()
 	m_SceneManager = m_Engine.GetSceneManager();
 	if (m_Enable)
 	{
+		Log::GetInstance()->Msg("Enabling Editor");
 		ImGui::SFML::Init(*m_GraphicsManager->GetWindow(), true);
 	}
 }

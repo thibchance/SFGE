@@ -110,9 +110,9 @@ void Engine::Start()
 		m_PythonManager->Update(dt);
 		m_Editor->Update(dt);
 
-		m_Editor->Draw();
 		m_SceneManager->Update(dt);
 		m_GraphicsManager->Update(dt);
+		m_Editor->Draw();
 		m_GraphicsManager->Display();
 	}
 

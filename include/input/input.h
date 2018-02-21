@@ -26,10 +26,13 @@ SOFTWARE.
 #define SFGE_INPUT_H
 
 #include <engine/engine.h>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 namespace sfge
 {
-
+class KeyboardManager;
+class MouseManager;
 /**
 * \brief Handles Input like the Keyboard, the Joystick or the Mouse
 */
@@ -37,6 +40,8 @@ class InputManager : public Module
 {
 public:
 	using Module::Module;
+
+	InputManager(Engine& engine, bool enable = true);
 	/**
 	 * \brief Initialize the Input Manager
 	 */
@@ -46,12 +51,45 @@ public:
 	 * \param dt Delta time since last frame
 	 */
 	void Update(sf::Time dt) override;
-
 	void Destroy() override;
 
-	void Reload() override;
 	void Reset() override;
+	void Reload() override;
+
+	KeyboardManager* GetKeyboardManager();
+	MouseManager* GetMouseManager();
+
 private:
+
+protected:
+	KeyboardManager* m_KeyboardManager = nullptr;
+	MouseManager* m_MouseManager = nullptr;
 };
+
+struct KeyPressedStatus { bool previousKeyPressed; bool keyPressed; };
+
+class KeyboardManager
+{
+public:
+	void Update(sf::Time dt);
+	bool IsKeyHeld(sf::Keyboard::Key key);
+	bool IsKeyDown(sf::Keyboard::Key key);
+	bool IsKeyUp(sf::Keyboard::Key key);
+
+protected:
+	
+
+private:
+	KeyPressedStatus keyPressedStatusArray[sf::Keyboard::Key::KeyCount] ={};
+};
+
+class MouseManager
+{
+public:
+	sf::Vector2i localPosition(sf::Window& window);
+private:
+
+};
+
 }
 #endif

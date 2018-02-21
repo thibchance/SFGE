@@ -26,6 +26,7 @@
 #include <engine/component.h>
 #include <engine/transform.h>
 #include <engine/log.h>
+#include <input/input.h>
 #include <python/python_engine.h>
 #include <python/pycomponent.h>
 #include <utility/file_utility.h>
@@ -47,6 +48,20 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	py::class_<SceneManager> sceneManager(m, "SceneManager");
 		sceneManager
 			.def("load_scene", &SceneManager::LoadScene);
+	
+	py::class_<InputManager> inputManager(m, "InputManager");
+	inputManager
+		.def_property_readonly("keyboard", &InputManager::GetKeyboardManager, py::return_value_policy::reference);
+	
+	py::class_<KeyboardManager> keyboardManager(m, "KeyboardManager");
+	keyboardManager
+		.def("is_key_held", &KeyboardManager::IsKeyHeld)
+		.def("is_key_down", &KeyboardManager::IsKeyDown)
+		.def("is_key_up", &KeyboardManager::IsKeyUp);
+	py::enum_<sf::Keyboard::Key>(keyboardManager, "Key")
+		.value("Space", sf::Keyboard::Space)
+		.export_values();
+
 	py::class_<Scene> scene(m, "Scene");
 
 	py::class_<GameObject, std::shared_ptr<GameObject>> game_object(m, "GameObject");
@@ -99,9 +114,11 @@ void PythonManager::Init()
 {
 	Log::GetInstance()->Msg("Initialise the python embed interpretor");
 	py::initialize_interpreter();
+	//Adding refecrence to c++ engine modules
 	py::module sfgeModule = py::module::import("SFGE");
 	sfgeModule.attr("engine")=  py::cast(&m_Engine);
 	sfgeModule.attr("scene_manager") = py::cast(m_Engine.GetSceneManager());
+	sfgeModule.attr("input_manager") = py::cast(m_Engine.GetInputManager());
 }
 
 void PythonManager::Update(sf::Time)

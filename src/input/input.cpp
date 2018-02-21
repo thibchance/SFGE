@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
-
 #include <input/input.h>
 #include <engine/log.h>
 #include <SFML/Window.hpp>
@@ -32,18 +30,40 @@ SOFTWARE.
 
 namespace sfge
 {
+InputManager::InputManager(Engine & engine, bool enable): Module(engine,enable)
+{
+	engine = m_Engine;
+	enable = m_Enable;
+}
+
+KeyboardManager* InputManager::GetKeyboardManager()
+{
+	return m_KeyboardManager;
+}
+
+MouseManager* InputManager::GetMouseManager()
+{
+	return m_MouseManager;
+}
 
 void InputManager::Init()
 {
-
+	m_KeyboardManager = new KeyboardManager();
+	m_MouseManager = new MouseManager();
 }
 
 void InputManager::Update(sf::Time dt)
 {
-
+	m_KeyboardManager->Update(dt);
 }
 
 void InputManager::Destroy()
+{
+	delete(m_KeyboardManager);
+	delete(m_MouseManager);
+}
+
+void InputManager::Reset()
 {
 }
 
@@ -51,8 +71,30 @@ void InputManager::Reload()
 {
 }
 
-void InputManager::Reset()
+void KeyboardManager::Update(sf::Time dt)
 {
+	for (int i = 0; i < sf::Keyboard::KeyCount; i++)
+	{
+		keyPressedStatusArray[i].previousKeyPressed = keyPressedStatusArray[i].keyPressed;
+		keyPressedStatusArray[i].keyPressed = sf::Keyboard::isKeyPressed((sf::Keyboard::Key)i);
+	}
 }
 
+bool KeyboardManager::IsKeyHeld(sf::Keyboard::Key key)
+{	
+	return keyPressedStatusArray[(int) key].keyPressed;
+}
+
+bool KeyboardManager::IsKeyDown(sf::Keyboard::Key key)
+{
+	return !keyPressedStatusArray[(int)key].previousKeyPressed && keyPressedStatusArray[(int)key].keyPressed;
+}
+bool KeyboardManager::IsKeyUp(sf::Keyboard::Key key)
+{
+	return !keyPressedStatusArray[(int)key].keyPressed && keyPressedStatusArray[(int)key].previousKeyPressed;
+}
+sf::Vector2i MouseManager::localPosition(sf::Window& window)
+{
+	return sf::Mouse::getPosition(window);
+}
 }
