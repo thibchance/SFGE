@@ -34,16 +34,27 @@ SOFTWARE.
 
 namespace sfge
 {
+
+enum class ColliderType
+{
+	NONE,
+	CIRCLE,
+	RECTANGLE,
+	LINE
+};
+
 class Collider : public Component
 {
 public:
 	using Component::Component;
-
+	void Init() override;
+	void Update(float dt) override;
 	void OnColliderEnter(Collider* collider);
 	void OnColliderExit(Collider* collider);
-	static Collider* LoadCollider(Engine& engine, GameObject& gameObject, json& componentJson);
+
+	static Collider* LoadCollider(Engine& engine, GameObject* gameObject, json& componentJson);
 protected:
-	b2Fixture * m_Fixture;
+	b2Fixture * m_Fixture = nullptr;
 };
 }
 

@@ -26,6 +26,7 @@
 #include <python/pycomponent.h>
 #include <python/python_engine.h>
 #include <engine/log.h>
+#include <physics/collider.h>
 
 namespace sfge
 {
@@ -113,6 +114,44 @@ PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, 
 		Log::GetInstance()->Error("No script path given for the PyComponent");
 	}
 	return nullptr;
+}
+void PyComponent::OnCollisionEnter(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_collision_enter",
+			OnCollisionEnter,
+			collider
+			);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnCollisionEnter\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
+}
+void PyComponent::OnTriggerEnter(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_collision_enter",
+			OnTriggerEnter,
+			collider
+		);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnTriggerEnter\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
 }
 unsigned int PyComponent::GetInstanceId() const
 {

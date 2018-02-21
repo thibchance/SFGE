@@ -44,7 +44,7 @@ enum class ShapeType
 	CONVEX,
 };
 
-class Shape : public Component, Offsetable
+class Shape : public Component, public Offsetable
 {
 public:
 	Shape(GameObject* gameObject);
@@ -60,7 +60,7 @@ class Circle : public Shape
 {
 public:
 	Circle(GameObject* gameObject,  float radius);
-	
+	void Update(float dt) override;
 	static Circle* LoadCircle(json& componentJson, GameObject* gameObject);
 protected:
 	float m_Radius;
@@ -70,7 +70,7 @@ class Rectangle : public Shape
 {
 public:
 	Rectangle(GameObject* gameObject, sf::Vector2f size);
-
+	void Update(float time) override;
 	static Rectangle* LoadRectangle(json& componentJson, GameObject* gameObject);
 protected:
 	sf::Vector2f m_Size;

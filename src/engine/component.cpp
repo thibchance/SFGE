@@ -28,6 +28,7 @@
 #include <graphics/shape.h>
 #include <python/pycomponent.h>
 #include <physics/body2d.h>
+#include <physics/collider.h>
 
 #include <engine/log.h>
 
@@ -92,6 +93,8 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 		case ComponentType::BODY2D:
 			component = Body2d::LoadBody2d(engine, gameObject, componentJson);
 			break;
+		case ComponentType::COLLIDER:
+			component = Collider::LoadCollider(engine, gameObject, componentJson);
 		default:
 			break;
 		}

@@ -125,10 +125,12 @@ void SceneManager::SetCurrentScene(std::shared_ptr<Scene> scene)
 
 void SceneManager::Reset()
 {
+
 }
 
 void SceneManager::Reload()
 {
+
 }
 
 std::shared_ptr<Scene> SceneManager::GetCurrentScene()
@@ -154,9 +156,16 @@ void SceneManager::Destroy()
 
 void SceneManager::LoadScene(std::string sceneName)
 {
+	sf::Clock loadingClock;
 	m_Engine.Reset();
 	SetCurrentScene(LoadSceneFromName(sceneName));
 	m_Engine.Reload();
+	{
+		sf::Time loadingTime = loadingClock.getElapsedTime();
+		std::ostringstream oss;
+		oss << "Scene Loading Time: " << loadingTime.asSeconds();
+		Log::GetInstance()->Msg(oss.str());
+	}
 }
 
 

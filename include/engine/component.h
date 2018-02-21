@@ -83,8 +83,8 @@ public:
 
 	ComponentType GetComponentType();
 
-	void OnTriggerEnter(Collider* collider);
-	void OnCollisionEnter(Collider* collider);
+	virtual void OnTriggerEnter(Collider* collider);
+	virtual void OnCollisionEnter(Collider* collider);
 
 	static unsigned int incrementalComponentId;
 protected:

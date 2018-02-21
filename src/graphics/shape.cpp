@@ -77,13 +77,9 @@ Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObj
 
 		}
 	}
-	if (CheckJsonParameter(componentJson, "offset", json::value_t::array))
-	{
-		if (componentJson["offset"].size() == 2)
-		{
-			offset = sf::Vector2f(componentJson["offset"][0], componentJson["offset"][1]);
-		}
-	}
+	offset = GetVectorFromJson(componentJson, "offset");
+		
+	
 	if(shape != nullptr)
 	{
 		{
@@ -102,6 +98,14 @@ Circle::Circle(GameObject* gameObject,   float radius):
 	m_Radius = radius;
 	m_Shape = std::make_shared<sf::CircleShape>(radius);
 	m_Shape->setFillColor(sf::Color::Green);
+}
+
+void Circle::Update(float dt)
+{
+	if (m_Shape != nullptr)
+	{
+		m_Shape->setPosition(m_GameObject->GetTransform()->GetPosition()-m_Radius*sf::Vector2f(1.0f,1.0f) + m_Offset);
+	}
 }
 
 
@@ -126,18 +130,25 @@ Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f size):
 	m_Shape->setFillColor(sf::Color::Red);
 }
 
+void Rectangle::Update(float time)
+{
+	if (m_Shape != nullptr)
+	{
+		m_Shape->setPosition(m_GameObject->GetTransform()->GetPosition()-m_Size/2.0f + m_Offset);
+	}
+}
+
 Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject)
 {
 
 	sf::Vector2f size;
-	if(CheckJsonParameter(componentJson, "size", json::value_t::array))
+	size = GetVectorFromJson(componentJson, "size");
 	{
-		if(componentJson["size"].size() == 2)
-		{
-			size = sf::Vector2f(componentJson["size"][0], componentJson["size"][1]);
-		}
+		std::ostringstream oss;
+		oss << "Loading Rectangle with size: " << size.x << ", " << size.y;
+		Log::GetInstance()->Msg(oss.str());
 	}
-	return new Rectangle(gameObject,   size);
+	return new Rectangle(gameObject, size);
 }
 
 

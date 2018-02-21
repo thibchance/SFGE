@@ -34,5 +34,8 @@ int main()
 
 
 	engine.Start();
+#if WIN32
+	system("pause");
+#endif
 	return EXIT_SUCCESS;
 }
