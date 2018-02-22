@@ -103,6 +103,8 @@ public:
 
 	void OnTriggerEnter(Collider* collider);
 	void OnCollisionEnter(Collider* collider);
+	void OnTriggerExit(Collider* collider);
+	void OnCollisionExit(Collider* collider);
 
 protected:
 	friend class Component;

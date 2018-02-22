@@ -150,4 +150,20 @@ void GameObject::OnCollisionEnter(Collider * collider)
 	}
 }
 
+void GameObject::OnTriggerExit(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnTriggerExit(collider);
+	}
+}
+
+void GameObject::OnCollisionExit(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnCollisionExit(collider);
+	}
+}
+
 }

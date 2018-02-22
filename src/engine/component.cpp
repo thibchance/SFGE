@@ -147,6 +147,14 @@ void Component::OnCollisionEnter(Collider * collider)
 {
 }
 
+void Component::OnTriggerExit(Collider * collider)
+{
+}
+
+void Component::OnCollisionExit(Collider * collider)
+{
+}
+
 Offsetable::Offsetable()
 {
 }

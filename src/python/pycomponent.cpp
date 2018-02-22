@@ -153,6 +153,44 @@ void PyComponent::OnTriggerEnter(Collider * collider)
 		Log::GetInstance()->Error(oss.str());
 	}
 }
+void PyComponent::OnCollisionExit(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_collision_exit",
+			OnCollisionExit,
+			collider
+		);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnCollisionExit\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
+}
+void PyComponent::OnTriggerExit(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_trigger_exit",
+			OnTriggerExit,
+			collider
+		);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnTriggerExit\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
+}
 unsigned int PyComponent::GetInstanceId() const
 {
 	return instanceId;

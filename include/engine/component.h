@@ -86,6 +86,9 @@ public:
 	virtual void OnTriggerEnter(Collider* collider);
 	virtual void OnCollisionEnter(Collider* collider);
 
+	virtual void OnTriggerExit(Collider* collider);
+	virtual void OnCollisionExit(Collider* collider);
+
 	static unsigned int incrementalComponentId;
 protected:
 

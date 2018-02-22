@@ -80,7 +80,9 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def_property_readonly("game_object", &Component::GetGameObject, py::return_value_policy::reference)
 		.def_property_readonly("name", &Component::GetName, py::return_value_policy::reference)
 		.def("on_trigger_enter", &Component::OnTriggerEnter)
-		.def("on_collision_enter", &Component::OnCollisionEnter);
+		.def("on_collision_enter", &Component::OnCollisionEnter)
+		.def("on_trigger_exit", &Component::OnTriggerExit)
+		.def("on_collision_exit", &Component::OnCollisionExit);
 	py::class_<Transform, Component> transform(m, "Transform");
 	transform
 		.def("get_euler_angle", &Transform::GetEulerAngle)

@@ -242,7 +242,7 @@ int main()
 	srand(time(NULL));
 
 	std::list<Object> objectsList;
-	const int objNmb = 2500;
+	const int objNmb = 1000;
 	for (int i = 0; i < objNmb; i++)
 	{
 		objectsList.push_back({
@@ -270,7 +270,7 @@ int main()
 		ImGui::Begin("Stats");
 		{
 			std::ostringstream oss;
-			oss << "FPS: " << 1.0f/dt.asSeconds();
+			oss << "FPS: " << 1.0f / dt.asSeconds();
 
 			ImGui::Text(oss.str().c_str());
 		}

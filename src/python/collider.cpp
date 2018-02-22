@@ -46,6 +46,14 @@ void Collider::OnColliderEnter(Collider * collider)
 
 void Collider::OnColliderExit(Collider * collider)
 {
+	if (collider->m_Fixture->IsSensor() or m_Fixture->IsSensor())
+	{
+		m_GameObject->OnTriggerEnter(collider);
+	}
+	else
+	{
+		m_GameObject->OnCollisionEnter(collider);
+	}
 }
 
 Collider* Collider::LoadCollider(Engine & engine, GameObject * gameObject, json & componentJson)
