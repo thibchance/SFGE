@@ -84,6 +84,10 @@ Collider* Collider::LoadCollider(Engine & engine, GameObject * gameObject, json 
 				break; 
 			}
 		}
+		if (CheckJsonNumber(componentJson, "bouncing"))
+		{
+			fixtureDef.restitution = componentJson["bouncing"];
+		}
 		if (shape != nullptr)
 		{
 			fixtureDef.shape = shape;

@@ -54,11 +54,11 @@ void PyComponent::Init()
 
 void PyComponent::Update(float dt)
 {
-	{
+	/*{
 		std::ostringstream oss;
 		oss << "Update PyComponent with dt:  " << dt;
 		Log::GetInstance()->Msg(oss.str());
-	}
+	}*/
 	try
 	{
 		PYBIND11_OVERLOAD_PURE_NAME(

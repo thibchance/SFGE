@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <physics/physics.h>
 #include <physics/collider.h>
+#include <physics/body2d.h>
 
 namespace sfge
 {

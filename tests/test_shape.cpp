@@ -41,13 +41,13 @@ int main()
 					{
 							{
 									{"type", 3},
-									{"shape_type",1},
+									{"shape_type",(int)sfge::ShapeType::CIRCLE},
 									{"position", {100,300}},
 									{"radius", 500.0}
 							},
 							{
 									{"type", 3},
-									{"shape_type",2},
+									{"shape_type",(int)sfge::ShapeType::RECTANGLE },
 									{"position", {500,300}},
 									{"size", {100,100}}
 							}
