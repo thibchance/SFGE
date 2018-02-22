@@ -21,7 +21,6 @@ int main()
 	auto sound = dynamic_cast<sfge::Sound*>(sfge::Sound::LoadComponent(engine,objectJson,&gameObject));
 	auto sound1 = sound->LoadSound(engine, objectJson,&gameObject);
 	auto sound3 = sound->LoadSound(engine, objectJson2, &gameObject);
-	auto sound4 = sound->LoadSound(engine, objectJson2, &gameObject);
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
@@ -56,10 +55,6 @@ int main()
 		if (keyboardManager.IsKeyDown(sf::Keyboard::S))
 		{
 			sound3->play();
-		}
-		if (keyboardManager.IsKeyDown(sf::Keyboard::D))
-		{
-			sound4->play();
 		}
 		// clear the window with black color
 		window.clear(sf::Color::Black);
