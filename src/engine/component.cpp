@@ -27,6 +27,9 @@
 #include <graphics/sprite.h>
 #include <graphics/shape.h>
 #include <python/pycomponent.h>
+#include <physics/body2d.h>
+#include <physics/collider.h>
+
 #include <engine/log.h>
 
 namespace sfge
@@ -72,8 +75,13 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 				componentName = "Transform";
 				gameObject->SetTransform(dynamic_cast<Transform*>(component));
 			}
+			else
+			{
+				Log::GetInstance()->Error("Loaded Transform was nullptr");
+			}
 			break;
 		case ComponentType::SPRITE:
+			Log::GetInstance()->Msg("Loading Sprite Component");
 			component = Sprite::LoadSprite(engine,  componentJson, gameObject);
 			break;
 		case ComponentType::PYCOMPONENT:
@@ -82,6 +90,11 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 		case ComponentType::SHAPE:
 			component = Shape::LoadShape(engine, componentJson, gameObject);
 			break;
+		case ComponentType::BODY2D:
+			component = Body2d::LoadBody2d(engine, gameObject, componentJson);
+			break;
+		case ComponentType::COLLIDER:
+			component = Collider::LoadCollider(engine, gameObject, componentJson);
 		default:
 			break;
 		}
@@ -124,6 +137,36 @@ void Component::SetName(const std::string & name)
 ComponentType Component::GetComponentType()
 {
 	return m_ComponentType;
+}
+
+void Component::OnTriggerEnter(Collider * collider)
+{
+}
+
+void Component::OnCollisionEnter(Collider * collider)
+{
+}
+
+void Component::OnTriggerExit(Collider * collider)
+{
+}
+
+void Component::OnCollisionExit(Collider * collider)
+{
+}
+
+Offsetable::Offsetable()
+{
+}
+
+sf::Vector2f Offsetable::GetOffset()
+{
+	return m_Offset;
+}
+
+void Offsetable::SetOffset(sf::Vector2f newOffset)
+{
+	m_Offset = newOffset;
 }
 
 }

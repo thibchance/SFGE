@@ -25,7 +25,9 @@
 #include <engine/game_object.h>
 #include <engine/component.h>
 #include <engine/transform.h>
+#include <physics/collider.h>
 #include <engine/log.h>
+#include <input/input.h>
 #include <python/python_engine.h>
 #include <python/pycomponent.h>
 #include <utility/file_utility.h>
@@ -45,13 +47,30 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	py::class_<Module> module(m, "Module");
 
 	py::class_<SceneManager> sceneManager(m, "SceneManager");
+		sceneManager
+			.def("load_scene", &SceneManager::LoadScene);
+	
+	py::class_<InputManager> inputManager(m, "InputManager");
+	inputManager
+		.def_property_readonly("keyboard", &InputManager::GetKeyboardManager, py::return_value_policy::reference);
+	
+	py::class_<KeyboardManager> keyboardManager(m, "KeyboardManager");
+	keyboardManager
+		.def("is_key_held", &KeyboardManager::IsKeyHeld)
+		.def("is_key_down", &KeyboardManager::IsKeyDown)
+		.def("is_key_up", &KeyboardManager::IsKeyUp);
+
+	py::enum_<sf::Keyboard::Key>(keyboardManager, "Key")
+		.value("Space", sf::Keyboard::Space)
+		.export_values();
 
 	py::class_<Scene> scene(m, "Scene");
 
 	py::class_<GameObject, std::shared_ptr<GameObject>> game_object(m, "GameObject");
 	game_object
 		.def(py::init<>())
-		.def_property_readonly("transform", &GameObject::GetTransform, py::return_value_policy::reference);
+		.def_property_readonly("transform", &GameObject::GetTransform, py::return_value_policy::reference)
+		.def_property_readonly("name", &GameObject::GetName, py::return_value_policy::reference);
 
 	py::class_<Component, PyComponent> component(m, "Component");
 	component
@@ -59,8 +78,11 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def("init", &Component::Init)
 		.def("update", &Component::Update)
 		.def_property_readonly("game_object", &Component::GetGameObject, py::return_value_policy::reference)
-		.def_property_readonly("name", &Component::GetName, py::return_value_policy::reference);
-
+		.def_property_readonly("name", &Component::GetName, py::return_value_policy::reference)
+		.def("on_trigger_enter", &Component::OnTriggerEnter)
+		.def("on_collision_enter", &Component::OnCollisionEnter)
+		.def("on_trigger_exit", &Component::OnTriggerExit)
+		.def("on_collision_exit", &Component::OnCollisionExit);
 	py::class_<Transform, Component> transform(m, "Transform");
 	transform
 		.def("get_euler_angle", &Transform::GetEulerAngle)
@@ -69,7 +91,8 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def("set_position", &Transform::SetPosition)
 		.def("get_scale", &Transform::GetScale)
 		.def("set_scale",&Transform::SetScale);
-
+	py::class_<Collider, Component> collider(m, "Collider");
+	
 	//Utility
 	py::class_<Timer> timer(m, "Timer");
 	timer
@@ -98,7 +121,11 @@ void PythonManager::Init()
 {
 	Log::GetInstance()->Msg("Initialise the python embed interpretor");
 	py::initialize_interpreter();
-
+	//Adding refecrence to c++ engine modules
+	py::module sfgeModule = py::module::import("SFGE");
+	sfgeModule.attr("engine")=  py::cast(&m_Engine);
+	sfgeModule.attr("scene_manager") = py::cast(m_Engine.GetSceneManager());
+	sfgeModule.attr("input_manager") = py::cast(m_Engine.GetInputManager());
 }
 
 void PythonManager::Update(sf::Time)
@@ -113,6 +140,15 @@ void PythonManager::Destroy()
 	Log::GetInstance()->Msg("Finalize the python embed interpretor");
 	py::finalize_interpreter();
 }
+
+void PythonManager::Reset()
+{
+	pythonInstanceMap.clear();
+}
+void PythonManager::Reload()
+{
+}
+
 
 unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObject* gameObject)
 {

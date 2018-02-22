@@ -36,14 +36,15 @@ namespace sfge
 {
 class Transform;
 
-
 enum class ComponentType
 {
 	NONE,
 	TRANSFORM,
 	SPRITE,
 	SHAPE,
-	PYCOMPONENT
+	PYCOMPONENT,
+	BODY2D,
+	COLLIDER
 };
 
 /**
@@ -82,6 +83,12 @@ public:
 
 	ComponentType GetComponentType();
 
+	virtual void OnTriggerEnter(Collider* collider);
+	virtual void OnCollisionEnter(Collider* collider);
+
+	virtual void OnTriggerExit(Collider* collider);
+	virtual void OnCollisionExit(Collider* collider);
+
 	static unsigned int incrementalComponentId;
 protected:
 
@@ -93,6 +100,16 @@ protected:
 	*/
 	GameObject* m_GameObject;
 
+};
+
+class Offsetable
+{
+public:
+	Offsetable();
+	sf::Vector2f GetOffset();
+	void SetOffset(sf::Vector2f newOffset);
+protected:
+	sf::Vector2f m_Offset = sf::Vector2f();
 };
 }
 #endif

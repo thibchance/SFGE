@@ -21,45 +21,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <engine/engine.h>
-#include <engine/log.h>
-#include <python/python_engine.h>
-#include <python/pycomponent.h>
-#include <engine/game_object.h>
+#include <engine/scene.h>
 #include <utility/json_utility.h>
-#include <memory>
 
 int main()
 {
 	sfge::Engine engine;
-	engine.Init(true);
+	engine.Init(false, true);
 
-	auto pythonManager = engine.GetPythonManager();
-
-	sfge::GameObject* gameObject = new sfge::GameObject();
-	gameObject->SetName("PyGameObject");
-	{
-		json componentJson;
-
-		componentJson["type"] = (int)sfge::ComponentType::TRANSFORM;
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-		componentJson["type"] = (int)sfge::ComponentType::PYCOMPONENT;
-		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
+	auto sceneManager = engine.GetSceneManager();
+	sceneManager->SetCurrentScene(sceneManager->LoadSceneFromName("data/scenes/test_switch.scene"));
 
 
-		for(int i = 0; i < 10; i++)
-		{
-			sfge::Log::GetInstance()->Msg("GAME OBJECT UPDATE");
-			gameObject->Update(sf::seconds(0.4));
-		}
-	}
-	delete(gameObject);
-	engine.Destroy();
+	engine.Start();
 
 #ifdef WIN32
 	system("pause");

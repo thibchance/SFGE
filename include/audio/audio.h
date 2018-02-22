@@ -73,6 +73,8 @@ public:
 	* \brief return a MusicManager class
 	*/
 	std::shared_ptr<MusicManager> GetMusicManager();
+	void Reset() override;
+	void Reload() override;
 
 protected:
 	std::shared_ptr<SoundManager> m_SoundManager = nullptr;

@@ -55,6 +55,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 			if (!texture->loadFromFile(filename))
 				return 0U;
 			nameIdsMap[filename] = increment_id;
+			idsNameMap[increment_id] = filename;
 			texturesMap[increment_id] = texture;
 			return increment_id;
 		}
@@ -68,6 +69,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 			if (!texture->loadFromFile(filename))
 				return 0U;
 			nameIdsMap[filename] = increment_id;
+			idsNameMap[increment_id] = filename;
 			texturesMap[increment_id] = texture;
 			return increment_id;
 		}
@@ -87,6 +89,27 @@ std::shared_ptr<sf::Texture> TextureManager::GetTexture(unsigned int text_id)
 		return texturesMap[text_id];
 	}
 	return nullptr;
+}
+
+void TextureManager::Reset()
+{
+	idsNameMap.clear();
+}
+
+void TextureManager::Reload()
+{
+	std::list<unsigned int> unusedTextureIds;
+	for (auto nameIdPair : nameIdsMap)
+	{
+		if (idsNameMap.find(nameIdPair.second) == idsNameMap.end())
+		{
+			unusedTextureIds.push_back(nameIdPair.second);
+		}
+	}
+	for (auto unusedTextureId : unusedTextureIds)
+	{
+		texturesMap.erase(unusedTextureId);
+	}
 }
 
 }

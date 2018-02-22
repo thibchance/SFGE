@@ -39,6 +39,7 @@ SOFTWARE.
 #include <audio/audio.h>
 #include <engine/editor.h>
 #include <graphics/sprite.h>
+#include <physics/physics.h>
 #include <engine/log.h>
 
 
@@ -58,26 +59,22 @@ void Engine::Init(bool windowless, bool editor)
 		Log::GetInstance()->Msg("Game Engine Configuration Successfull");
 	}
 
-	m_GraphicsManager = std::make_shared<GraphicsManager>(*this, true, windowless);
-	m_AudioManager = std::make_shared<AudioManager>(*this, true);
-	m_SceneManager = std::make_shared<SceneManager>(*this, true);
-	m_InputManager = std::make_shared<InputManager>(*this, true);
-	m_PythonManager = std::make_shared<PythonManager>(*this, true);
-	m_Editor = std::make_shared<Editor>(*this, editor);
-	modules =
-	{
-		std::dynamic_pointer_cast<Module>(m_GraphicsManager),
-		std::dynamic_pointer_cast<Module>(m_AudioManager),
-		std::dynamic_pointer_cast<Module>(m_InputManager),
-		std::dynamic_pointer_cast<Module>(m_PythonManager),
-		std::dynamic_pointer_cast<Module>(m_SceneManager),
-		std::dynamic_pointer_cast<Module>(m_Editor)
-	};
+	m_GraphicsManager = new GraphicsManager(*this, true, windowless);
+	m_AudioManager = new AudioManager(*this, true);
+	m_SceneManager = new SceneManager(*this, true);
+	m_InputManager = new InputManager(*this, true);
+	m_PythonManager = new PythonManager(*this, true);
+	m_Editor = new Editor(*this, editor);
+	m_PhysicsManager = new PhysicsManager(*this, true);
 	
-	for (auto module : modules)
-	{	
-		module->Init();
-	}
+	
+	m_GraphicsManager->Init();
+	m_AudioManager->Init();
+	m_SceneManager->Init();
+	m_InputManager->Init();
+	m_PythonManager->Init();
+	m_Editor->Init();
+	m_PhysicsManager->Init();
 
 	m_Window = m_GraphicsManager->GetWindow();
 	running = true;
@@ -108,7 +105,7 @@ void Engine::Start()
 				}
 			}
 		}
-		
+		m_PhysicsManager->Update(dt);
 		m_InputManager->Update(dt);
 		m_PythonManager->Update(dt);
 		m_Editor->Update(dt);
@@ -123,14 +120,46 @@ void Engine::Start()
 
 void Engine::Destroy()
 {
-	for (auto module : modules)
-	{
-		module->Destroy();
-	}
+	m_GraphicsManager->Destroy();
+	m_AudioManager->Destroy();
+	m_SceneManager->Destroy();
+	m_InputManager->Destroy();
+	m_PythonManager->Destroy();
+	m_Editor->Destroy();
+	m_PhysicsManager->Destroy();
+}
+
+void Engine::Reset()
+{
+	m_GraphicsManager->Reset();
+	m_AudioManager->Reset();
+	m_SceneManager->Reset();
+	m_InputManager->Reset();
+	m_PythonManager->Reset();
+	m_Editor->Reset();
+	m_PhysicsManager->Reset();
+}
+
+void Engine::Reload()
+{
+	m_GraphicsManager->Reload();
+	m_AudioManager->Reload();
+	m_SceneManager->Reload();
+	m_InputManager->Reload();
+	m_PythonManager->Reload();
+	m_Editor->Reload();
+	m_PhysicsManager->Reload();
 }
 
 Engine::~Engine()
 {
+	delete(m_GraphicsManager);
+	delete(m_AudioManager);
+	delete(m_SceneManager);
+	delete(m_InputManager);
+	delete(m_PythonManager);
+	delete(m_Editor);
+	delete(m_PhysicsManager);
 }
 
 std::shared_ptr<Configuration> Engine::GetConfig()
@@ -138,10 +167,36 @@ std::shared_ptr<Configuration> Engine::GetConfig()
 	return m_Config;
 }
 
-std::shared_ptr<Module> Engine::GetModule(EngineModule engineModule)
+GraphicsManager * Engine::GetGraphicsManager()
 {
-	return modules[(int)engineModule];
+	return m_GraphicsManager;
 }
+
+AudioManager * Engine::GetAudioManager()
+{
+	return m_AudioManager;
+}
+
+SceneManager * Engine::GetSceneManager()
+{
+	return m_SceneManager;
+}
+
+InputManager * Engine::GetInputManager()
+{
+	return m_InputManager;
+}
+
+PythonManager * Engine::GetPythonManager()
+{
+	return m_PythonManager;
+}
+
+PhysicsManager * Engine::GetPhysicsManager()
+{
+	return m_PhysicsManager;
+}
+
 
 Module::Module(Engine& engine, bool enable=true) :
 		m_Engine(engine)

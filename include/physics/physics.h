@@ -34,34 +34,39 @@ SOFTWARE.
 namespace sfge
 {
 
+	float pixel2meter(float pixel);
+	float pixel2meter(int pixel);
+	b2Vec2 pixel2meter(sf::Vector2f pixel);
+	b2Vec2 pixel2meter(sf::Vector2i pixel);
+
+	float meter2pixel(float meter);
+	sf::Vector2f meter2pixel(b2Vec2 meter);
+
+class ContactListener : public b2ContactListener
+{
+public:
+	void BeginContact(b2Contact* contact) override;
+
+	void EndContact(b2Contact* contact) override;
+};
 /**
  * \brief The Physics Manager use Box2D to simulate 2D physics
  */
-class PhysicManager : public Module
+class PhysicsManager : public Module
 {
 public:
+	using Module::Module;
+
+	~PhysicsManager();
 	/**
 	 * \brief Initialize the Physics Manager, but do not create a b2World
 	 */
 	void Init() override;
+
 	/**
-	 * \brief Initialize a b2World
-	 */
-	void InitWorld();
-	/**
-	 * \brief Create Rigidbody
-	 * \return A 2D Rigidbody
-	 */
-	b2Body* CreateBody();
-	/**
-	 * \brief Destroy the body from the b2World
-	 * \param body Rigidbody to be destroyed
-	 */
-	void DestroyBody(b2Body* body);
-	/**
-	 * \brief Destroy the current b2World
-	 */
-	void DestroyWorld();
+	* \brief Get The World
+	*/
+	b2World* GetWorld();
 	/**
 	 * \brief Called each frame to update the b2World if not in editor mode
 	 * @param dt Delta time since last frame
@@ -71,19 +76,25 @@ public:
 	* \brief Called at the end of the program to Destroy a b2World, if it sill exists
 	*/
 	void Destroy() override;
+
+	void Reset() override;
+	void Reload() override;
+
+	const static float pixelPerMeter;
 private:
+	friend class Body2d;
+	friend class Collider;
 	b2World* m_World = nullptr;
-	~PhysicManager();
+	const int32 m_VelocityIterations = 8;  
+	const int32 m_PositionIterations = 3;
+	ContactListener* m_ContactListener = nullptr;
+
+	std::list<Body2d*> m_Bodies;
+	std::list<Collider*> m_Colliders;
 
 };
 
-class Rigidbody : public Component
-{
-	void Init() override;
-	void Update(float dt) override;
-protected:
-	b2Body* m_Body = nullptr;
-};
+
 
 }
 #endif

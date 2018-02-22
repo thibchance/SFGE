@@ -56,10 +56,15 @@ public:
 	* \return The pointer to the texture in memory
 	*/
 	std::shared_ptr<sf::Texture> GetTexture(unsigned int text_id);
+	
+	void Reset();
+
+	void Reload();
 
 private:
 
 	std::map<std::string, unsigned int> nameIdsMap;
+	std::map<unsigned int, std::string> idsNameMap;
 	std::map<unsigned int, std::shared_ptr<sf::Texture>> texturesMap;
 	unsigned int increment_id = 0;
 

@@ -36,30 +36,40 @@ InputManager::InputManager(Engine & engine, bool enable): Module(engine,enable)
 	enable = m_Enable;
 }
 
-std::shared_ptr<InputManager> InputManager::GetInputManager()
+
+KeyboardManager* InputManager::GetKeyboardManager()
 {
-	return m_InputManager;
+	return m_KeyboardManager;
 }
 
-std::shared_ptr<KeyboardManager> InputManager::GetKeyboardManager()
+MouseManager* InputManager::GetMouseManager()
 {
-	return m_Keyboard;
+	return m_MouseManager;
 }
 
 void InputManager::Init()
 {
-	m_InputManager = std::make_shared<InputManager>(*this);
-	m_Keyboard = std::make_shared<KeyboardManager>();
+	m_KeyboardManager = new KeyboardManager();
+	m_MouseManager = new MouseManager();
 }
 
 void InputManager::Update(sf::Time dt)
 {
-
+	m_KeyboardManager->Update(dt);
 }
 
 void InputManager::Destroy()
 {
+	delete(m_KeyboardManager);
+	delete(m_MouseManager);
+}
 
+void InputManager::Reset()
+{
+}
+
+void InputManager::Reload()
+{
 }
 
 void KeyboardManager::Update(sf::Time dt)
@@ -85,5 +95,8 @@ bool KeyboardManager::IsKeyUp(sf::Keyboard::Key key)
 	return !keyPressedStatusArray[(int)key].keyPressed && keyPressedStatusArray[(int)key].previousKeyPressed;
 }
 
-
+sf::Vector2i MouseManager::localPosition(sf::Window& window)
+{
+	return sf::Mouse::getPosition(window);
+}
 }

@@ -46,6 +46,11 @@ public:
 	void Update(float dt) override;
 	static PyComponent* LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject);
 
+	void OnCollisionEnter(Collider* collider) override;
+	void OnTriggerEnter(Collider * collider) override;
+	void OnCollisionExit(Collider* collider) override;
+	void OnTriggerExit(Collider * collider) override;
+
 	unsigned int GetInstanceId() const;
 	void SetInstanceId(unsigned int instanceId = 0U);
 

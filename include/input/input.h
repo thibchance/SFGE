@@ -28,11 +28,12 @@ SOFTWARE.
 #include <engine/engine.h>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <SFML/System/Time.hpp>
 
 namespace sfge
 {
 class KeyboardManager;
-
+class MouseManager;
 /**
 * \brief Handles Input like the Keyboard, the Joystick or the Mouse
 */
@@ -53,14 +54,17 @@ public:
 	void Update(sf::Time dt) override;
 	void Destroy() override;
 
-	std::shared_ptr<InputManager> GetInputManager();
-	std::shared_ptr<KeyboardManager> GetKeyboardManager();
+	void Reset() override;
+	void Reload() override;
+
+	KeyboardManager* GetKeyboardManager();
+	MouseManager* GetMouseManager();
 
 private:
 
 protected:
-	std::shared_ptr<InputManager> m_InputManager = nullptr;
-	std::shared_ptr<KeyboardManager> m_Keyboard = nullptr;
+	KeyboardManager* m_KeyboardManager = nullptr;
+	MouseManager* m_MouseManager = nullptr;
 };
 
 struct KeyPressedStatus { bool previousKeyPressed; bool keyPressed; };
@@ -80,18 +84,10 @@ private:
 	KeyPressedStatus keyPressedStatusArray[sf::Keyboard::Key::KeyCount] ={};
 };
 
-class Mouse
+class MouseManager
 {
 public:
-private:
-
-};
-
-class Controller
-{
-public:
-private:
-
+	sf::Vector2i localPosition(sf::Window& window);
 };
 
 }

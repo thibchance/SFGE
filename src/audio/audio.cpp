@@ -120,8 +120,7 @@ void Sound::Update(float dt)
 }
 std::shared_ptr<sf::Sound> Sound::LoadSound(Engine& engine, json & componentJson, GameObject* gameObject)
 {
-	auto audioManager = std::dynamic_pointer_cast<AudioManager>(
-		engine.GetModule(sfge::EngineModule::AUDIO_MANAGER));
+	auto audioManager = engine.GetAudioManager();
 	auto soundManager = audioManager->GetSoundManager();
 	if (soundManager != nullptr)
 	{
@@ -221,6 +220,14 @@ std::shared_ptr<sf::Music> MusicManager::GetMusic(unsigned int musicId)
 	{
 		return musicMap[musicId];
 	}
+}
+
+void AudioManager::Reset()
+{
+}
+
+void AudioManager::Reload()
+{
 }
 
 }
