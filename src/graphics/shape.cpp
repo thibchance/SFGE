@@ -26,18 +26,26 @@ SOFTWARE.
 #include <graphics/shape.h>
 #include <utility/json_utility.h>
 #include <engine/log.h>
+#include <engine/transform.h>
 
 namespace sfge
 {
 
-Shape::Shape(GameObject* gameObject, sf::Vector2f position):
+Shape::Shape(GameObject* gameObject):
 		Component(gameObject)
 {
+}
 
+void Shape::Init()
+{
 }
 
 void Shape::Update(float time)
 {
+	if (m_Shape != nullptr)
+	{
+		m_Shape->setPosition(m_GameObject->GetTransform()->GetPosition() + m_Offset);
+	}
 }
 
 void Shape::Draw(sf::RenderWindow& window)
@@ -48,59 +56,61 @@ void Shape::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Shape::Init()
-{
-}
 
 Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObject)
 {
 	Shape* shape = nullptr;
-	sf::Vector2f position;
-	if(CheckJsonParameter(componentJson, "position", json::value_t::array))
-	{
-		if(componentJson["position"].size() == 2)
-		{
-			position = sf::Vector2f(componentJson["position"][0], componentJson["position"][1]);
-		}
-	}
+	sf::Vector2f offset;
+	
 
-	if(CheckJsonParameter(componentJson, "shape_type", json::value_t::number_integer))
+	if(CheckJsonNumber(componentJson, "shape_type"))
 	{
 		ShapeType shapeType = (ShapeType)componentJson["shape_type"];
 		switch(shapeType)
 		{
 		case ShapeType::CIRCLE:
-			shape = Circle::LoadCircle(componentJson, gameObject, position);
+			shape = Circle::LoadCircle(componentJson, gameObject);
 			break;
 		case ShapeType::RECTANGLE:
-			shape = Rectangle::LoadRectangle(componentJson, gameObject, position);
+			shape = Rectangle::LoadRectangle(componentJson, gameObject);
 			break;
 
 		}
 	}
+	offset = GetVectorFromJson(componentJson, "offset");
+		
+	
 	if(shape != nullptr)
 	{
 		{
 			Log::GetInstance()->Msg("Load shape");
 		}
-		auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
-				engine.GetModule(EngineModule::GRAPHICS_MANAGER));
+		shape->SetOffset(offset);
+		auto graphicsManager = engine.GetGraphicsManager();
 		graphicsManager->GetShapeManager()->AddShape(shape);
 	}
 	return shape;
 }
 
-Circle::Circle(GameObject* gameObject,  sf::Vector2f position, float radius):
-		Shape(gameObject,  position)
+Circle::Circle(GameObject* gameObject,   float radius):
+		Shape(gameObject)
 {
 	m_Radius = radius;
 	m_Shape = std::make_shared<sf::CircleShape>(radius);
 	m_Shape->setFillColor(sf::Color::Green);
-	m_Shape->setPosition(position);
+}
+
+void Circle::Update(float dt)
+{
+	if (m_Shape != nullptr)
+	{
+		m_Shape->setPosition(m_GameObject->GetTransform()->GetPosition()-m_Radius*sf::Vector2f(1.0f,1.0f) + m_Offset);
+	}
 }
 
 
-Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
+
+Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject)
 {
 	float radius = 1.0f;
 
@@ -109,30 +119,36 @@ Circle* Circle::LoadCircle(json& componentJson, GameObject* gameObject, sf::Vect
 		radius = componentJson["radius"];
 	}
 
-	return new Circle(gameObject, position, radius);
+	return new Circle(gameObject, radius);
 
 }
-Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f position, sf::Vector2f size):
-		Shape(gameObject, position)
+Rectangle::Rectangle(GameObject* gameObject, sf::Vector2f size):
+		Shape(gameObject)
 {
 	m_Size = size;
 	m_Shape = std::make_shared<sf::RectangleShape>(size);
 	m_Shape->setFillColor(sf::Color::Red);
-	m_Shape->setPosition(position);
 }
 
-Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject, sf::Vector2f position)
+void Rectangle::Update(float time)
+{
+	if (m_Shape != nullptr)
+	{
+		m_Shape->setPosition(m_GameObject->GetTransform()->GetPosition()-m_Size/2.0f + m_Offset);
+	}
+}
+
+Rectangle* Rectangle::LoadRectangle(json& componentJson, GameObject* gameObject)
 {
 
 	sf::Vector2f size;
-	if(CheckJsonParameter(componentJson, "size", json::value_t::array))
+	size = GetVectorFromJson(componentJson, "size");
 	{
-		if(componentJson["size"].size() == 2)
-		{
-			size = sf::Vector2f(componentJson["size"][0], componentJson["size"][1]);
-		}
+		std::ostringstream oss;
+		oss << "Loading Rectangle with size: " << size.x << ", " << size.y;
+		Log::GetInstance()->Msg(oss.str());
 	}
-	return new Rectangle(gameObject,  position, size);
+	return new Rectangle(gameObject, size);
 }
 
 
@@ -149,6 +165,19 @@ void ShapeManager::Draw(sf::RenderWindow& window)
 	{
 		shape->Draw(window);
 	}
+}
+
+void ShapeManager::Reset()
+{
+	for (auto shape : m_Shapes)
+	{
+		delete(shape);
+	}
+	m_Shapes.clear();
+}
+
+void ShapeManager::Reload()
+{
 }
 
 void ShapeManager::AddShape(Shape* shape)

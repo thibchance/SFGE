@@ -37,7 +37,7 @@ void Sprite::Update(float dt)
 }
 void Sprite::Draw(sf::RenderWindow& window)
 {
-	sprite.setPosition(m_GameObject->GetTransform()->GetPosition());
+	sprite.setPosition(m_GameObject->GetTransform()->GetPosition()+m_Offset);
 	sprite.setScale(m_GameObject->GetTransform()->GetScale());
 	sprite.setRotation(m_GameObject->GetTransform()->GetEulerAngle());
 	window.draw(sprite);
@@ -45,6 +45,10 @@ void Sprite::Draw(sf::RenderWindow& window)
 void Sprite::SetTexture(std::shared_ptr<sf::Texture> newTexture)
 {
 	sprite.setTexture(*newTexture);
+}
+void Sprite::SetTextureId(unsigned int textureId)
+{
+	m_TextureId = textureId;
 }
 void Sprite::SetLayer(int layer)
 {
@@ -59,10 +63,10 @@ bool Sprite::SpriteLayerComp(Sprite* s1, Sprite* s2)
 {
 	return s1->layer>s2->layer;
 }
+
 Sprite* Sprite::LoadSprite(Engine& engine, json& componentJson, GameObject* gameObject)
 {
-	auto graphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
-		engine.GetModule(sfge::EngineModule::GRAPHICS_MANAGER));
+	auto graphicsManager = engine.GetGraphicsManager();
 	auto spriteManager = graphicsManager->GetSpriteManager();
 
 
@@ -71,6 +75,10 @@ Sprite* Sprite::LoadSprite(Engine& engine, json& componentJson, GameObject* game
 		auto newSprite = new Sprite(gameObject);
 		spriteManager->LoadSprite(componentJson, newSprite);
 		return newSprite;
+	}
+	else
+	{
+		sfge::Log::GetInstance()->Error("SPRITE MANAGER IS NULL");
 	}
 	return nullptr;
 }
@@ -102,11 +110,17 @@ void SpriteManager::LoadSprite(json& componentJson, Sprite* newSprite)
 		std::shared_ptr<sf::Texture> texture = nullptr;
 		if (FileExists(path))
 		{
-			unsigned int text_id = m_GraphicsManager.GetTextureManager()->LoadTexture(path);
-			if (text_id != 0)
+			unsigned int textureId = m_GraphicsManager.GetTextureManager()->LoadTexture(path);
+			if (textureId != 0)
 			{
-				texture = m_GraphicsManager.GetTextureManager()->GetTexture(text_id);
+				{
+					std::ostringstream oss;
+					oss << "Loading Sprite with Texture at: " << path << " with texture id: " << textureId;
+					sfge::Log::GetInstance()->Msg(oss.str());
+				}
+				texture = m_GraphicsManager.GetTextureManager()->GetTexture(textureId);
 				newSprite->SetTexture(texture);
+				newSprite->SetTextureId(textureId);
 			}
 		}
 		else
@@ -125,6 +139,19 @@ void SpriteManager::LoadSprite(json& componentJson, Sprite* newSprite)
 		newSprite->SetLayer(componentJson["layer"]);
 	}
 	m_Sprites.push_back(newSprite);
+}
+
+void SpriteManager::Reset()
+{
+	for (auto sprite : m_Sprites)
+	{
+		delete(sprite);
+	}
+	m_Sprites.clear();
+}
+
+void SpriteManager::Reload()
+{
 }
 
 

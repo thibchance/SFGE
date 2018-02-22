@@ -81,6 +81,10 @@ GameObject* GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
 			}
 		}
 	}
+	else
+	{
+		Log::GetInstance()->Error("There are no Component attached to the GameObject");
+	}
 
 	//if there is no transform, it is always at the beginning of the list
 	if(gameObject->m_Transform == nullptr)
@@ -102,19 +106,6 @@ void GameObject::SetTransform(Transform* transform)
 {
 	m_Transform = transform;
 }
-template <typename T>
-T* GameObject::GetComponent()
-{
-	for(auto component : m_Components)
-	{
-		auto castComponent = std::dynamic_pointer_cast<T>(component);
-		if(castComponent != nullptr)
-		{
-			return castComponent;
-		}
-	}
-	return nullptr;
-}
 
 GameObject::GameObject()
 {
@@ -122,14 +113,7 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	while (!m_Components.empty())
-	{
-		if (dynamic_cast<PyComponent*>(m_Components.front()) == nullptr)
-		{
-			delete m_Components.front();
-		}
-		m_Components.pop_front();
-	}
+	delete(m_Transform);
 	{
 		Log::GetInstance()->Error("DESTROY GAME OBJECT "+m_Name);
 	}
@@ -148,6 +132,38 @@ const std::string & GameObject::GetName()
 void GameObject::SetName(std::string name)
 {
 	m_Name = name;
+}
+
+void GameObject::OnTriggerEnter(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnTriggerEnter(collider);
+	}
+}
+
+void GameObject::OnCollisionEnter(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnCollisionEnter(collider);
+	}
+}
+
+void GameObject::OnTriggerExit(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnTriggerExit(collider);
+	}
+}
+
+void GameObject::OnCollisionExit(Collider * collider)
+{
+	for (auto comp : m_Components)
+	{
+		comp->OnCollisionExit(collider);
+	}
 }
 
 }

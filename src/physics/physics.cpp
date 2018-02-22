@@ -23,49 +23,153 @@ SOFTWARE.
 */
 
 #include <physics/physics.h>
+#include <physics/collider.h>
+#include <physics/body2d.h>
 
 namespace sfge
 {
 
-void PhysicManager::Init()
+const float PhysicsManager::pixelPerMeter = 100.0f;
+
+PhysicsManager::~PhysicsManager()
 {
+}
+
+void PhysicsManager::Init()
+{
+	b2Vec2 gravity = m_Engine.GetConfig()->gravity;
+	m_World = new b2World(gravity);
+	m_ContactListener = new ContactListener();
+	m_World->SetContactListener(m_ContactListener);
 
 }
 
-void PhysicManager::Update(sf::Time dt)
+void PhysicsManager::Update(sf::Time dt)
 {
-
-}
-
-void PhysicManager::InitWorld()
-{
-	m_World = new b2World(b2Vec2(0.0f, 0.0f));
-}
-
-void PhysicManager::DestroyWorld()
-{
-	if (m_World != nullptr)
+	if (m_World)
 	{
-		delete m_World;
+		m_World->Step(dt.asSeconds(), m_VelocityIterations, m_PositionIterations);
 	}
 }
 
-b2Body* PhysicManager::CreateBody()
+b2World * PhysicsManager::GetWorld()
 {
-	return nullptr;
+	return m_World;
 }
 
-void PhysicManager::DestroyBody(b2Body* body)
+
+void PhysicsManager::Destroy()
+{
+	if (m_World)
+	{
+		delete(m_World);
+	}
+
+	for (Body2d* body : m_Bodies)
+	{
+		delete(body);
+	}
+	m_Bodies.clear();
+
+	for (Collider* collider : m_Colliders)
+	{
+		delete(collider);
+	}
+	m_Colliders.clear();
+}
+
+void PhysicsManager::Reset()
+{
+	Destroy();
+	Init();
+}
+
+void PhysicsManager::Reload()
 {
 }
 
-void PhysicManager::Destroy()
+void ContactListener::BeginContact(b2Contact* contact) 
 {
+	Collider* firstCollider = nullptr;
+	Collider* secondCollider = nullptr;
+
+	void* colliderUserData = contact->GetFixtureA()->GetUserData();
+	if (colliderUserData)
+	{
+		firstCollider = static_cast<Collider*>(colliderUserData);
+	}
+
+	
+	colliderUserData = contact->GetFixtureB()->GetUserData();
+	if (colliderUserData)
+	{
+		secondCollider = static_cast<Collider*>(colliderUserData);
+	}
+
+	if (firstCollider and secondCollider)
+	{
+		firstCollider->OnColliderEnter(secondCollider);
+		secondCollider->OnColliderEnter(firstCollider);
+	}
+
 }
 
-PhysicManager::~PhysicManager()
+void ContactListener::EndContact(b2Contact* contact)
 {
-	DestroyWorld();
+
+	Collider* firstCollider = nullptr;
+	Collider* secondCollider = nullptr;
+
+	void* colliderUserData = contact->GetFixtureA()->GetUserData();
+	if (colliderUserData)
+	{
+		firstCollider = static_cast<Collider*>(colliderUserData);
+	}
+
+
+	colliderUserData = contact->GetFixtureB()->GetUserData();
+	if (colliderUserData)
+	{
+		secondCollider = static_cast<Collider*>(colliderUserData);
+	}
+
+	if (firstCollider and secondCollider)
+	{
+		firstCollider->OnColliderExit(secondCollider);
+		secondCollider->OnColliderExit(firstCollider);
+	}
+
+}
+
+
+float pixel2meter(float pixel)
+{
+	return pixel/PhysicsManager::pixelPerMeter;
+}
+
+float pixel2meter(int pixel)
+{
+	return pixel / PhysicsManager::pixelPerMeter;
+}
+
+b2Vec2 pixel2meter(sf::Vector2f pixel)
+{
+	return b2Vec2(pixel2meter(pixel.x), pixel2meter(pixel.y));
+}
+
+b2Vec2 pixel2meter(sf::Vector2i pixel)
+{
+	return b2Vec2(pixel2meter(pixel.x), pixel2meter(pixel.y));
+}
+
+float meter2pixel(float meter)
+{
+	return meter*PhysicsManager::pixelPerMeter;
+}
+
+sf::Vector2f meter2pixel(b2Vec2 meter)
+{
+	return sf::Vector2f(meter2pixel(meter.x), meter2pixel(meter.y));
 }
 
 }

@@ -26,6 +26,7 @@
 #include <python/pycomponent.h>
 #include <python/python_engine.h>
 #include <engine/log.h>
+#include <physics/collider.h>
 
 namespace sfge
 {
@@ -53,11 +54,11 @@ void PyComponent::Init()
 
 void PyComponent::Update(float dt)
 {
-	{
+	/*{
 		std::ostringstream oss;
 		oss << "Update PyComponent with dt:  " << dt;
 		Log::GetInstance()->Msg(oss.str());
-	}
+	}*/
 	try
 	{
 		PYBIND11_OVERLOAD_PURE_NAME(
@@ -86,7 +87,7 @@ PyComponent::~PyComponent()
 
 PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject)
 {
-	auto pythonManager = std::dynamic_pointer_cast<PythonManager>(engine.GetModule(EngineModule::PYTHON_MANAGER));
+	auto pythonManager = engine.GetPythonManager();
 	if(CheckJsonParameter(componentJson, "script_path", json::value_t::string))
 	{
 		unsigned int componentInstanceId = pythonManager->LoadPyComponentFile(componentJson["script_path"], gameObject);
@@ -113,6 +114,82 @@ PyComponent* PyComponent::LoadPythonScript(Engine& engine, json& componentJson, 
 		Log::GetInstance()->Error("No script path given for the PyComponent");
 	}
 	return nullptr;
+}
+void PyComponent::OnCollisionEnter(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_collision_enter",
+			OnCollisionEnter,
+			collider
+			);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnCollisionEnter\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
+}
+void PyComponent::OnTriggerEnter(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_collision_enter",
+			OnTriggerEnter,
+			collider
+		);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnTriggerEnter\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
+}
+void PyComponent::OnCollisionExit(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_collision_exit",
+			OnCollisionExit,
+			collider
+		);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnCollisionExit\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
+}
+void PyComponent::OnTriggerExit(Collider * collider)
+{
+	try
+	{
+		PYBIND11_OVERLOAD_PURE_NAME(
+			void,
+			Component,
+			"on_trigger_exit",
+			OnTriggerExit,
+			collider
+		);
+	}
+	catch (std::runtime_error& e)
+	{
+		std::stringstream oss;
+		oss << "Python error on PyComponent OnTriggerExit\n" << e.what();
+		Log::GetInstance()->Error(oss.str());
+	}
 }
 unsigned int PyComponent::GetInstanceId() const
 {

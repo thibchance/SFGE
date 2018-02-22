@@ -21,48 +21,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <engine/engine.h>
-#include <engine/log.h>
-#include <python/python_engine.h>
-#include <python/pycomponent.h>
-#include <engine/game_object.h>
+
+
+#ifndef SFGE_COLLIDER_H
+#define SFGE_COLLIDER_H
+
+#include <engine/component.h>
 #include <utility/json_utility.h>
-#include <memory>
 
-int main()
+#include <Box2D/Box2D.h>
+
+
+namespace sfge
 {
-	sfge::Engine engine;
-	engine.Init(true);
 
-	auto pythonManager = engine.GetPythonManager();
+enum class ColliderType
+{
+	NONE,
+	CIRCLE,
+	RECTANGLE,
+	LINE
+};
 
-	sfge::GameObject* gameObject = new sfge::GameObject();
-	gameObject->SetName("PyGameObject");
-	{
-		json componentJson;
+class Collider : public Component
+{
+public:
+	using Component::Component;
+	void Init() override;
+	void Update(float dt) override;
+	void OnColliderEnter(Collider* collider);
+	void OnColliderExit(Collider* collider);
 
-		componentJson["type"] = (int)sfge::ComponentType::TRANSFORM;
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-		componentJson["type"] = (int)sfge::ComponentType::PYCOMPONENT;
-		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-
-		for(int i = 0; i < 10; i++)
-		{
-			sfge::Log::GetInstance()->Msg("GAME OBJECT UPDATE");
-			gameObject->Update(sf::seconds(0.4));
-		}
-	}
-	delete(gameObject);
-	engine.Destroy();
-
-#ifdef WIN32
-	system("pause");
-#endif
-	return EXIT_SUCCESS;
+	static Collider* LoadCollider(Engine& engine, GameObject* gameObject, json& componentJson);
+protected:
+	b2Fixture * m_Fixture = nullptr;
+};
 }
+
+#endif

@@ -39,39 +39,46 @@ int main()
 	sfge::Engine engine;
 
 	engine.Init(true);
-
+	json gameObjectJson;
 	json spriteJson;
 	spriteJson["path"] = "data/sprites/boss_01_dialog_pose_001_b.png";
 	spriteJson["type"] = (int)sfge::ComponentType::SPRITE;
-	std::cout << spriteJson["path"]<<"\n";
-	sfge::GameObject gameObject;
-	auto sprite = dynamic_cast<sfge::Sprite*>(sfge::Sprite::LoadComponent(engine, spriteJson, &gameObject));
+	gameObjectJson["components"] = json::array({ spriteJson });
 
-	// create the window
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Sprite");
-
-
-	sf::Clock clock;
-	// run the program as long as the window is open
-	while (window.isOpen())
+	sfge::GameObject* gameObject = sfge::GameObject::LoadGameObject(engine, gameObjectJson);
+	auto sprite = gameObject->GetComponent<sfge::Sprite>();
+	if (sprite != nullptr)
 	{
-		sf::Time dt = clock.restart();
-		// check all the window's events that were triggered since the last iteration of the loop
-		sf::Event event;
-		while (window.pollEvent(event))
+		// create the window
+		sf::RenderWindow window(sf::VideoMode(800, 600), "Test Sprite");
+
+
+		sf::Clock clock;
+		// run the program as long as the window is open
+		while (window.isOpen())
 		{
-			// "close requested" event: we close the window
-			if (event.type == sf::Event::Closed)
-				window.close();
+			sf::Time dt = clock.restart();
+			// check all the window's events that were triggered since the last iteration of the loop
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				// "close requested" event: we close the window
+				if (event.type == sf::Event::Closed)
+					window.close();
+			}
+			gameObject->GetTransform()->SetPosition(gameObject->GetTransform()->GetPosition() + sf::Vector2f(10.f, 10.f)*dt.asSeconds());
+			// clear the window with black color
+			window.clear(sf::Color::Black);
+
+			sprite->Draw(window);
+
+			// end the current frame
+			window.display();
 		}
-		gameObject.GetTransform()->SetPosition(gameObject.GetTransform()->GetPosition() + sf::Vector2f(10.f, 10.f)*dt.asSeconds());
-		// clear the window with black color
-		window.clear(sf::Color::Black);
-
-		sprite->Draw(window);
-
-		// end the current frame
-		window.display();
+	}
+	else
+	{
+		sfge::Log::GetInstance()->Error("COULD NOT LOAD SPRITE");
 	}
 	engine.Destroy();
 #if WIN32

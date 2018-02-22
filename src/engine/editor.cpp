@@ -26,12 +26,20 @@ SOFTWARE.
 #include <imgui-SFML.h>
 
 #include <engine/editor.h>
-#include <graphics/graphics.h>
+
+#include <engine/log.h>
+
 #include <engine/scene.h>
 #include <engine/game_object.h>
 #include <engine/component.h>
 #include <engine/transform.h>
-#include <engine/log.h>
+
+#include <graphics/graphics.h>
+#include <graphics/sprite.h>
+
+#include <physics/physics.h>
+
+#include <physics/body2d.h>
 
 
 namespace sfge
@@ -41,12 +49,11 @@ namespace sfge
 */
 void Editor::Init()
 {
-	m_GraphicsManager = std::dynamic_pointer_cast<GraphicsManager>(
-		m_Engine.GetModule(EngineModule::GRAPHICS_MANAGER));
-	m_SceneManager = std::dynamic_pointer_cast<SceneManager>(
-		m_Engine.GetModule(EngineModule::SCENE_MANAGER));
+	m_GraphicsManager = m_Engine.GetGraphicsManager();
+	m_SceneManager = m_Engine.GetSceneManager();
 	if (m_Enable)
 	{
+		Log::GetInstance()->Msg("Enabling Editor");
 		ImGui::SFML::Init(*m_GraphicsManager->GetWindow(), true);
 	}
 }
@@ -58,8 +65,8 @@ void Editor::Update(sf::Time dt)
 		ImGui::SFML::Update(*m_GraphicsManager->GetWindow(), dt);
 		static GameObject* selectedGameObject = nullptr;
 		//GameObject window
-		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(150, m_Engine.GetConfig()->screenResolution.y), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(150.0f, m_Engine.GetConfig()->screenResolution.y), ImGuiCond_FirstUseEver);
 		ImGui::Begin("GameObjects");
 		if (m_SceneManager->GetCurrentScene() != nullptr)
 		{
@@ -81,8 +88,8 @@ void Editor::Update(sf::Time dt)
 		}
 		ImGui::End();
 		//Component inspector window
-		ImGui::SetNextWindowPos(ImVec2(m_Engine.GetConfig()->screenResolution.x - 50, 0), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(150, m_Engine.GetConfig()->screenResolution.y), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(m_Engine.GetConfig()->screenResolution.x - 50.0f, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(150.0f, m_Engine.GetConfig()->screenResolution.y), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Inspector");
 		if (selectedGameObject != nullptr)
 		{
@@ -90,6 +97,12 @@ void Editor::Update(sf::Time dt)
 			{
 				if (ImGui::CollapsingHeader(component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
+					Offsetable* offsetableComponent = dynamic_cast<Offsetable*>(component);
+					if (offsetableComponent != nullptr)
+					{
+						float offset[2] = { offsetableComponent->GetOffset().x, offsetableComponent->GetOffset().y };
+						ImGui::InputFloat2("Offset", offset);
+					}
 					switch (component->GetComponentType())
 					{
 					case ComponentType::TRANSFORM:
@@ -98,7 +111,6 @@ void Editor::Update(sf::Time dt)
 							if (transform != nullptr)
 							{
 
-								ImGui::Separator();
 								float pos[2] = { transform->GetPosition().x, transform->GetPosition().y };
 								ImGui::InputFloat2("Position", pos);
 							}
@@ -108,8 +120,23 @@ void Editor::Update(sf::Time dt)
 					case ComponentType::SHAPE:
 						break;
 					case ComponentType::SPRITE:
+						
 						break;
 					case ComponentType::PYCOMPONENT:
+						break;
+					case ComponentType::BODY2D:
+						Body2d * body2d = dynamic_cast<Body2d*>(component);
+						if (body2d != nullptr)
+						{
+							b2Body* b2Body = body2d->GetBody();
+							if (b2Body != nullptr)
+							{
+								sf::Vector2f speed = meter2pixel(b2Body->GetLinearVelocity());
+								float speedArray[2] = { speed.x, speed.y };
+								ImGui::InputFloat2("Speed", speedArray);
+							}
+						}
+
 						break;
 					}
 				}
@@ -157,4 +184,13 @@ void Editor::Destroy()
 		ImGui::Shutdown();
 	}
 }
+
+void Editor::Reload()
+{
+}
+
+void Editor::Reset()
+{
+}
+
 }

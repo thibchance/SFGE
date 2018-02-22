@@ -36,9 +36,9 @@
 
 namespace sfge
 {
-
 class Component;
 class Transform;
+class Collider;
 
 /**
 * \brief The basic Game Object handler containing a list of Components
@@ -73,7 +73,20 @@ public:
 	 * \return Return the first Component of type T that is attached to the GameObject
 	 */
 	template <class T>
-	T* GetComponent();
+	T* GetComponent()
+	{
+		for (auto component : m_Components)
+		{
+			auto castComponent = dynamic_cast<T*>(component);
+			if (castComponent != nullptr)
+			{
+				return castComponent;
+			}
+		}
+		return nullptr;
+	}
+
+	template<> Component* GetComponent<Component>();
 
 	/**
 	* \brief Return the reference to all the Component in the GameObject
@@ -87,6 +100,11 @@ public:
 	const std::string& GetName();
 
 	void SetName(std::string name);
+
+	void OnTriggerEnter(Collider* collider);
+	void OnCollisionEnter(Collider* collider);
+	void OnTriggerExit(Collider* collider);
+	void OnCollisionExit(Collider* collider);
 
 protected:
 	friend class Component;

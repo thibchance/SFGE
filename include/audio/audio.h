@@ -48,7 +48,8 @@ public:
 	void Init() override;
 	void Update(sf::Time dt) override;
 	void Destroy() override;
-
+	void Reset() override;
+	void Reload() override;
 	std::shared_ptr<SoundManager> GetSoundManager();
 	std::shared_ptr<SoundBuffer> GetSoundBuffer();
 	std::shared_ptr<MusicManager> GetMusicManager();

@@ -57,8 +57,9 @@ class GameObject:
 
 
 class Component:
-    def __init__(self, game_object):
+    def __init__(self, game_object, name):
         self.gameObject = game_object
+        self.name = name
     
     def update(self, dt):
         pass

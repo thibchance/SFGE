@@ -29,9 +29,8 @@ int main()
 	sfge::Engine engine;
 	engine.Init(false, true);
 
-	auto sceneManager = std::dynamic_pointer_cast<sfge::SceneManager>(
-		engine.GetModule(sfge::EngineModule::SCENE_MANAGER));
-	sceneManager->SetCurrentScene(sceneManager->LoadScene("data/scenes/test.scene"));
+	auto sceneManager = engine.GetSceneManager();
+	sceneManager->SetCurrentScene(sceneManager->LoadSceneFromName("data/scenes/test.scene"));
 
 
 	engine.Start();
