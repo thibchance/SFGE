@@ -44,7 +44,8 @@ enum class ComponentType
 	SHAPE,
 	PYCOMPONENT,
 	BODY2D,
-	COLLIDER
+	COLLIDER,
+	SOUND
 };
 
 /**

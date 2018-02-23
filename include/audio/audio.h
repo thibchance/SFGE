@@ -33,79 +33,15 @@ SOFTWARE.
 
 namespace sfge
 {
-class SoundBuffer;
 class SoundManager;
-class Sound;
-class MusicManager;
-
-class AudioManager : public Module
-{
-public:
-	using Module::Module;
-	/**
-	* \brief construct the AudioManager
-	* \param engine use for init the module
-	* \param enable use for ImGui 
-	*/
-	AudioManager(Engine& engine, bool enable = true);
-	/**
-	* \brief Initialize SoundManager class, SoundBuffer class and MusicManager class
-	*/
-	void Init() override;
-	/**
-	* \brief Update the audioManager, called only in play mode
-	* \ param dt The delta time since last frame
-	*/
-	void Update(sf::Time dt) override;
-	/**
-	* \brief delete the AudioManager
-	*/
-	void Destroy() override;
-	/**
-	* \brief return a SoundManager class
-	*/
-	std::shared_ptr<SoundManager> GetSoundManager();
-	/**
-	* \brief return a SoundBuffer class
-	*/
-	std::shared_ptr<SoundBuffer> GetSoundBuffer();
-	/**
-	* \brief return a MusicManager class
-	*/
-	std::shared_ptr<MusicManager> GetMusicManager();
-	void Reset() override;
-	void Reload() override;
-
-protected:
-	std::shared_ptr<SoundManager> m_SoundManager = nullptr;
-	std::shared_ptr<SoundBuffer> m_SoundBuffer = nullptr;
-	std::shared_ptr<MusicManager> m_MusicManager = nullptr;
-};
-
-class SoundBuffer
-{
-public:
-	/**
-	* \brief load a sf::SoundBuffer, put it on soundBufferMap and return the matchin id
-	* \param filename The filename of the buffer file
-	*/
-	unsigned int LoadSoundBuffer(std::string filename);
-	/**
-	* \brief return the sf::SoundBuffer attached to the given sound_buffer_id on the soundBufferMap
-	* \param sound_buffer_id The id key of the soundBuffer
-	*/
-	std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(unsigned int sound_buffer_id);
-
-private:
-	std::map<std::string, unsigned int> bufferIdPath;
-	std::map<unsigned int, std::shared_ptr<sf::SoundBuffer>> soundBufferMap;
-	unsigned int increment_id = 0;
-};
 /**
 * \brief Sound class child is a Component
 */
 class Sound : public Component
 {
+protected:
+	SoundManager* m_SoundManager;
+	sf::Sound sound;
 public:
 	using Component::Component;
 	/**
@@ -123,31 +59,47 @@ public:
 	* \param componentJson The json using when call LoadSound of SoundManager class
 	* \param gameObject The GameObject which the sound is attached
 	*/
-	static std::shared_ptr<sf::Sound> LoadSound(Engine& engine, json& componentJson, GameObject* gameObject);
+	static Sound* LoadSound(Engine& engine, json& componentJson, GameObject* gameObject);
+	void SetBuffer(std::shared_ptr<sf::SoundBuffer> buffer);
+	void Play();
 };
 
 class SoundManager
 {
 public:
-	SoundManager(AudioManager& audioManager);
+	SoundManager();
+	/**
+	* \brief load a sf::SoundBuffer, put it on soundBufferMap and return the matchin id
+	* \param filename The filename of the buffer file
+	*/
+	unsigned int LoadSoundBuffer(std::string filename);
+	/**
+	* \brief return the sf::SoundBuffer attached to the given sound_buffer_id on the soundBufferMap
+	* \param sound_buffer_id The id key of the soundBuffer
+	*/
+	std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(unsigned int sound_buffer_id);
+
 	/**
 	* \brief load a buffer from a json["path"] and ad it to the newSound
 	* \param componentJson The json using for load a sf::SoundBuffer when call LoadSoundBuffer from SoundBuffer class
 	* \param newSound The sound where sf::SoundBuffer was set 
 	*/
-	void LoadSound(json& componentJson, std::shared_ptr<sf::Sound> newSound);
+	void LoadSound(json& componentJson,Sound* sound);
 	~SoundManager();
 protected:
 	/**
 	* \brief The list where the sounds of LoadSound fuction of SoundManager was placed
 	*/
-	std::list<std::shared_ptr<sf::Sound>> m_Sounds;
-	AudioManager& m_AudioManager;
+	std::list<Sound*> m_Sounds;
+	std::map<std::string, unsigned int> bufferIdPath;
+	std::map<unsigned int, std::shared_ptr<sf::SoundBuffer>> soundBufferMap;
+	unsigned int increment_id = 0;
 };
 
 class MusicManager 
 {
 public:
+	MusicManager();
 	/**
 	* \brief open a music from a path file, put it on MusicMap and return the matchin id
 	* \param filename The filename of the music file
@@ -158,11 +110,42 @@ public:
 	* \param musicId the id key of the music
 	*/
 	std::shared_ptr<sf::Music> GetMusic(unsigned int musicId);
-
+	~MusicManager();
 protected:
 	std::map< std::string , unsigned int> musicPathId;
 	std::map<unsigned int, std::shared_ptr<sf::Music>> musicMap;
 	unsigned int increment_id = 0;
+};
+class AudioManager : public Module
+{
+protected:
+	SoundManager m_SoundManager;
+	MusicManager m_MusicManager;
+public:
+	using Module::Module;
+	/**
+	* \brief construct the AudioManager
+	* \param engine use for init the module
+	* \param enable use for ImGui
+	*/
+	AudioManager(Engine& engine, bool enable = true);
+	/**
+	* \brief Initialize SoundManager class, SoundBuffer class and MusicManager class
+	*/
+	void Init() override;
+	/**
+	* \brief Update the audioManager, called only in play mode
+	* \ param dt The delta time since last frame
+	*/
+	void Update(sf::Time dt) override;
+	/**
+	* \brief delete the AudioManager
+	*/
+	SoundManager* GetSoundManager();
+	MusicManager* GetMusicManager();
+	void Destroy() override;
+	void Reset() override;
+	void Reload() override;
 };
 }
 #endif // !SFGE_AUDIO

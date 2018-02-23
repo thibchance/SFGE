@@ -11,16 +11,15 @@ int main()
 
 	//SOUND TEST !!!
 	sfge::Engine engine;
-	engine.Init(false);
-	sfge::SoundBuffer buffer;
+	engine.Init(true);
+	json gameObjectJson;
 	json objectJson;
 	objectJson["path"] = "data/audio/sounds/Laser.wav";
-	json objectJson2;
-	objectJson2["path"] = "data/audio/sounds/BasicGun.wav";
-	sfge::GameObject gameObject;
-	auto sound = dynamic_cast<sfge::Sound*>(sfge::Sound::LoadComponent(engine,objectJson, &gameObject));
-	auto sound1 = sound->LoadSound(engine, objectJson, &gameObject);
-	auto sound3 = sound->LoadSound(engine, objectJson2, &gameObject);
+	objectJson["type"] = (int)sfge::ComponentType::SOUND;
+	gameObjectJson["components"] = json::array({ objectJson });
+	gameObjectJson["name"] = objectJson["path"];
+	sfge::GameObject* gameObject = sfge::GameObject::LoadGameObject(engine, gameObjectJson);
+	auto sound = gameObject->GetComponent<sfge::Sound>();
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
@@ -30,6 +29,7 @@ int main()
 	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
 	sf::Time dt;
+	float deltaT = 1;
 	// run the program as long as the window is open
 	while (window.isOpen())
 	{
@@ -43,18 +43,15 @@ int main()
 				window.close();
 		}
 		keyboardManager.Update(dt);
+		sound->Update(deltaT);
 		if (keyboardManager.IsKeyDown(sf::Keyboard::Space))
 		{
 			std::cout << "play";
-			sound1->play();
+			sound->Play();
 		}
 		if (keyboardManager.IsKeyUp(sf::Keyboard::Q))
 		{
 			goodMusic->play();
-		}
-		if (keyboardManager.IsKeyDown(sf::Keyboard::S))
-		{
-			sound3->play();
 		}
 		// clear the window with black color
 		window.clear(sf::Color::Black);
