@@ -25,7 +25,9 @@ SOFTWARE.
 #ifndef SFGE_PHYSICS_H
 #define SFGE_PHYSICS_H
 
-#include <Box2D/Box2D.h>
+#include <p2vector.h>
+#include <p2world.h>
+
 #include <SFML/System/Time.hpp>
 
 #include <engine/engine.h>
@@ -34,21 +36,22 @@ SOFTWARE.
 namespace sfge
 {
 
-	float pixel2meter(float pixel);
-	float pixel2meter(int pixel);
-	b2Vec2 pixel2meter(sf::Vector2f pixel);
-	b2Vec2 pixel2meter(sf::Vector2i pixel);
+float pixel2meter(float pixel);
+float pixel2meter(int pixel);
+p2Vec2 pixel2meter(sf::Vector2f pixel);
+p2Vec2 pixel2meter(sf::Vector2i pixel);
 
-	float meter2pixel(float meter);
-	sf::Vector2f meter2pixel(b2Vec2 meter);
+float meter2pixel(float meter);
+sf::Vector2f meter2pixel(p2Vec2 meter);
 
-class ContactListener : public b2ContactListener
+class ContactListener : public p2ContactListener
 {
-public:
-	void BeginContact(b2Contact* contact) override;
 
-	void EndContact(b2Contact* contact) override;
+	void BeginContact(p2Contact* contact) override;
+
+	void EndContact(p2Contact* contact) override;
 };
+
 /**
  * \brief The Physics Manager use Box2D to simulate 2D physics
  */
@@ -66,7 +69,7 @@ public:
 	/**
 	* \brief Get The World
 	*/
-	b2World* GetWorld();
+	p2World* GetWorld();
 	/**
 	 * \brief Called each frame to update the b2World if not in editor mode
 	 * @param dt Delta time since last frame
@@ -84,11 +87,8 @@ public:
 private:
 	friend class Body2d;
 	friend class Collider;
-	b2World* m_World = nullptr;
-	const int32 m_VelocityIterations = 8;  
-	const int32 m_PositionIterations = 3;
-	ContactListener* m_ContactListener = nullptr;
-
+	p2World* m_World = nullptr;
+	ContactListener* m_ContactListener;
 	std::list<Body2d*> m_Bodies;
 	std::list<Collider*> m_Colliders;
 

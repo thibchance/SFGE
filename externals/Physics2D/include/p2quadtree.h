@@ -22,40 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef SFGE_P2QUADTREE_H
+#define SFGE_P2QUADTREE_H
 
-#ifndef SFGE_COLLIDER_H
-#define SFGE_COLLIDER_H
+#include <list>
 
-#include <engine/component.h>
-#include <utility/json_utility.h>
+#include <p2vector.h>
+#include <p2aabb.h>
+#include <p2body.h>
 
-#include <p2collider.h>
-
-
-namespace sfge
-{
-
-enum class ColliderType
-{
-	NONE,
-	CIRCLE,
-	RECTANGLE,
-	LINE
-};
-
-class Collider : public Component
+class p2QuadTree
 {
 public:
-	using Component::Component;
-	void Init() override;
-	void Update(float dt) override;
-	void OnColliderEnter(Collider* collider);
-	void OnColliderExit(Collider* collider);
+	p2QuadTree(int nodeLevel, p2AABB bounds);
+	~p2QuadTree();
+	void Clear();
+	void Split();
 
-	static Collider* LoadCollider(Engine& engine, GameObject* gameObject, json& componentJson);
-protected:
-	p2Collider * m_PhysicsCollider = nullptr;
+
+	int GetIndex(p2Body* rect);
+	void Insert(p2Body* obj);
+	void Retrieve();
+	
+private:
+
+
+	static const int MAX_OBJECTS = 10;
+	static const int MAX_LEVELS = 5;
+	static const int CHILD_TREE_NMB = 4;
+	int m_NodeLevel = 0;
+	p2QuadTree* nodes[CHILD_TREE_NMB] = { nullptr };
+	std::list<p2Body*> m_Objects;
+	p2AABB m_Bounds;
 };
-}
 
 #endif

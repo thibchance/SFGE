@@ -54,7 +54,7 @@ std::unique_ptr<Configuration> Configuration::LoadConfig(std::string configFilen
 	newConfig->screenResolution = sf::Vector2i(
 		jsonConfig["screenResolution"]["x"],
 		jsonConfig["screenResolution"]["y"]);
-	newConfig->gravity = b2Vec2(
+	newConfig->gravity = p2Vec2(
 		jsonConfig["gravity"]["x"],
 		jsonConfig["gravity"]["y"]
 	);

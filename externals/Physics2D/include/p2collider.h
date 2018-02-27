@@ -23,39 +23,27 @@ SOFTWARE.
 */
 
 
-#ifndef SFGE_COLLIDER_H
-#define SFGE_COLLIDER_H
+#ifndef SFGE_P2COLLIDER_H
+#define SFGE_P2COLLIDER_H
 
-#include <engine/component.h>
-#include <utility/json_utility.h>
+#include <p2shape.h>
 
-#include <p2collider.h>
-
-
-namespace sfge
+struct p2ColliderDef
 {
-
-enum class ColliderType
-{
-	NONE,
-	CIRCLE,
-	RECTANGLE,
-	LINE
+	void* userData;
+	p2Shape* shape;
+	float restitution;
+	bool isSensor;
 };
 
-class Collider : public Component
+class p2Collider
 {
 public:
-	using Component::Component;
-	void Init() override;
-	void Update(float dt) override;
-	void OnColliderEnter(Collider* collider);
-	void OnColliderExit(Collider* collider);
-
-	static Collider* LoadCollider(Engine& engine, GameObject* gameObject, json& componentJson);
-protected:
-	p2Collider * m_PhysicsCollider = nullptr;
+	bool IsSensor();
+	void* GetUserData();
+private:
+	void* userData;
 };
-}
+
 
 #endif

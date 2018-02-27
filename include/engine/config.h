@@ -26,7 +26,7 @@ SOFTWARE.
 #define SFGE_CONFIG_H
 //Externals include
 #include <SFML/System/Vector2.hpp>
-#include <Box2D/Box2D.h>
+#include <p2vector.h>
 //STL includes
 #include <list>
 #include <memory>
@@ -44,7 +44,7 @@ struct Configuration
 	 */
 	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
 
-	b2Vec2 gravity = b2Vec2(0.0f, 9.81f);
+	p2Vec2 gravity = p2Vec2(0.0f, 9.81f);
 	/**
 	 * \brief The limited framerate
 	 */

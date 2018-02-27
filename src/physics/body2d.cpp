@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <p2physics.h>
+
 #include <physics/body2d.h>
 #include <physics/physics.h>
 #include <engine/game_object.h>
@@ -39,7 +41,7 @@ void Body2d::Update(float dt)
 	m_GameObject->GetTransform()->SetPosition(meter2pixel(m_Body->GetPosition()));
 }
 
-b2Body * Body2d::GetBody()
+p2Body * Body2d::GetBody()
 {
 	return m_Body;
 }
@@ -51,11 +53,11 @@ Body2d * Body2d::LoadBody2d(Engine & engine, GameObject * gameObject, json& comp
 	{
 		return nullptr;
 	}
-	b2World* world = physicsManager->GetWorld();
+	p2World* world = physicsManager->GetWorld();
 	
-	b2BodyDef bodyDef;
+	p2BodyDef bodyDef;
 
-	bodyDef.type = b2BodyType::b2_dynamicBody;
+	bodyDef.type = p2BodyType::DYNAMIC;
 	if (CheckJsonNumber(componentJson, "body_type"))
 	{
 		bodyDef.type = componentJson["body_type"];
@@ -69,7 +71,7 @@ Body2d * Body2d::LoadBody2d(Engine & engine, GameObject * gameObject, json& comp
 		}
 	}
 
-	b2Body* body = world->CreateBody(&bodyDef);
+	p2Body* body = world->CreateBody(&bodyDef);
 	Body2d* bodyComponent = new Body2d(gameObject);
 	bodyComponent->m_Body = body;
 	physicsManager->m_Bodies.push_back(bodyComponent);

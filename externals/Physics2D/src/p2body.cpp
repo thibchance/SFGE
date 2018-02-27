@@ -21,41 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include <p2body.h>
 
-
-#ifndef SFGE_COLLIDER_H
-#define SFGE_COLLIDER_H
-
-#include <engine/component.h>
-#include <utility/json_utility.h>
-
-#include <p2collider.h>
-
-
-namespace sfge
+p2Vec2 p2Body::GetLinearVelocity()
 {
-
-enum class ColliderType
-{
-	NONE,
-	CIRCLE,
-	RECTANGLE,
-	LINE
-};
-
-class Collider : public Component
-{
-public:
-	using Component::Component;
-	void Init() override;
-	void Update(float dt) override;
-	void OnColliderEnter(Collider* collider);
-	void OnColliderExit(Collider* collider);
-
-	static Collider* LoadCollider(Engine& engine, GameObject* gameObject, json& componentJson);
-protected:
-	p2Collider * m_PhysicsCollider = nullptr;
-};
+	return p2Vec2();
 }
 
-#endif
+void p2Body::SetLinearVelocity(p2Vec2 velocity)
+{
+
+}
+float p2Body::GetAngularVelocity()
+{
+	return 0.0f;
+}
+
+p2Vec2 p2Body::GetPosition()
+{
+	return p2Vec2();
+}
+
+p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)
+{
+	return nullptr;
+}

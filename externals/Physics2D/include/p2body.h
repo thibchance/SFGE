@@ -22,40 +22,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef SFGE_P2BODY_H
+#define SFGE_P2BODY_H
 
-#ifndef SFGE_COLLIDER_H
-#define SFGE_COLLIDER_H
+#include <p2aabb.h>
 
-#include <engine/component.h>
-#include <utility/json_utility.h>
+class p2Collider;
+struct p2ColliderDef;
 
-#include <p2collider.h>
-
-
-namespace sfge
+enum class p2BodyType
 {
-
-enum class ColliderType
-{
-	NONE,
-	CIRCLE,
-	RECTANGLE,
-	LINE
+	STATIC,
+	KINEMATIC,
+	DYNAMIC
 };
 
-class Collider : public Component
+struct p2BodyDef
+{
+	p2BodyType type;
+	p2Vec2 position;
+	p2Vec2 linearVelocity;
+	
+};
+
+class p2Body
 {
 public:
-	using Component::Component;
-	void Init() override;
-	void Update(float dt) override;
-	void OnColliderEnter(Collider* collider);
-	void OnColliderExit(Collider* collider);
+	p2Vec2 GetLinearVelocity();
+	
+	void SetLinearVelocity(p2Vec2 velocity);
 
-	static Collider* LoadCollider(Engine& engine, GameObject* gameObject, json& componentJson);
-protected:
-	p2Collider * m_PhysicsCollider = nullptr;
+	float GetAngularVelocity();
+	
+	p2Vec2 GetPosition();
+
+	p2Collider* CreateCollider(p2ColliderDef* colliderDef);
+private:
+	p2AABB aabb;
+	p2Vec2 position;
+	p2Vec2 linearVelocity;
+	float angularVelocity;
 };
-}
 
 #endif

@@ -37,8 +37,8 @@ PhysicsManager::~PhysicsManager()
 
 void PhysicsManager::Init()
 {
-	b2Vec2 gravity = m_Engine.GetConfig()->gravity;
-	m_World = new b2World(gravity);
+	p2Vec2 gravity = m_Engine.GetConfig()->gravity;
+	m_World = new p2World(gravity);
 	m_ContactListener = new ContactListener();
 	m_World->SetContactListener(m_ContactListener);
 
@@ -48,11 +48,11 @@ void PhysicsManager::Update(sf::Time dt)
 {
 	if (m_World)
 	{
-		m_World->Step(dt.asSeconds(), m_VelocityIterations, m_PositionIterations);
+		m_World->Step(dt.asSeconds());
 	}
 }
 
-b2World * PhysicsManager::GetWorld()
+p2World * PhysicsManager::GetWorld()
 {
 	return m_World;
 }
@@ -88,19 +88,19 @@ void PhysicsManager::Reload()
 {
 }
 
-void ContactListener::BeginContact(b2Contact* contact) 
+void ContactListener::BeginContact(p2Contact* contact) 
 {
 	Collider* firstCollider = nullptr;
 	Collider* secondCollider = nullptr;
 
-	void* colliderUserData = contact->GetFixtureA()->GetUserData();
+	void* colliderUserData = contact->GetColliderA()->GetUserData();
 	if (colliderUserData)
 	{
 		firstCollider = static_cast<Collider*>(colliderUserData);
 	}
 
 	
-	colliderUserData = contact->GetFixtureB()->GetUserData();
+	colliderUserData = contact->GetColliderB()->GetUserData();
 	if (colliderUserData)
 	{
 		secondCollider = static_cast<Collider*>(colliderUserData);
@@ -114,20 +114,20 @@ void ContactListener::BeginContact(b2Contact* contact)
 
 }
 
-void ContactListener::EndContact(b2Contact* contact)
+void ContactListener::EndContact(p2Contact* contact)
 {
 
 	Collider* firstCollider = nullptr;
 	Collider* secondCollider = nullptr;
 
-	void* colliderUserData = contact->GetFixtureA()->GetUserData();
+	void* colliderUserData = contact->GetColliderA()->GetUserData();
 	if (colliderUserData)
 	{
 		firstCollider = static_cast<Collider*>(colliderUserData);
 	}
 
 
-	colliderUserData = contact->GetFixtureB()->GetUserData();
+	colliderUserData = contact->GetColliderB()->GetUserData();
 	if (colliderUserData)
 	{
 		secondCollider = static_cast<Collider*>(colliderUserData);
@@ -152,14 +152,14 @@ float pixel2meter(int pixel)
 	return pixel / PhysicsManager::pixelPerMeter;
 }
 
-b2Vec2 pixel2meter(sf::Vector2f pixel)
+p2Vec2 pixel2meter(sf::Vector2f pixel)
 {
-	return b2Vec2(pixel2meter(pixel.x), pixel2meter(pixel.y));
+	return p2Vec2(pixel2meter(pixel.x), pixel2meter(pixel.y));
 }
 
-b2Vec2 pixel2meter(sf::Vector2i pixel)
+p2Vec2 pixel2meter(sf::Vector2i pixel)
 {
-	return b2Vec2(pixel2meter(pixel.x), pixel2meter(pixel.y));
+	return p2Vec2(pixel2meter(pixel.x), pixel2meter(pixel.y));
 }
 
 float meter2pixel(float meter)
@@ -167,7 +167,7 @@ float meter2pixel(float meter)
 	return meter*PhysicsManager::pixelPerMeter;
 }
 
-sf::Vector2f meter2pixel(b2Vec2 meter)
+sf::Vector2f meter2pixel(p2Vec2 meter)
 {
 	return sf::Vector2f(meter2pixel(meter.x), meter2pixel(meter.y));
 }

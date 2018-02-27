@@ -29,7 +29,7 @@ SOFTWARE.
 #include <engine/component.h>
 #include <utility/json_utility.h>
 
-#include <Box2D/Box2D.h>
+#include <p2body.h>
 
 namespace sfge
 {
@@ -41,12 +41,12 @@ public:
 	void Init() override;
 	void Update(float dt) override;
 
-	b2Body* GetBody();
+	p2Body* GetBody();
 
 
 	static Body2d* LoadBody2d(Engine& engine, GameObject* gameObject, json& componentJson);
 protected:
-	b2Body * m_Body = nullptr;
+	p2Body * m_Body = nullptr;
 };
 
 }

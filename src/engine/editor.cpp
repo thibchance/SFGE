@@ -128,10 +128,10 @@ void Editor::Update(sf::Time dt)
 						Body2d * body2d = dynamic_cast<Body2d*>(component);
 						if (body2d != nullptr)
 						{
-							b2Body* b2Body = body2d->GetBody();
-							if (b2Body != nullptr)
+							p2Body* p2Body = body2d->GetBody();
+							if (p2Body != nullptr)
 							{
-								sf::Vector2f speed = meter2pixel(b2Body->GetLinearVelocity());
+								sf::Vector2f speed = meter2pixel(p2Body->GetLinearVelocity());
 								float speedArray[2] = { speed.x, speed.y };
 								ImGui::InputFloat2("Speed", speedArray);
 							}

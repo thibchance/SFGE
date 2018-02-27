@@ -21,6 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
+
 #include <physics/collider.h>
 #include <physics/body2d.h>
 #include <physics/physics.h>
@@ -34,7 +36,7 @@ void Collider::Update(float dt)
 }
 void Collider::OnColliderEnter(Collider * collider)
 {
-	if (collider->m_Fixture->IsSensor() or m_Fixture->IsSensor())
+	if (collider->m_PhysicsCollider->IsSensor() or m_PhysicsCollider->IsSensor())
 	{
 		m_GameObject->OnTriggerEnter(collider);
 	}
@@ -46,7 +48,7 @@ void Collider::OnColliderEnter(Collider * collider)
 
 void Collider::OnColliderExit(Collider * collider)
 {
-	if (collider->m_Fixture->IsSensor() or m_Fixture->IsSensor())
+	if (collider->m_PhysicsCollider->IsSensor() or m_PhysicsCollider->IsSensor())
 	{
 		m_GameObject->OnTriggerEnter(collider);
 	}
@@ -62,49 +64,49 @@ Collider* Collider::LoadCollider(Engine & engine, GameObject * gameObject, json 
 	if (body2d != nullptr)
 	{
 		Collider* collider = new Collider(gameObject);
-		b2FixtureDef fixtureDef;
-		fixtureDef.userData = collider;
+		p2ColliderDef colliderDef;
+		colliderDef.userData = collider;
 		
 		ColliderType colliderType = ColliderType::NONE;
 		if (CheckJsonNumber(componentJson, "collider_type"))
 		{
 			colliderType = (ColliderType)componentJson["collider_type"];
 		}
-		b2Shape* shape = nullptr;
+		p2Shape* shape = nullptr;
 		switch (colliderType)
 		{
 		case ColliderType::CIRCLE:
 			{
-				b2CircleShape* circleShape = new b2CircleShape();
+				p2CircleShape* circleShape = new p2CircleShape();
 				if (CheckJsonNumber(componentJson, "radius"))
 				{
-					circleShape->m_radius = pixel2meter((float)componentJson["radius"]);
+					circleShape->SetRadius(pixel2meter((float)componentJson["radius"]));
 				}
 				shape = circleShape;
 			}
 		break;
 		case ColliderType::RECTANGLE:
 			{
-				b2PolygonShape* rectShape = new b2PolygonShape();
-				b2Vec2 boxSize = pixel2meter(GetVectorFromJson(componentJson, "size"));
-				rectShape->SetAsBox(boxSize.x / 2.0f, boxSize.y / 2.0f);
+				p2RectShape* rectShape = new p2RectShape();
+				p2Vec2 boxSize = pixel2meter(GetVectorFromJson(componentJson, "size"));
+				rectShape->SetSize(boxSize);
 				shape = rectShape;
 				break; 
 			}
 		}
 		if (CheckJsonNumber(componentJson, "bouncing"))
 		{
-			fixtureDef.restitution = componentJson["bouncing"];
+			colliderDef.restitution = componentJson["bouncing"];
 		}
 		if (shape != nullptr)
 		{
-			fixtureDef.shape = shape;
+			colliderDef.shape = shape;
 		}
 		if (CheckJsonParameter(componentJson, "sensor", json::value_t::boolean))
 		{
-			fixtureDef.isSensor = componentJson["sensor"];
+			colliderDef.isSensor = componentJson["sensor"];
 		}
-		collider->m_Fixture = body2d->GetBody()->CreateFixture(&fixtureDef);
+		collider->m_PhysicsCollider = body2d->GetBody()->CreateCollider(&colliderDef);
 		if (shape != nullptr)
 		{
 			delete(shape);

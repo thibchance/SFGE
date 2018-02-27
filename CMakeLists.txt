@@ -67,16 +67,16 @@ LIST(APPEND SFGE_LIBRARIES
 	imgui-sfml)
 
 
-#BOX2D
-set(BOX2D_DIR ${EXTERNAL_DIR}/Box2D)
+#Physics2D
+set(Physics2D_DIR ${EXTERNAL_DIR}/Physics2D)
 
-SET(BOX2D_INSTALL ON CACHE INTERNAL "")
-SET(BOX2D_BUILD_STATIC ON  CACHE INTERNAL "")
+SET(Physics2D_INSTALL ON CACHE INTERNAL "")
+SET(Physics2D_BUILD_STATIC ON  CACHE INTERNAL "")
 
-add_subdirectory(${BOX2D_DIR})
-include_directories(${BOX2D_DIR}/Box2D/)
+add_subdirectory(${Physics2D_DIR})
+include_directories(${Physics2D_DIR}/include/)
 LIST(APPEND SFGE_LIBRARIES
-	Box2D)
+	Physics2D)
 
 #JSON
 set(JSON_DIR ${EXTERNAL_DIR}/json/)

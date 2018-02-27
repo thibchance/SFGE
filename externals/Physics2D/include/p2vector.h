@@ -22,40 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef SFGE_P2VECTOR_H
+#define SFGE_P2VECTOR_H
 
-#ifndef SFGE_COLLIDER_H
-#define SFGE_COLLIDER_H
-
-#include <engine/component.h>
-#include <utility/json_utility.h>
-
-#include <p2collider.h>
-
-
-namespace sfge
+struct p2Vec2
 {
+	p2Vec2();
+	p2Vec2(float x, float y);
+	p2Vec2 operator+(p2Vec2 v);
+	p2Vec2 operator+=(p2Vec2 v);
+	p2Vec2 operator-(p2Vec2 v);
+	p2Vec2 operator-=(p2Vec2 v);
+	p2Vec2 operator /(float f);
 
-enum class ColliderType
-{
-	NONE,
-	CIRCLE,
-	RECTANGLE,
-	LINE
+	float x = 0.0f;
+	float y = 0.0f;
+
 };
-
-class Collider : public Component
-{
-public:
-	using Component::Component;
-	void Init() override;
-	void Update(float dt) override;
-	void OnColliderEnter(Collider* collider);
-	void OnColliderExit(Collider* collider);
-
-	static Collider* LoadCollider(Engine& engine, GameObject* gameObject, json& componentJson);
-protected:
-	p2Collider * m_PhysicsCollider = nullptr;
-};
-}
 
 #endif

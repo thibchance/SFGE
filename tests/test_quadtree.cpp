@@ -22,7 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <Box2D/Box2D.h>
+#include <p2vector.h>
+#include <p2aabb.h>
+#include <p2body.h>
+#include <p2world.h>
+#include <p2shape.h>
+#include <p2collider.h>
+
 #include <SFML/Graphics.hpp>
 #include <physics/physics.h>
 #include <imgui-SFML.h>
@@ -33,223 +39,34 @@ SOFTWARE.
 #include <cstdlib>     /* srand, rand */
 #include <ctime>       /* time */
 
-struct Object
-{
-	Object(b2Vec2 position, b2Vec2 extends, b2Vec2 speed)
-	{
-		this->position = position;
-		this->extends = extends;
-		this->speed = speed;
-		Update(0.0f);
-	}
-	sf::RectangleShape rectangle;
-	void Update(float dt)
-	{
-		b2Vec2 deltaPos = speed;
-		deltaPos *= dt;
-		position = position + deltaPos;
-		aabb.lowerBound = position - extends;
-		aabb.upperBound = position + extends;
-		
-	}
-	void Draw(sf::RenderWindow& window)
-	{
-		rectangle.setPosition(sfge::meter2pixel(position) - sfge::meter2pixel(extends));
-		rectangle.setSize ( sfge::meter2pixel(extends)*2.0f);
-		window.draw(rectangle);
-	}
 
-	b2AABB aabb;
-	b2Vec2 position;
-	b2Vec2 extends;
-	b2Vec2 speed;
-};
-
-class QuadTree
-{
-public:
-	QuadTree(int nodeLevel, b2AABB bounds)
-	{
-		m_NodeLevel = nodeLevel;
-		m_Bounds = bounds;
-	}
-	~QuadTree()
-	{
-		for (int i = 0; i < CHILD_TREE_NMB; i++)
-		{
-			if (nodes[i] != nullptr)
-			{
-				nodes[i]->Clear();
-				delete(nodes[i]);
-				nodes[i] = nullptr;
-			}
-		}
-	}
-	void Clear()
-	{
-		m_Objects.clear();
-		
-		for (int i = 0; i < CHILD_TREE_NMB; i++)
-		{
-			if (nodes[i] != nullptr)
-			{
-				nodes[i]->Clear();
-				delete(nodes[i]);
-				nodes[i] = nullptr;
-			}
-		}
-		
-	}
-	void Split()
-	{
-		b2Vec2 center = m_Bounds.GetCenter();
-		nodes[0] = new QuadTree(m_NodeLevel + 1, 
-			{center, m_Bounds.upperBound});
-		nodes[1] = new QuadTree(m_NodeLevel + 1, 
-			{b2Vec2(m_Bounds.lowerBound.x, center.y), b2Vec2(center.x, m_Bounds.upperBound.y)});
-		nodes[2] = new QuadTree(m_NodeLevel + 1, 
-			{m_Bounds.lowerBound, center});
-		nodes[3] = new QuadTree(m_NodeLevel + 1, 
-			{b2Vec2(center.x, m_Bounds.lowerBound.y), b2Vec2(m_Bounds.upperBound.x, center.y)});
-	}
-
-	
-	int GetIndex(Object* rect)
-	{
-		int index = -1;
-		double verticalMidpoint = m_Bounds.GetCenter().x;
-		double horizontalMidpoint = m_Bounds.GetCenter().y;
-
-		// Object can completely fit within the top quadrants
-		bool topQuadrant = 
-			(rect->aabb.lowerBound.y > horizontalMidpoint);
-		// Object can completely fit within the bottom quadrants
-		bool bottomQuadrant = 
-			(rect->aabb.upperBound.y < horizontalMidpoint);
-
-		// Object can completely fit within the left quadrants
-		if (rect->aabb.upperBound.x < verticalMidpoint) 
-		{
-			if (topQuadrant) 
-			{
-				index = 1;
-			}
-			else if (bottomQuadrant) 
-			{
-				index = 2;
-			}
-		}
-		// Object can completely fit within the right quadrants
-		else if (rect->aabb.lowerBound.x > verticalMidpoint) 
-		{
-			if (topQuadrant) {
-				index = 0;
-			}
-			else if (bottomQuadrant) {
-				index = 3;
-			}
-		}
-		return index;
-	}
-	void Insert(Object* obj)
-	{
-		if (nodes[0] != nullptr) 
-		{
-			int index = GetIndex(obj);
-
-			if (index != -1) 
-			{
-				nodes[index]->Insert(obj);
-
-				return;
-			}
-		}
-
-		m_Objects.push_back(obj);
-
-		if (m_Objects.size() > MAX_OBJECTS && m_NodeLevel < MAX_LEVELS) {
-			if (nodes[0] == nullptr) 
-			{
-				Split();
-			}
-
-			auto objItr = m_Objects.begin();
-			while (objItr != m_Objects.end()) 
-			{
-				int index = GetIndex(*objItr);
-				if (index != -1) 
-				{
-					nodes[index]->Insert(*objItr);
-					objItr = m_Objects.erase(objItr);
-				}
-				else {
-					objItr++;
-				}
-			}
-		}
-	}
-	void Retrieve()
-	{
-
-	}
-	void Update(float dt)
-	{
-		position = m_Bounds.GetCenter();
-		extends = m_Bounds.GetExtents();
-		for (int i = 0; i < CHILD_TREE_NMB; i++)
-		{
-			if (nodes[i] != nullptr)
-			{
-				nodes[i]->Update(dt);
-			}
-		}
-	}
-	void Draw(sf::RenderWindow& window)
-	{
-		rectangle.setPosition(sfge::meter2pixel(position) - sfge::meter2pixel(extends));
-		rectangle.setSize(sfge::meter2pixel(extends)*2.0f);
-		rectangle.setFillColor(sf::Color::Transparent);
-		rectangle.setOutlineThickness(1.0f);
-		rectangle.setOutlineColor(sf::Color::Blue);
-		window.draw(rectangle);
-		for (int i = 0; i < CHILD_TREE_NMB; i++)
-		{
-			if (nodes[i] != nullptr)
-			{
-				nodes[i]->Draw(window);
-			}
-		}
-	}
-private:
-
-	b2Vec2 position;
-	b2Vec2 extends;
-	sf::RectangleShape rectangle;
-	static const int MAX_OBJECTS = 10;
-	static const int MAX_LEVELS = 5;
-	static const int CHILD_TREE_NMB = 4;
-	int m_NodeLevel = 0;
-	QuadTree* nodes[CHILD_TREE_NMB] = {nullptr};
-	std::list<Object*> m_Objects;
-	b2AABB m_Bounds;
-};
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 800), "QuadTree test");
-	QuadTree quad(0, { b2Vec2(0,0), sfge::pixel2meter(sf::Vector2i(800,800)) });
+	//QuadTree quad(0, { b2Vec2(0,0), sfge::pixel2meter(sf::Vector2i(800,800)) });
+	p2World world(p2Vec2(0.0f, 9.81f));
 
 	srand(time(NULL));
 
-	std::list<Object> objectsList;
+	std::list<p2Body*> bodiesList;
 	const int objNmb = 1000;
 	for (int i = 0; i < objNmb; i++)
 	{
-		objectsList.push_back({
-			sfge::pixel2meter(sf::Vector2f(rand() % 800, rand() % 800)),
-			sfge::pixel2meter(sf::Vector2f(rand() % 10, rand() % 10)),
-			sfge::pixel2meter(sf::Vector2f((rand() % 100) - 50, (rand() % 100) - 50)),
-			});
+		p2BodyDef bodyDef;
+		bodyDef.position = sfge::pixel2meter(sf::Vector2f(rand() % 800, rand() % 800));
+		bodyDef.linearVelocity = sfge::pixel2meter(sf::Vector2f(rand() % 10, rand() % 10));
+		p2Body* body = world.CreateBody(&bodyDef);
+
+		p2ColliderDef colliderDef;
+		
+		p2RectShape rectShape;
+		rectShape.SetSize(sfge::pixel2meter(sf::Vector2f((rand() % 100) - 50, (rand() % 100) - 50)));
+		colliderDef.shape = &rectShape;
+
+		body->CreateCollider(&colliderDef);
+
+		bodiesList.push_back(body);
 	}
 	ImGui::SFML::Init(window);
 	sf::Clock clock;
@@ -277,39 +94,39 @@ int main()
 
 		ImGui::End();
 
-		quad.Clear();
-		for (auto& obj : objectsList)
+		world.Step(dt.asSeconds());
+		for (auto& body : bodiesList)
 		{
-			obj.Update(dt.asSeconds());
-			sf::Vector2f objPos = sfge::meter2pixel(obj.position);
-			if (objPos.x < 0.0f && obj.speed.x<0.0f)
+			//obj.Update(dt.asSeconds());
+			sf::Vector2f pos = sfge::meter2pixel(body->GetPosition());
+			p2Vec2 v = body->GetLinearVelocity();
+			if (pos.x < 0.0f && v.x<0.0f)
 			{
-				obj.speed.x = -obj.speed.x;
+				body->SetLinearVelocity(p2Vec2(-v.x, v.y));
 			}
-			else if (objPos.x > 800.0f && obj.speed.x > 0.0f)
+			else if (pos.x > 800.0f && v.x > 0.0f)
 			{
-				obj.speed.x = -obj.speed.x;
+				body->SetLinearVelocity(p2Vec2(-v.x, v.y));
 			}
-			if (objPos.y < 0.0f && obj.speed.y<0.0f)
+			if (pos.y < 0.0f && v.y<0.0f)
 			{
-				obj.speed.y = -obj.speed.y;
+				body->SetLinearVelocity(p2Vec2(v.x, -v.y));
 			}
-			else if (objPos.y > 800.0f && obj.speed.y > 0.0f)
+			else if (pos.y > 800.0f && v.y > 0.0f)
 			{
-				obj.speed.y = -obj.speed.y;
+				body->SetLinearVelocity(p2Vec2(v.x, -v.y));
 			}
-			quad.Insert(&obj);
 		}
 
 		window.clear(sf::Color::Black);
 
-		for (auto& obj : objectsList)
+		for (auto& obj : bodiesList)
 		{
-			obj.Draw(window);
+			//obj.Draw(window);
 		}
 
-		quad.Update(dt.asSeconds());
-		quad.Draw(window);
+		//quad.Update(dt.asSeconds());
+		//quad.Draw(window);
 		ImGui::SFML::Render(window);
 
 		window.display();
