@@ -36,23 +36,32 @@ int main()
 	//SOUND TEST !!!
 	sfge::Engine engine;
 	engine.Init(true);
-	json gameObjectJson;
 
-	json objectJson;
-	objectJson["path"] = "data/audio/sounds/Laser.wav";
-	objectJson["type"] = (int)sfge::ComponentType::SOUND;
+	json gameObjectJson1;
+	json objectJson1;
+	objectJson1["path"] = "data/audio/sounds/Laser.wav";
+	objectJson1["type"] = (int)sfge::ComponentType::SOUND;
+	gameObjectJson1["components"] = json::array({ objectJson1 });
+	gameObjectJson1["name"] = objectJson1["path"];
+	sfge::GameObject* gameObject1 = sfge::GameObject::LoadGameObject(engine, gameObjectJson1);
+	auto sound1 = gameObject1->GetComponent<sfge::Sound>();
+	auto sound2 = gameObject1->GetComponent<sfge::Sound>();
 
-	gameObjectJson["components"] = json::array({ objectJson });
-	gameObjectJson["name"] = "AudioGameObject";
 
-	sfge::GameObject* gameObject = sfge::GameObject::LoadGameObject(engine, gameObjectJson);
+	json gameObjectJson2;
+	json objectJson2;
+	objectJson2["path"] = "data/audio/sounds/BasicGun.wav";
+	objectJson2["type"] = (int)sfge::ComponentType::SOUND;
+	gameObjectJson2["components"] = json::array({ objectJson2 });
+	gameObjectJson2["name"] = objectJson1["path"];
+	sfge::GameObject* gameObject2 = sfge::GameObject::LoadGameObject(engine, gameObjectJson2);
+	auto sound3 = gameObject2->GetComponent<sfge::Sound>();
 
-	auto sound = gameObject->GetComponent<sfge::Sound>();
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
 	sfge::MusicManager musicManager;
-	auto goodMusic = musicManager.GetMusic(musicManager.LoadMusic("data/audio/musics/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg"));
+	auto music = musicManager.GetMusic(musicManager.LoadMusic("data/audio/musics/Harry_Potter_Theme_Song_Hedwigs_Theme.ogg"));
 	//MUSIC TEST !!!
 	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
@@ -69,16 +78,27 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		gameObject->Update(dt);
 		keyboardManager.Update(dt);
 		if (keyboardManager.IsKeyDown(sf::Keyboard::Space))
 		{
 			sfge::Log::GetInstance()->Msg("PLAY SOUND");
-			sound->Play();
+			sound1->Play();			
+		}
+		if (keyboardManager.IsKeyDown(sf::Keyboard::A))
+		{
+			sound3->Play();
+		}
+		if (keyboardManager.IsKeyDown(sf::Keyboard::S))
+		{
+			sound2->Play();
 		}
 		if (keyboardManager.IsKeyUp(sf::Keyboard::Q))
 		{
-			goodMusic->play();
+			music->play();
+			if (music->Playing)
+			{
+				std::cout << "music play";
+			}
 		}
 		// clear the window with black color
 		window.clear(sf::Color::Black);

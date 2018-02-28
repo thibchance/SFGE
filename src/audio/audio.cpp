@@ -210,6 +210,7 @@ void SoundManager::LoadSound(json & componentJson, Sound* newSound)
 void Sound::Play()
 {
 	m_Sound->play();
+	
 }
 
 SoundManager::~SoundManager()
