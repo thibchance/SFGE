@@ -35,6 +35,7 @@
 #include <graphics/shape.h>
 #include <physics/body2d.h>
 #include <physics/collider.h>
+#include <audio/audio.h>
 
 namespace sfge
 {
@@ -146,6 +147,8 @@ py::object GameObject::GetComponent(ComponentType componentType)
 		return py::cast(GetComponent<Body2d>());
 	case ComponentType::COLLIDER:
 		return py::cast(GetComponent<Collider>());
+	case ComponentType::SOUND:
+		return py::cast(GetComponent<Sound>());
 	}
 	return py::none();
 }
@@ -164,6 +167,8 @@ py::object GameObject::GetComponents(ComponentType componentType)
 		return py::cast(GetComponents<Body2d>());
 	case ComponentType::COLLIDER:
 		return py::cast(GetComponents<Collider>());
+	case ComponentType::SOUND:
+		return py::cast(GetComponents<Sound>());
 	}
 	return py::none();
 }

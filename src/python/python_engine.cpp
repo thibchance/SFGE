@@ -38,6 +38,8 @@
 #include <utility/file_utility.h>
 #include <utility/time_utility.h>
 
+#include <audio/audio.h>
+
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 
@@ -104,6 +106,9 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def("get_scale", &Transform::GetScale)
 		.def("set_scale",&Transform::SetScale);
 	py::class_<Collider, Component> collider(m, "Collider");
+	py::class_<Sound, Component> sound(m, "Sound");
+	sound
+		.def("play", &Sound::Play);
 	py::class_<Shape, Component> shape(m, "Shape");
 	shape
 		.def("set_fill_color", &Shape::SetFillColor);
@@ -124,7 +129,7 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def_readonly_static("Cyan", &sf::Color::Cyan)
 		.def_readonly_static("Transparent", &sf::Color::Transparent);
 	py::class_<Timer> timer(m, "Timer");
-	timer
+	timer 
 		.def(py::init<float, float>())
 		.def("update", &Timer::Update)
 		.def("reset", &Timer::Reset)

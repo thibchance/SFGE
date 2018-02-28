@@ -28,6 +28,7 @@ SOFTWARE.
 #include <engine/engine.h>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <SFML/System/Time.hpp>
 
 namespace sfge
 {
@@ -87,8 +88,6 @@ class MouseManager
 {
 public:
 	sf::Vector2i localPosition(sf::Window& window);
-private:
-
 };
 
 }
