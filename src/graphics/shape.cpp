@@ -56,6 +56,14 @@ void Shape::Draw(sf::RenderWindow& window)
 	}
 }
 
+void Shape::SetFillColor(sf::Color color)
+{
+	if (m_Shape != nullptr)
+	{
+		m_Shape->setFillColor(color);
+	}
+}
+
 
 Shape* Shape::LoadShape(Engine& engine, json& componentJson, GameObject* gameObject)
 {

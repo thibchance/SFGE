@@ -51,6 +51,9 @@ public:
 	void Init() override;
 	void Update(float time) override;
 	void Draw(sf::RenderWindow& window);
+
+	void SetFillColor(sf::Color color);
+
 	static Shape* LoadShape(Engine& engine, json& componentJson, GameObject* gameObject);
 protected:
 	std::shared_ptr<sf::Shape> m_Shape = nullptr;

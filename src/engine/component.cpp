@@ -107,7 +107,6 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 			component->SetName(componentName);
 			component->m_ComponentId = incrementalComponentId;
 			component->m_ComponentType = componentType;
-			component->Init();
 
 			incrementalComponentId++;
 		}

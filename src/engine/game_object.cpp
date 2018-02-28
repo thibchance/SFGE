@@ -26,10 +26,15 @@
 #include <engine/component.h>
 #include <engine/transform.h>
 #include <engine/log.h>
-#include <python/pycomponent.h>
 #include <python/python_engine.h>
-
+#include <pybind11/stl.h>
 #include <memory>
+
+#include <graphics/sprite.h>
+#include <python/pycomponent.h>
+#include <graphics/shape.h>
+#include <physics/body2d.h>
+#include <physics/collider.h>
 
 namespace sfge
 {
@@ -85,7 +90,7 @@ GameObject* GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
 	{
 		Log::GetInstance()->Error("There are no Component attached to the GameObject");
 	}
-
+	gameObject->Init();
 	//if there is no transform, it is always at the beginning of the list
 	if(gameObject->m_Transform == nullptr)
 	{
@@ -119,7 +124,51 @@ GameObject::~GameObject()
 	}
 }
 
-std::list<Component*>& GameObject::GetComponents()
+void GameObject::Init()
+{
+	for (auto comp : m_Components)
+	{
+		comp->Init();
+	}
+}
+
+py::object GameObject::GetComponent(ComponentType componentType)
+{
+	switch (componentType)
+	{
+	case ComponentType::SPRITE:
+		return py::cast(GetComponent<Sprite>());
+	case ComponentType::PYCOMPONENT:
+		return py::cast(GetComponent<PyComponent>());
+	case ComponentType::SHAPE:
+		return py::cast(GetComponent<Shape>());
+	case ComponentType::BODY2D:
+		return py::cast(GetComponent<Body2d>());
+	case ComponentType::COLLIDER:
+		return py::cast(GetComponent<Collider>());
+	}
+	return py::none();
+}
+
+py::object GameObject::GetComponents(ComponentType componentType)
+{
+	switch (componentType)
+	{
+	case ComponentType::SPRITE:
+		return py::cast(GetComponents<Sprite>());
+	case ComponentType::PYCOMPONENT:
+		return py::cast(GetComponents<PyComponent>());
+	case ComponentType::SHAPE:
+		return py::cast(GetComponents<Shape>());
+	case ComponentType::BODY2D:
+		return py::cast(GetComponents<Body2d>());
+	case ComponentType::COLLIDER:
+		return py::cast(GetComponents<Collider>());
+	}
+	return py::none();
+}
+
+std::list<Component*>& GameObject::GetAllComponents()
 {
 	return m_Components;
 }
