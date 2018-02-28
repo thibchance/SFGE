@@ -33,7 +33,9 @@ SOFTWARE.
 
 namespace sfge
 {
+
 class SoundManager;
+
 /**
 * \brief Sound class child is a Component
 */
@@ -117,6 +119,7 @@ protected:
 	std::map<unsigned int, std::shared_ptr<sf::Music>> musicMap;
 	unsigned int incrementId = 0;
 };
+
 class AudioManager : public Module
 {
 protected:

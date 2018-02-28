@@ -57,7 +57,7 @@ public:
 	static Sprite* LoadSprite(Engine& engine, json& componentJson, GameObject* gameObject);
 
 
-	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
+	void SetTexture(sf::Texture* newTexture);
 
 	void SetTextureId(unsigned int textureId);
 

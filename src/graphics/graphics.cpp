@@ -136,7 +136,8 @@ void checkVersion()
 
 void GraphicsManager::Destroy()
 {
-	
+	Reset();
+	Reload();
 	ImGui::SFML::Shutdown();
 }
 
