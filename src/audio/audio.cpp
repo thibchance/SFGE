@@ -169,7 +169,10 @@ void SoundManager::LoadSound(json & componentJson, Sound* newsound)
 
 void Sound::Play()
 {
-	sound.play();
+	if (m_ComponentType == ComponentType::SOUND)
+	{
+		sound.play();
+	}
 }
 
 SoundManager::~SoundManager()
