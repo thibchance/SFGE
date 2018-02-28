@@ -150,7 +150,7 @@ void SpriteManager::Reset()
 	m_Sprites.clear();
 }
 
-void SpriteManager::Reload()
+void SpriteManager::Collect()
 {
 }
 

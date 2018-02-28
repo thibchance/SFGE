@@ -57,7 +57,7 @@ public:
 
 	void Reset() override;
 	
-	void Reload() override;
+	void Collect() override;
 
 
 

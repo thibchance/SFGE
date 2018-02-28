@@ -77,7 +77,7 @@ public:
 	void SetCurrentScene(std::shared_ptr<Scene> scene);
 
 	void Reset() override;
-	void Reload() override;
+	void Collect() override;
 
 	std::shared_ptr<Scene> GetCurrentScene();
 private:

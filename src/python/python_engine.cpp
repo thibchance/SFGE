@@ -180,7 +180,7 @@ void PythonManager::Reset()
 {
 	pythonInstanceMap.clear();
 }
-void PythonManager::Reload()
+void PythonManager::Collect()
 {
 }
 

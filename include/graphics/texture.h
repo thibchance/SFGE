@@ -59,7 +59,7 @@ public:
 	
 	void Reset();
 
-	void Reload();
+	void Collect();
 
 private:
 

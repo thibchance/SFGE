@@ -84,7 +84,7 @@ public:
 	void LoadSprite(json& componentJson, Sprite* sprite);
 
 	void Reset();
-	void Reload();
+	void Collect();
 protected:
 	std::list<Sprite*> m_Sprites;
 	GraphicsManager& m_GraphicsManager;

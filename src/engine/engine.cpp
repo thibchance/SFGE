@@ -142,13 +142,13 @@ void Engine::Reset()
 
 void Engine::Reload()
 {
-	m_GraphicsManager->Reload();
-	m_AudioManager->Reload();
-	m_SceneManager->Reload();
-	m_InputManager->Reload();
-	m_PythonManager->Reload();
-	m_Editor->Reload();
-	m_PhysicsManager->Reload();
+	m_GraphicsManager->Collect();
+	m_AudioManager->Collect();
+	m_SceneManager->Collect();
+	m_InputManager->Collect();
+	m_PythonManager->Collect();
+	m_Editor->Collect();
+	m_PhysicsManager->Collect();
 }
 
 Engine::~Engine()

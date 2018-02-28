@@ -68,7 +68,7 @@ void InputManager::Reset()
 {
 }
 
-void InputManager::Reload()
+void InputManager::Collect()
 {
 }
 

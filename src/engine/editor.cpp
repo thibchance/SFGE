@@ -185,7 +185,7 @@ void Editor::Destroy()
 	}
 }
 
-void Editor::Reload()
+void Editor::Collect()
 {
 }
 

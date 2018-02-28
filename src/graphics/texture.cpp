@@ -58,7 +58,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 				return 0U;
 			incrementId++;
 			nameIdsMap[filename] = incrementId;
-			idsRefCountMap[incrementId] = 0U;
+			idsRefCountMap[incrementId] = 1U;
 			texturesMap[incrementId] = texture;
 			return incrementId;
 		}
@@ -72,7 +72,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 			if (!texture->loadFromFile(filename))
 				return 0U;
 			nameIdsMap[filename] = incrementId;
-			idsRefCountMap[incrementId] = 0U;
+			idsRefCountMap[incrementId] = 1U;
 			texturesMap[incrementId] = texture;
 			return incrementId;
 		}
@@ -102,7 +102,7 @@ void TextureManager::Reset()
 	}
 }
 
-void TextureManager::Reload()
+void TextureManager::Collect()
 {
 	std::list<unsigned int> unusedTextureIds;
 	for (auto idRefCountPair : idsRefCountMap)

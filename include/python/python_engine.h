@@ -55,7 +55,7 @@ public:
 	*/
 	void Destroy() override;
 
-	void Reload() override;
+	void Collect() override;
 	void Reset() override;
 	/**
 	 * \brief Load a python script and return a python object of it

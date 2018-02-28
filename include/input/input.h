@@ -55,7 +55,7 @@ public:
 	void Destroy() override;
 
 	void Reset() override;
-	void Reload() override;
+	void Collect() override;
 
 	KeyboardManager* GetKeyboardManager();
 	MouseManager* GetMouseManager();

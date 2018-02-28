@@ -24,80 +24,19 @@ SOFTWARE.
 
 #ifndef SFGE_AUDIO_H
 #define SFGE_AUDIO_H
+
 #include <engine/engine.h>
 #include <engine/component.h>
 #include <SFML/Audio.hpp>
 #include <map>
 #include <string>
 #include "utility/json_utility.h"
+#include <audio/sound.h>
 
 namespace sfge
 {
 
-class SoundManager;
 
-/**
-* \brief Sound class child is a Component
-*/
-class Sound : public Component
-{
-protected:
-	sf::Sound* m_Sound = nullptr;
-public:
-	Sound(GameObject* gameObject);
-	~Sound();
-	/**
-	* \brief initialize the Sound class
-	*/
-	void Init() override;
-	/**
-	* \brief Update the audioManager, called only in play mode
-	* \ param dt The delta time since last frame
-	*/
-	void Update(float dt) override;
-	/**
-	* \brief create a sf::Sound, call LoadSound of SoundManager class and return the created sound
-	* \param engine The engine using for create a dynamic_pointer_cast of audio_manager 
-	* \param componentJson The json using when call LoadSound of SoundManager class
-	* \param gameObject The GameObject which the sound is attached
-	*/
-	static Sound* LoadSound(Engine& engine, json& componentJson, GameObject* gameObject);
-	void SetBuffer(sf::SoundBuffer* buffer);
-	void Play();
-};
-
-class SoundManager
-{
-public:
-	SoundManager();
-	~SoundManager();
-	/**
-	* \brief load a sf::SoundBuffer, put it on soundBufferMap and return the matchin id
-	* \param filename The filename of the buffer file
-	*/
-	unsigned int LoadSoundBuffer(std::string filename);
-	/**
-	* \brief return the sf::SoundBuffer attached to the given sound_buffer_id on the soundBufferMap
-	* \param sound_buffer_id The id key of the soundBuffer
-	*/
-	sf::SoundBuffer* GetSoundBuffer(unsigned int sound_buffer_id);
-
-	/**
-	* \brief load a buffer from a json["path"] and ad it to the newSound
-	* \param componentJson The json using for load a sf::SoundBuffer when call LoadSoundBuffer from SoundBuffer class
-	* \param newSound The sound where sf::SoundBuffer was set 
-	*/
-	void LoadSound(json& componentJson,Sound* sound);
-
-protected:
-	/**
-	* \brief The list where the sounds of LoadSound fuction of SoundManager was placed
-	*/
-	std::list<Sound*> m_Sounds;
-	std::map<std::string, unsigned int> bufferIdPath;
-	std::map<unsigned int, sf::SoundBuffer*> soundBufferMap;
-	unsigned int incrementId = 0;
-};
 
 class MusicManager 
 {
@@ -149,7 +88,7 @@ public:
 	MusicManager* GetMusicManager();
 	void Destroy() override;
 	void Reset() override;
-	void Reload() override;
+	void Collect() override;
 };
 }
 #endif // !SFGE_AUDIO

@@ -48,7 +48,7 @@ public:
 	*/
 	void Destroy() override;
 
-	void Reload() override;
+	void Collect() override;
 	void Reset() override;
 protected:
 	GraphicsManager* m_GraphicsManager;

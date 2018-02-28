@@ -137,7 +137,7 @@ void checkVersion()
 void GraphicsManager::Destroy()
 {
 	Reset();
-	Reload();
+	Collect();
 	ImGui::SFML::Shutdown();
 }
 
@@ -147,11 +147,11 @@ void GraphicsManager::Reset()
 	m_SpriteManager->Reset();
 }
 
-void GraphicsManager::Reload()
+void GraphicsManager::Collect()
 {
 
-	m_TextureManager->Reload();
-	m_SpriteManager->Reload();
+	m_TextureManager->Collect();
+	m_SpriteManager->Collect();
 }
 
 }

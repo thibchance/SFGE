@@ -148,7 +148,7 @@ public:
 	/**
 	* \brief Called after we load a scene
 	*/
-	virtual void Reload() = 0;
+	virtual void Collect() = 0;
 
 	void SetEnable(bool enable);
 	bool GetEnable();

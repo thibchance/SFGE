@@ -78,7 +78,7 @@ public:
 	void Destroy() override;
 
 	void Reset() override;
-	void Reload() override;
+	void Collect() override;
 
 	const static float pixelPerMeter;
 private:

@@ -84,7 +84,7 @@ void PhysicsManager::Reset()
 	Init();
 }
 
-void PhysicsManager::Reload()
+void PhysicsManager::Collect()
 {
 }
 

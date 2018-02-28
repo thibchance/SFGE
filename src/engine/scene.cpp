@@ -128,7 +128,7 @@ void SceneManager::Reset()
 
 }
 
-void SceneManager::Reload()
+void SceneManager::Collect()
 {
 
 }
