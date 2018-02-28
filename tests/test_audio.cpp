@@ -32,6 +32,7 @@ int main()
 	gameObjectJson2["name"] = objectJson1["path"];
 	sfge::GameObject* gameObject2 = sfge::GameObject::LoadGameObject(engine, gameObjectJson2);
 	auto sound3 = gameObject2->GetComponent<sfge::Sound>();
+
 	//SOUND TEST !!!
 
 	//MUSIC TEST !!!
@@ -40,12 +41,11 @@ int main()
 	//MUSIC TEST !!!
 	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
-	sf::Time dt;
-	float deltaT = 1;
+	sf::Clock clock;
 	// run the program as long as the window is open
 	while (window.isOpen())
 	{
-
+		sf::Time dt = clock.restart();
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -55,7 +55,6 @@ int main()
 				window.close();
 		}
 		keyboardManager.Update(dt);
-		sound1->Update(deltaT);
 		if (keyboardManager.IsKeyDown(sf::Keyboard::Space))
 		{
 			std::cout << "play";
@@ -82,6 +81,7 @@ int main()
 		// end the current frame
 		window.display();
 	}
+	engine.Destroy();
 
 	return 0;
 }
