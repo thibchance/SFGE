@@ -96,6 +96,7 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 			break;
 		case ComponentType::COLLIDER:
 			component = Collider::LoadCollider(engine, gameObject, componentJson);
+			break;
 		case ComponentType::SOUND:
 			component = Sound::LoadSound(engine, componentJson, gameObject);
 			break;
