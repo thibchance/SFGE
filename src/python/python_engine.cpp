@@ -235,8 +235,7 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObj
 				pythonModuleIdMap[script_path] = incrementalScriptId;
 				for (auto& moduleObj : pythonModuleObjectMap)
 				{
-					moduleObj.second.attr()
-					globals[class_name.c_str()] = pythonModuleObjectMap[incrementalScriptId]
+					moduleObj.second.attr(class_name.c_str()) = pythonModuleObjectMap[incrementalScriptId]
 						.attr(class_name.c_str());
 				}
 				pythonInstanceMap[incrementalInstanceId] = pythonModuleObjectMap[incrementalScriptId].attr(class_name.c_str())(gameObject);
