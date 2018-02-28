@@ -111,6 +111,8 @@ public:
 
 	py::object GetComponent(ComponentType componentType);
 
+	py::object GetPyComponent(py::handle pycomponentType);
+
 	py::object GetComponents(ComponentType componentType);
 	/**
 	* \brief Return the reference to all the Component in the GameObject

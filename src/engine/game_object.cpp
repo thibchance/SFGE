@@ -28,6 +28,7 @@
 #include <engine/log.h>
 #include <python/python_engine.h>
 #include <pybind11/stl.h>
+#include <pybind11/pytypes.h>
 #include <memory>
 
 #include <graphics/sprite.h>
@@ -149,6 +150,18 @@ py::object GameObject::GetComponent(ComponentType componentType)
 		return py::cast(GetComponent<Collider>());
 	case ComponentType::SOUND:
 		return py::cast(GetComponent<Sound>());
+	}
+	return py::none();
+}
+
+py::object GameObject::GetPyComponent(py::handle pycomponentType)
+{
+	for (PyComponent* pyComponent : GetComponents<PyComponent>())
+	{
+		if (py::cast(pyComponent).get_type().is(pycomponentType))
+		{
+			return py::cast(pyComponent);
+		}
 	}
 	return py::none();
 }
