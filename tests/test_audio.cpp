@@ -13,12 +13,16 @@ int main()
 	sfge::Engine engine;
 	engine.Init(true);
 	json gameObjectJson;
+
 	json objectJson;
 	objectJson["path"] = "data/audio/sounds/Laser.wav";
 	objectJson["type"] = (int)sfge::ComponentType::SOUND;
+
 	gameObjectJson["components"] = json::array({ objectJson });
-	gameObjectJson["name"] = objectJson["path"];
+	gameObjectJson["name"] = "AudioGameObject";
+
 	sfge::GameObject* gameObject = sfge::GameObject::LoadGameObject(engine, gameObjectJson);
+
 	auto sound = gameObject->GetComponent<sfge::Sound>();
 	//SOUND TEST !!!
 
@@ -28,12 +32,11 @@ int main()
 	//MUSIC TEST !!!
 	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Test Audio");
-	sf::Time dt;
-	float deltaT = 1;
+	sf::Clock clock;
 	// run the program as long as the window is open
 	while (window.isOpen())
 	{
-
+		sf::Time dt = clock.restart();
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -42,8 +45,8 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		gameObject->Update(dt);
 		keyboardManager.Update(dt);
-		sound->Update(deltaT);
 		if (keyboardManager.IsKeyDown(sf::Keyboard::Space))
 		{
 			std::cout << "play";
@@ -58,6 +61,7 @@ int main()
 		// end the current frame
 		window.display();
 	}
+	engine.Destroy();
 
 	return 0;
 }
