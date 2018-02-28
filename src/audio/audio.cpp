@@ -72,7 +72,9 @@ unsigned int SoundManager::LoadSoundBuffer(std::string filename)
 		}
 		else
 		{
-			std::shared_ptr<sf::SoundBuffer> soundBuffer = std::make_shared<sf::SoundBuffer>();
+
+
+			sf::SoundBuffer* soundBuffer = new sf::SoundBuffer();
 			if (!soundBuffer->loadFromFile(filename))
 			{
 				{
@@ -82,15 +84,16 @@ unsigned int SoundManager::LoadSoundBuffer(std::string filename)
 				}
 				return 0U;
 			}
-			bufferIdPath[filename] = increment_id;
-			soundBufferMap[increment_id] = soundBuffer;
-			return increment_id;
+
+			incrementId++;
+			bufferIdPath[filename] = incrementId;
+			soundBufferMap[incrementId] = soundBuffer;
+			return incrementId;
 		}
 	}		
 	else if (FileExists(filename))
 	{
-		increment_id++;
-		auto soundBuffer = std::make_shared<sf::SoundBuffer>();
+		sf::SoundBuffer* soundBuffer = new sf::SoundBuffer();
 
 		if (!soundBuffer->loadFromFile(filename))
 		{
@@ -101,14 +104,20 @@ unsigned int SoundManager::LoadSoundBuffer(std::string filename)
 			}
 			return 0U;
 		}
-		bufferIdPath[filename] = increment_id;
-		soundBufferMap[increment_id] = soundBuffer;
-		return increment_id;
+		{
+			std::ostringstream oss;
+			oss << "Loading Sound Buffer for: " << filename;
+			sfge::Log::GetInstance()->Msg(oss.str());
+		}
+		incrementId++;
+		bufferIdPath[filename] = incrementId;
+		soundBufferMap[incrementId] = soundBuffer;
+		return incrementId;
 	}
 	
 	return 0U;
 }
-std::shared_ptr<sf::SoundBuffer> SoundManager::GetSoundBuffer(unsigned int sound_buffer_id)
+sf::SoundBuffer* SoundManager::GetSoundBuffer(unsigned int sound_buffer_id)
 {
 	if (soundBufferMap.find(sound_buffer_id) != soundBufferMap.end())
 	{
@@ -116,6 +125,20 @@ std::shared_ptr<sf::SoundBuffer> SoundManager::GetSoundBuffer(unsigned int sound
 	}
 	return nullptr;
 	
+}
+
+sfge::Sound::Sound(GameObject * gameObject): Component(gameObject)
+{
+	m_Sound = new sf::Sound();
+}
+
+sfge::Sound::~Sound()
+{
+	if (m_Sound != nullptr)
+	{
+		delete(m_Sound);
+		m_Sound = nullptr;
+	}
 }
 void Sound::Init()
 {
@@ -136,9 +159,9 @@ Sound* Sound::LoadSound(Engine& engine, json & componentJson, GameObject* gameOb
 	}
 	return nullptr;
 }
-void Sound::SetBuffer(std::shared_ptr<sf::SoundBuffer> buffer)
+void Sound::SetBuffer(sf::SoundBuffer* buffer)
 {
-	sound.setBuffer(*buffer);
+	m_Sound->setBuffer(*buffer);
 }
 SoundManager::SoundManager()
 {
@@ -154,14 +177,20 @@ void SoundManager::LoadSound(json & componentJson, Sound* newSound)
 	if (CheckJsonParameter(componentJson, "path", json::value_t::string))
 	{
 		std::string path = componentJson["path"].get<std::string>();
-		std::shared_ptr<sf::SoundBuffer> buffer = nullptr;
 		if (FileExists(path))
 		{
 			unsigned int soundBufferId = LoadSoundBuffer(path);
 			if (soundBufferId != 0U)
 			{
-				buffer = GetSoundBuffer(soundBufferId);
+
+				sf::SoundBuffer* buffer = GetSoundBuffer(soundBufferId);
 				newSound->SetBuffer(buffer);
+			}
+			else
+			{
+				std::ostringstream oss;
+				oss << "Could not find SoundBuffer for:"<< path;
+				Log::GetInstance()->Error(oss.str());
 			}
 		}
 		else
@@ -180,12 +209,19 @@ void SoundManager::LoadSound(json & componentJson, Sound* newSound)
 
 void Sound::Play()
 {
-	sound.play();
+	m_Sound->play();
 }
 
 SoundManager::~SoundManager()
 {
-
+	for (auto sound : m_Sounds)
+	{
+		delete(sound);
+	}
+	for (auto soundBuffer : soundBufferMap)
+	{
+		delete(soundBuffer.second);
+	}
 }
 MusicManager::MusicManager()
 {
@@ -210,16 +246,16 @@ unsigned int MusicManager::LoadMusic(std::string filename)
 				std::cout << "music not open from file";
 				return 0U;
 			}
-			musicPathId[filename] = increment_id;
-			musicMap[increment_id] = music;
-			return increment_id;
+			musicPathId[filename] = incrementId;
+			musicMap[incrementId] = music;
+			return incrementId;
 		}
 	}
 	else
 	{
 		if (FileExists(filename))
 		{
-			increment_id++;
+			incrementId++;
 			auto music = std::make_shared<sf::Music>();
 
 			if (!music->openFromFile(filename))
@@ -227,9 +263,9 @@ unsigned int MusicManager::LoadMusic(std::string filename)
 				std::cout << "music not open from file but exist";
 				return 0U;
 			}
-			musicPathId[filename] = increment_id;
-			musicMap[increment_id] = music;
-			return increment_id;
+			musicPathId[filename] = incrementId;
+			musicMap[incrementId] = music;
+			return incrementId;
 		}
 	}
 	return 0U;
@@ -241,6 +277,7 @@ std::shared_ptr<sf::Music> MusicManager::GetMusic(unsigned int musicId)
 	{
 		return musicMap[musicId];
 	}
+	return nullptr;
 }
 
 MusicManager::~MusicManager()

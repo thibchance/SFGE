@@ -40,10 +40,10 @@ class SoundManager;
 class Sound : public Component
 {
 protected:
-	SoundManager* m_SoundManager;
-	sf::Sound sound;
+	sf::Sound* m_Sound = nullptr;
 public:
-	using Component::Component;
+	Sound(GameObject* gameObject);
+	~Sound();
 	/**
 	* \brief initialize the Sound class
 	*/
@@ -60,7 +60,7 @@ public:
 	* \param gameObject The GameObject which the sound is attached
 	*/
 	static Sound* LoadSound(Engine& engine, json& componentJson, GameObject* gameObject);
-	void SetBuffer(std::shared_ptr<sf::SoundBuffer> buffer);
+	void SetBuffer(sf::SoundBuffer* buffer);
 	void Play();
 };
 
@@ -68,6 +68,7 @@ class SoundManager
 {
 public:
 	SoundManager();
+	~SoundManager();
 	/**
 	* \brief load a sf::SoundBuffer, put it on soundBufferMap and return the matchin id
 	* \param filename The filename of the buffer file
@@ -77,7 +78,7 @@ public:
 	* \brief return the sf::SoundBuffer attached to the given sound_buffer_id on the soundBufferMap
 	* \param sound_buffer_id The id key of the soundBuffer
 	*/
-	std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(unsigned int sound_buffer_id);
+	sf::SoundBuffer* GetSoundBuffer(unsigned int sound_buffer_id);
 
 	/**
 	* \brief load a buffer from a json["path"] and ad it to the newSound
@@ -85,15 +86,15 @@ public:
 	* \param newSound The sound where sf::SoundBuffer was set 
 	*/
 	void LoadSound(json& componentJson,Sound* sound);
-	~SoundManager();
+
 protected:
 	/**
 	* \brief The list where the sounds of LoadSound fuction of SoundManager was placed
 	*/
 	std::list<Sound*> m_Sounds;
 	std::map<std::string, unsigned int> bufferIdPath;
-	std::map<unsigned int, std::shared_ptr<sf::SoundBuffer>> soundBufferMap;
-	unsigned int increment_id = 0;
+	std::map<unsigned int, sf::SoundBuffer*> soundBufferMap;
+	unsigned int incrementId = 0;
 };
 
 class MusicManager 
@@ -114,7 +115,7 @@ public:
 protected:
 	std::map< std::string , unsigned int> musicPathId;
 	std::map<unsigned int, std::shared_ptr<sf::Music>> musicMap;
-	unsigned int increment_id = 0;
+	unsigned int incrementId = 0;
 };
 class AudioManager : public Module
 {

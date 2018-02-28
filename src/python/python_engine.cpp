@@ -124,7 +124,7 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def_readonly_static("Cyan", &sf::Color::Cyan)
 		.def_readonly_static("Transparent", &sf::Color::Transparent);
 	py::class_<Timer> timer(m, "Timer");
-	timer
+	timer 
 		.def(py::init<float, float>())
 		.def("update", &Timer::Update)
 		.def("reset", &Timer::Reset)
