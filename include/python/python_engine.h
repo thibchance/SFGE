@@ -28,6 +28,8 @@
 #include <engine/engine.h>
 #include <engine/component.h>
 #include <utility/python_utility.h>
+#include <pybind11/functional.h>
+
 namespace sfge
 {
 class PyComponent;

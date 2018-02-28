@@ -28,8 +28,10 @@
 
 #include <utility/json_utility.h>
 #include <engine/engine.h>
+#include <utility/python_utility.h>
 //External includes
 #include <SFML/System.hpp>
+#include <pybind11/functional.h>
 //STL includes
 #include <list>
 #include <string>
@@ -39,6 +41,7 @@ namespace sfge
 class Component;
 class Transform;
 class Collider;
+enum class ComponentType;
 
 /**
 * \brief The basic Game Object handler containing a list of Components
@@ -49,6 +52,7 @@ class GameObject
 public:
 	GameObject();
 	~GameObject();
+	void Init();
 	/**
 	* \brief Update the GameObject and its Components
 	* \param dt Delta time since last frame
@@ -88,10 +92,30 @@ public:
 
 	template<> Component* GetComponent<Component>();
 
+	template <class T>
+	std::list<T*> GetComponents()
+	{
+		std::list<T*> componentsList;
+		for (auto component : m_Components)
+		{
+			auto castComponent = dynamic_cast<T*>(component);
+			if (castComponent != nullptr)
+			{
+				componentsList.push_back(castComponent);
+			}
+		}
+		return componentsList;
+	}
+
+	template<> std::list<Component*> GetComponents<Component>();
+
+	py::object GetComponent(ComponentType componentType);
+
+	py::object GetComponents(ComponentType componentType);
 	/**
 	* \brief Return the reference to all the Component in the GameObject
 	*/
-	std::list<Component*>& GetComponents();
+	std::list<Component*>& GetAllComponents();
 
 	/**
 	 * \brief Get the name of the GameObject in the Scene

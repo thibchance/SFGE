@@ -28,6 +28,7 @@ SOFTWARE.
 #include <engine/game_object.h>
 #include <utility/json_utility.h>
 #include <memory>
+#include <graphics/shape.h>
 
 int main()
 {
@@ -36,27 +37,37 @@ int main()
 
 	auto pythonManager = engine.GetPythonManager();
 
-	sfge::GameObject* gameObject = new sfge::GameObject();
-	gameObject->SetName("PyGameObject");
+	json gameObjectJson = {
+	{"name", "PyGameObject" },
+	{"components",
 	{
-		json componentJson;
-
-		componentJson["type"] = (int)sfge::ComponentType::TRANSFORM;
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-		componentJson["type"] = (int)sfge::ComponentType::PYCOMPONENT;
-		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-		componentJson["script_path"] = "scripts/component_test.py";
-		sfge::Component::LoadComponent(engine, componentJson, gameObject);
-
-
-		for(int i = 0; i < 10; i++)
 		{
-			sfge::Log::GetInstance()->Msg("GAME OBJECT UPDATE");
-			gameObject->Update(sf::seconds(0.4));
+			{"type", (int)sfge::ComponentType::TRANSFORM}
+		},
+		{
+			{"type", (int)sfge::ComponentType::PYCOMPONENT },
+			{"script_path", "scripts/component_test.py" }
+		},
+		{
+			{ "type", (int)sfge::ComponentType::PYCOMPONENT },
+			{ "script_path", "scripts/sprite_test.py" }
+		},
+		{
+			{"type", (int)sfge::ComponentType::SHAPE },
+			{"shape_type",(int)sfge::ShapeType::CIRCLE},
+			{"position",{ 100,300 }},
+			{ "radius", 500.0 }
 		}
+	}
+	}
+	};
+
+	sfge::GameObject* gameObject = sfge::GameObject::LoadGameObject(engine, gameObjectJson);
+
+	for (int i = 0; i < 10; i++)
+	{
+		sfge::Log::GetInstance()->Msg("GAME OBJECT UPDATE");
+		gameObject->Update(sf::seconds(0.4));
 	}
 	delete(gameObject);
 	engine.Destroy();

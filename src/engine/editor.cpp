@@ -93,7 +93,7 @@ void Editor::Update(sf::Time dt)
 		ImGui::Begin("Inspector");
 		if (selectedGameObject != nullptr)
 		{
-			for (auto component : selectedGameObject->GetComponents())
+			for (auto component : selectedGameObject->GetAllComponents())
 			{
 				if (ImGui::CollapsingHeader(component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
