@@ -81,9 +81,11 @@ public:
 
 	std::shared_ptr<Scene> GetCurrentScene();
 private:
-
+	std::shared_ptr<Scene> m_PreviousScene = nullptr;
 	std::shared_ptr<Scene> m_CurrentScene = nullptr;
-	std::list<std::shared_ptr<Scene>> m_Scenes;
+	//std::list<std::shared_ptr<Scene>> m_Scenes;
+
+	bool m_Switching = false;
 };
 
 /**
@@ -93,6 +95,7 @@ private:
 class Scene
 {
 public:
+	Scene(SceneManager* sceneManager);
 	/**
 	* \brief Update the Scene, mostly updating the GameObjects and doing the transition when needed
 	* \param dt Delta time since last frame
@@ -107,6 +110,7 @@ public:
 protected:
 	std::string name;
 	std::list<GameObject*> m_GameObjects;
+	SceneManager* m_SceneManager;
 	friend class SceneManager;
 };
 }

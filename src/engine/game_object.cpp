@@ -120,10 +120,12 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	delete(m_Transform);
 	{
-		Log::GetInstance()->Error("DESTROY GAME OBJECT "+m_Name);
+		Log::GetInstance()->Error("DESTROY GAME OBJECT " + m_Name);
 	}
+	m_Components.clear();
+	delete(m_Transform);
+	
 }
 
 void GameObject::Init()

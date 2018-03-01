@@ -97,25 +97,24 @@ void Engine::Start()
 				running = false;
 				m_Window->close();
 			}
-			if (event.type == sf::Event::KeyPressed)
-			{
-				if (event.key.code == sf::Keyboard::E)
-				{
-
-				}
-			}
+			
+		}
+		if (!running)
+		{
+			continue;
 		}
 		m_PhysicsManager->Update(dt);
 		m_InputManager->Update(dt);
 		m_PythonManager->Update(dt);
-		m_Editor->Update(dt);
 
 		m_SceneManager->Update(dt);
+
+		m_Editor->Update(dt);
 		m_GraphicsManager->Update(dt);
 		m_Editor->Draw();
 		m_GraphicsManager->Display();
 	}
-
+	Destroy();
 }
 
 void Engine::Destroy()
@@ -140,7 +139,7 @@ void Engine::Reset()
 	m_PhysicsManager->Reset();
 }
 
-void Engine::Reload()
+void Engine::Collect()
 {
 	m_GraphicsManager->Collect();
 	m_AudioManager->Collect();

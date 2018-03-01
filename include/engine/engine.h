@@ -88,7 +88,7 @@ public:
 	/**
 	* \brief Reload is used after loading a new scene
 	*/
-	void Reload();
+	void Collect();
 
 	~Engine();
 	/**

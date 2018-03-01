@@ -21,21 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#if WIN32 && _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#endif
+
 #include <engine/scene.h>
 #include <utility/json_utility.h>
 
 int main()
 {
-	sfge::Engine engine;
-	engine.Init(false, true);
+	{
+		sfge::Engine engine;
+		engine.Init(false, true);
 
-	auto sceneManager = engine.GetSceneManager();
-	sceneManager->SetCurrentScene(sceneManager->LoadSceneFromName("data/scenes/test_switch.scene"));
+		auto sceneManager = engine.GetSceneManager();
+		sceneManager->SetCurrentScene(sceneManager->LoadSceneFromName("data/scenes/test_switch.scene"));
 
 
-	engine.Start();
+		engine.Start(); 
+	}
+
 
 #ifdef WIN32
+#if _DEBUG
+	_CrtDumpMemoryLeaks();
+#endif
 	system("pause");
 #endif
 	return EXIT_SUCCESS;
