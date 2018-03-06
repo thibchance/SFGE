@@ -110,6 +110,10 @@ void Engine::Start()
 		m_SceneManager->Update(dt);
 
 		m_Editor->Update(dt);
+		if (m_SceneManager->IsSwitching())
+		{
+			Collect();
+		}
 		m_GraphicsManager->Update(dt);
 		m_Editor->Draw();
 		m_GraphicsManager->Display();

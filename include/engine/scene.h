@@ -78,7 +78,7 @@ public:
 
 	void Reset() override;
 	void Collect() override;
-
+	bool IsSwitching();
 	std::shared_ptr<Scene> GetCurrentScene();
 private:
 	std::shared_ptr<Scene> m_PreviousScene = nullptr;

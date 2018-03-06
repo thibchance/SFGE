@@ -50,11 +50,7 @@ void SceneManager::Update(sf::Time dt)
 	{
 		m_CurrentScene->Update(dt);
 	}
-	if (m_Switching)
-	{
-		m_Engine.Collect();
-		m_Switching = false;
-	}
+	
 }
 
 std::shared_ptr<Scene> SceneManager::LoadSceneFromName(std::string sceneName)
@@ -140,7 +136,12 @@ void SceneManager::Collect()
 {
 	
 	m_PreviousScene = nullptr;
-	
+	m_Switching = false;
+}
+
+bool SceneManager::IsSwitching()
+{
+	return m_Switching;
 }
 
 std::shared_ptr<Scene> SceneManager::GetCurrentScene()

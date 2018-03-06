@@ -203,6 +203,11 @@ void SoundManager::Collect()
 		delete(soundBufferMap[soundBufferId]);
 		soundBufferMap.erase(soundBufferId);
 	}
+	for (auto sound : m_Sounds)
+	{
+		delete(sound);
+	}
+	m_Sounds.clear();
 }
 
 void Sound::Play()
