@@ -125,6 +125,7 @@ GameObject::~GameObject()
 	}
 	m_Components.clear();
 	delete(m_Transform);
+	m_Transform = nullptr;
 	
 }
 
@@ -136,7 +137,7 @@ void GameObject::Init()
 	}
 }
 
-py::object GameObject::GetComponent(ComponentType componentType)
+py::object GameObject::GetComponentFromType(ComponentType componentType)
 {
 	switch (componentType)
 	{
@@ -156,7 +157,7 @@ py::object GameObject::GetComponent(ComponentType componentType)
 	return py::none();
 }
 
-py::object GameObject::GetPyComponent(py::handle pycomponentType)
+py::object GameObject::GetPyComponentFromType(py::handle pycomponentType)
 {
 	for (PyComponent* pyComponent : GetComponents<PyComponent>())
 	{
@@ -168,7 +169,7 @@ py::object GameObject::GetPyComponent(py::handle pycomponentType)
 	return py::none();
 }
 
-py::object GameObject::GetComponents(ComponentType componentType)
+py::object GameObject::GetComponentsFromType(ComponentType componentType)
 {
 	switch (componentType)
 	{

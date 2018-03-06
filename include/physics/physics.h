@@ -33,14 +33,16 @@ SOFTWARE.
 
 namespace sfge
 {
+	
+class Body2d;
 
-	float pixel2meter(float pixel);
-	float pixel2meter(int pixel);
-	b2Vec2 pixel2meter(sf::Vector2f pixel);
-	b2Vec2 pixel2meter(sf::Vector2i pixel);
+float pixel2meter(float pixel);
+float pixel2meter(int pixel);
+b2Vec2 pixel2meter(sf::Vector2f pixel);
+b2Vec2 pixel2meter(sf::Vector2i pixel);
 
-	float meter2pixel(float meter);
-	sf::Vector2f meter2pixel(b2Vec2 meter);
+float meter2pixel(float meter);
+sf::Vector2f meter2pixel(b2Vec2 meter);
 
 class ContactListener : public b2ContactListener
 {

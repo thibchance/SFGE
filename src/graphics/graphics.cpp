@@ -138,6 +138,7 @@ void GraphicsManager::Destroy()
 {
 	Reset();
 	Collect();
+	m_Window = nullptr;
 	ImGui::SFML::Shutdown();
 }
 

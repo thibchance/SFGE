@@ -126,6 +126,7 @@ void Engine::Destroy()
 	m_PythonManager->Destroy();
 	m_Editor->Destroy();
 	m_PhysicsManager->Destroy();
+	m_Window = nullptr;
 }
 
 void Engine::Reset()

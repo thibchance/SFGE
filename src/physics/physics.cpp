@@ -63,6 +63,12 @@ void PhysicsManager::Destroy()
 	if (m_World)
 	{
 		delete(m_World);
+		m_World = nullptr;
+	}
+	if(m_ContactListener)
+	{
+		delete(m_ContactListener);
+		m_ContactListener = nullptr;
 	}
 
 	for (Body2d* body : m_Bodies)

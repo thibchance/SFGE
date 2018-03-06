@@ -88,10 +88,7 @@ public:
 			}
 		}
 		return nullptr;
-	}
-
-	template<> Component* GetComponent<Component>();
-
+	};
 	template <class T>
 	std::list<T*> GetComponents()
 	{
@@ -105,15 +102,14 @@ public:
 			}
 		}
 		return componentsList;
-	}
+	};
 
-	template<> std::list<Component*> GetComponents<Component>();
 
-	py::object GetComponent(ComponentType componentType);
+	py::object GetComponentFromType(ComponentType componentType);
 
-	py::object GetPyComponent(py::handle pycomponentType);
+	py::object GetPyComponentFromType(py::handle pycomponentType);
 
-	py::object GetComponents(ComponentType componentType);
+	py::object GetComponentsFromType(ComponentType componentType);
 	/**
 	* \brief Return the reference to all the Component in the GameObject
 	*/
@@ -139,4 +135,7 @@ protected:
 	Transform* m_Transform = nullptr;
 };
 }
+
+template<> sfge::Component* sfge::GameObject::GetComponent<sfge::Component>();
+template<> std::list<sfge::Component*> sfge::GameObject::GetComponents<sfge::Component>();
 #endif

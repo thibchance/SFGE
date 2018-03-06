@@ -113,14 +113,17 @@ std::shared_ptr<Scene> SceneManager::LoadSceneFromJson(json& sceneJson)
 
 void SceneManager::SetCurrentScene(std::string sceneName)
 {
-	/*for (auto scene : m_Scenes)
+	auto loadedScene = LoadSceneFromName(sceneName);
+	if(loadedScene != nullptr)
 	{
-		if (scene->name == sceneName)
-		{
-			SetCurrentScene(scene);
-			break;
-		}
-	}*/
+		SetCurrentScene(loadedScene);
+	}
+	else
+	{
+		std::ostringstream oss;
+		oss <<"Error while loading scene: "<<sceneName;
+		Log::GetInstance()->Error(oss.str());
+	}
 }
 
 void SceneManager::SetCurrentScene(std::shared_ptr<Scene> scene)

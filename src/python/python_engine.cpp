@@ -79,9 +79,9 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def(py::init<>())
 		.def_property_readonly("transform", &GameObject::GetTransform, py::return_value_policy::reference)
 		.def_property_readonly("name", &GameObject::GetName, py::return_value_policy::reference)
-		.def("get_component", &GameObject::GetComponent, py::return_value_policy::reference)
-		.def("get_component", &GameObject::GetPyComponent, py::return_value_policy::reference)
-		.def("get_components", &GameObject::GetComponents);
+		.def("get_component", &GameObject::GetComponentFromType, py::return_value_policy::reference)
+		.def("get_component", &GameObject::GetPyComponentFromType, py::return_value_policy::reference)
+		.def("get_components", &GameObject::GetComponentsFromType, py::return_value_policy::reference);
 	
 	py::class_<Component, PyComponent> component(m, "Component");
 	component

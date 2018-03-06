@@ -28,6 +28,7 @@ SOFTWARE.
 
 //STL
 #include <sstream>
+#include <list>
 
 
 namespace sfge
