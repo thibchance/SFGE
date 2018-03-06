@@ -43,7 +43,7 @@ GraphicsManager::GraphicsManager(Engine& engine, bool enable, bool windowless) :
 {
 	
 }
-	void GraphicsManager::Init()
+void GraphicsManager::Init()
 {
 	auto config = m_Engine.GetConfig();
 	if (config == nullptr)
@@ -61,9 +61,6 @@ GraphicsManager::GraphicsManager(Engine& engine, bool enable, bool windowless) :
 			CheckVersion();
 		}
 	}
-	
-	
-
 	//Init Texture and Sprite Manager
 	m_TextureManager = std::make_shared<TextureManager>();
 	m_SpriteManager = std::make_shared<SpriteManager>(*this);
@@ -139,7 +136,9 @@ void checkVersion()
 
 void GraphicsManager::Destroy()
 {
-	
+	Reset();
+	Collect();
+	m_Window = nullptr;
 	ImGui::SFML::Shutdown();
 }
 
@@ -149,11 +148,11 @@ void GraphicsManager::Reset()
 	m_SpriteManager->Reset();
 }
 
-void GraphicsManager::Reload()
+void GraphicsManager::Collect()
 {
 
-	m_TextureManager->Reload();
-	m_SpriteManager->Reload();
+	m_TextureManager->Collect();
+	m_SpriteManager->Collect();
 }
 
 }

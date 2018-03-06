@@ -54,13 +54,19 @@ public:
 	* \brief Destroy the window and other
 	*/
 	void Destroy() override;
-
+	/**
+	* \brief Called before the new scene loads, to remove the reference count for the textures
+	*/
 	void Reset() override;
-	
-	void Reload() override;
+	/**
+	* \brief Called at the end of the loading frame to remove all the unused assets
+	*/
+	void Collect() override;
 
 
-
+	/**
+	* \brief Draw a simple line
+	*/
 	void DrawLine(sf::Vector2f from, sf::Vector2f to, sf::Color color=sf::Color::Red);
 
 	/**
@@ -68,8 +74,17 @@ public:
 	* \return The SFML window
 	*/
 	std::shared_ptr<sf::RenderWindow> GetWindow();
+	/**
+	* \brief Getter of the ShapeManager
+	*/
 	std::shared_ptr<ShapeManager> GetShapeManager();
+	/**
+	* \brief Getter of the SpriteManager
+	*/
 	std::shared_ptr<SpriteManager> GetSpriteManager();
+	/**
+	* \brief Getter of the TextureManager
+	*/
 	std::shared_ptr<TextureManager> GetTextureManager();
 
 protected:

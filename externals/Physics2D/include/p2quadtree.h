@@ -31,17 +31,35 @@ SOFTWARE.
 #include <p2aabb.h>
 #include <p2body.h>
 
+/**
+* \brief Representation of a tree with 4 branches containing p2Body defined by their p2AABB
+*/
 class p2QuadTree
 {
 public:
 	p2QuadTree(int nodeLevel, p2AABB bounds);
 	~p2QuadTree();
+
+	/**
+	* Remove all objects leafs and quadtrees children
+	*/
 	void Clear();
+	/**
+	* Called when node have too much objects and split the current node into four
+	*/
 	void Split();
 
-
+	/**
+	* Get the index of the child trees of the p2Body
+	*/
 	int GetIndex(p2Body* rect);
+	/**
+	* Insert a new p2Body in the tree
+	*/
 	void Insert(p2Body* obj);
+	/**
+	* Return a list of all the p2Body that might collide
+	*/
 	void Retrieve();
 	
 private:

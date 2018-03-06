@@ -28,6 +28,9 @@ SOFTWARE.
 #include <engine/engine.h>
 namespace sfge
 {
+/**
+* \brief Module managing the editor layer of the Engine
+*/
 class Editor : public Module
 {
 public:
@@ -41,14 +44,25 @@ public:
 	* \param dt Delta time since last frame
 	*/
 	void Update(sf::Time dt) override;
+	/**
+	* \brief Process SFML loop Events
+	*/
 	void ProcessEvent(sf::Event& event);
+	/**
+	* \brief Draw the editor layer, called each frame at the end
+	*/
 	void Draw();
 	/**
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
-
-	void Reload() override;
+	/**
+	* \brief Mandatory empty method
+	*/
+	void Collect() override;
+	/**
+	* \brief Mandatory empty method
+	*/
 	void Reset() override;
 protected:
 	GraphicsManager* m_GraphicsManager;

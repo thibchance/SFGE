@@ -42,7 +42,7 @@ void Sprite::Draw(sf::RenderWindow& window)
 	sprite.setRotation(m_GameObject->GetTransform()->GetEulerAngle());
 	window.draw(sprite);
 }
-void Sprite::SetTexture(std::shared_ptr<sf::Texture> newTexture)
+void Sprite::SetTexture(sf::Texture* newTexture)
 {
 	sprite.setTexture(*newTexture);
 }
@@ -107,7 +107,7 @@ void SpriteManager::LoadSprite(json& componentJson, Sprite* newSprite)
 	if(CheckJsonParameter(componentJson, "path", json::value_t::string))
 	{
 		std::string path = componentJson["path"].get<std::string>();
-		std::shared_ptr<sf::Texture> texture = nullptr;
+		sf::Texture* texture = nullptr;
 		if (FileExists(path))
 		{
 			unsigned int textureId = m_GraphicsManager.GetTextureManager()->LoadTexture(path);
@@ -150,7 +150,7 @@ void SpriteManager::Reset()
 	m_Sprites.clear();
 }
 
-void SpriteManager::Reload()
+void SpriteManager::Collect()
 {
 }
 

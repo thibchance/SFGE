@@ -54,10 +54,14 @@ std::unique_ptr<Configuration> Configuration::LoadConfig(std::string configFilen
 	newConfig->screenResolution = sf::Vector2i(
 		jsonConfig["screenResolution"]["x"],
 		jsonConfig["screenResolution"]["y"]);
-	newConfig->gravity = p2Vec2(
-		jsonConfig["gravity"]["x"],
-		jsonConfig["gravity"]["y"]
-	);
+
+	if (CheckJsonExists(jsonConfig, "gravity"))
+	{
+		newConfig->gravity = p2Vec2(
+			jsonConfig["gravity"]["x"],
+			jsonConfig["gravity"]["y"]
+		);
+	}
 	newConfig->maxFramerate = jsonConfig["maxFramerate"];
 	for(const std::string& scene : jsonConfig["scenesList"])
 	{

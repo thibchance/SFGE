@@ -43,7 +43,9 @@ struct Configuration
 	 * \brief The screen resolution used for the editor
 	 */
 	sf::Vector2i screenResolution = sf::Vector2i(800, 600);
-
+	/**
+	* \brief The gravity used by the PhysicsManager
+	*/
 	p2Vec2 gravity = p2Vec2(0.0f, 9.81f);
 	/**
 	 * \brief The limited framerate

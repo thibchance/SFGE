@@ -27,6 +27,9 @@ SOFTWARE.
 
 #include <p2collider.h>
 
+/**
+* \brief Representation of a contact given as argument in a p2ContactListener
+*/
 class p2Contact
 {
 public:
@@ -34,6 +37,9 @@ public:
 	p2Collider* GetColliderB();
 };
 
+/**
+* \brief Listener of contacts happening in an attached p2World
+*/
 class p2ContactListener
 {
 public:

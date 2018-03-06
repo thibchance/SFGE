@@ -29,6 +29,7 @@
 #include <python/pycomponent.h>
 #include <physics/body2d.h>
 #include <physics/collider.h>
+#include <audio/audio.h>
 
 #include <engine/log.h>
 
@@ -95,6 +96,10 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 			break;
 		case ComponentType::COLLIDER:
 			component = Collider::LoadCollider(engine, gameObject, componentJson);
+			break;
+		case ComponentType::SOUND:
+			component = Sound::LoadSound(engine, componentJson, gameObject);
+			break;
 		default:
 			break;
 		}
@@ -103,7 +108,6 @@ Component* Component::LoadComponent(Engine& engine, json& componentJson, GameObj
 			component->SetName(componentName);
 			component->m_ComponentId = incrementalComponentId;
 			component->m_ComponentType = componentType;
-			component->Init();
 
 			incrementalComponentId++;
 		}

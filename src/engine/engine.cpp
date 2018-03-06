@@ -97,25 +97,28 @@ void Engine::Start()
 				running = false;
 				m_Window->close();
 			}
-			if (event.type == sf::Event::KeyPressed)
-			{
-				if (event.key.code == sf::Keyboard::E)
-				{
-
-				}
-			}
+			
+		}
+		if (!running)
+		{
+			continue;
 		}
 		m_PhysicsManager->Update(dt);
 		m_InputManager->Update(dt);
 		m_PythonManager->Update(dt);
-		m_Editor->Update(dt);
 
 		m_SceneManager->Update(dt);
+
+		m_Editor->Update(dt);
+		if (m_SceneManager->IsSwitching())
+		{
+			Collect();
+		}
 		m_GraphicsManager->Update(dt);
 		m_Editor->Draw();
 		m_GraphicsManager->Display();
 	}
-
+	Destroy();
 }
 
 void Engine::Destroy()
@@ -127,6 +130,7 @@ void Engine::Destroy()
 	m_PythonManager->Destroy();
 	m_Editor->Destroy();
 	m_PhysicsManager->Destroy();
+	m_Window = nullptr;
 }
 
 void Engine::Reset()
@@ -140,15 +144,15 @@ void Engine::Reset()
 	m_PhysicsManager->Reset();
 }
 
-void Engine::Reload()
+void Engine::Collect()
 {
-	m_GraphicsManager->Reload();
-	m_AudioManager->Reload();
-	m_SceneManager->Reload();
-	m_InputManager->Reload();
-	m_PythonManager->Reload();
-	m_Editor->Reload();
-	m_PhysicsManager->Reload();
+	m_GraphicsManager->Collect();
+	m_AudioManager->Collect();
+	m_SceneManager->Collect();
+	m_InputManager->Collect();
+	m_PythonManager->Collect();
+	m_Editor->Collect();
+	m_PhysicsManager->Collect();
 }
 
 Engine::~Engine()

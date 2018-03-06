@@ -50,6 +50,7 @@ void SceneManager::Update(sf::Time dt)
 	{
 		m_CurrentScene->Update(dt);
 	}
+	
 }
 
 std::shared_ptr<Scene> SceneManager::LoadSceneFromName(std::string sceneName)
@@ -71,7 +72,7 @@ std::shared_ptr<Scene> SceneManager::LoadSceneFromName(std::string sceneName)
 
 std::shared_ptr<Scene> SceneManager::LoadSceneFromJson(json& sceneJson)
 {
-	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+	std::shared_ptr<Scene> scene = std::make_shared<Scene>(this);
 	if (CheckJsonParameter(sceneJson, "name", json::value_t::string))
 	{
 		scene->name = sceneJson["name"].get<std::string>();
@@ -102,19 +103,22 @@ std::shared_ptr<Scene> SceneManager::LoadSceneFromJson(json& sceneJson)
 		oss << "No GameObjects in " << scene->name;
 		Log::GetInstance()->Error(oss.str());
 	}
-	m_Scenes.push_back(scene);
+	//m_Scenes.push_back(scene);
 	return scene;
 }
 
 void SceneManager::SetCurrentScene(std::string sceneName)
 {
-	for (auto scene : m_Scenes)
+	auto loadedScene = LoadSceneFromName(sceneName);
+	if(loadedScene != nullptr)
 	{
-		if (scene->name == sceneName)
-		{
-			SetCurrentScene(scene);
-			break;
-		}
+		SetCurrentScene(loadedScene);
+	}
+	else
+	{
+		std::ostringstream oss;
+		oss <<"Error while loading scene: "<<sceneName;
+		Log::GetInstance()->Error(oss.str());
 	}
 }
 
@@ -125,12 +129,19 @@ void SceneManager::SetCurrentScene(std::shared_ptr<Scene> scene)
 
 void SceneManager::Reset()
 {
-
+	m_PreviousScene = m_CurrentScene;
 }
 
-void SceneManager::Reload()
+void SceneManager::Collect()
 {
+	
+	m_PreviousScene = nullptr;
+	m_Switching = false;
+}
 
+bool SceneManager::IsSwitching()
+{
+	return m_Switching;
 }
 
 std::shared_ptr<Scene> SceneManager::GetCurrentScene()
@@ -142,16 +153,9 @@ std::shared_ptr<Scene> SceneManager::GetCurrentScene()
 
 void SceneManager::Destroy()
 {
-	if (m_CurrentScene)
-	{
-		auto gameObjectList = m_CurrentScene->GetGameObjects();
-		while (!gameObjectList.empty())
-		{
-			delete gameObjectList.front();
-			gameObjectList.pop_front();
-		}
-		
-	}
+	Reset();
+	m_CurrentScene = nullptr;
+	Collect();
 }
 
 void SceneManager::LoadScene(std::string sceneName)
@@ -159,7 +163,7 @@ void SceneManager::LoadScene(std::string sceneName)
 	sf::Clock loadingClock;
 	m_Engine.Reset();
 	SetCurrentScene(LoadSceneFromName(sceneName));
-	m_Engine.Reload();
+	m_Switching = true;
 	{
 		sf::Time loadingTime = loadingClock.getElapsedTime();
 		std::ostringstream oss;
@@ -168,6 +172,11 @@ void SceneManager::LoadScene(std::string sceneName)
 	}
 }
 
+
+Scene::Scene(SceneManager * sceneManager) 
+{
+	m_SceneManager = sceneManager;
+}
 
 void Scene::Update(sf::Time dt)
 {

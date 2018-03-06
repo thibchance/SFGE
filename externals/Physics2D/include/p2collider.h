@@ -28,6 +28,9 @@ SOFTWARE.
 
 #include <p2shape.h>
 
+/**
+* \brief Struct defining a p2Collider when creating one
+*/
 struct p2ColliderDef
 {
 	void* userData;
@@ -36,10 +39,20 @@ struct p2ColliderDef
 	bool isSensor;
 };
 
+/**
+* \brief Representation of a Collider attached to a p2Body
+*/
+
 class p2Collider
 {
 public:
+	/**
+	* \brief Check if the p2Collider is a sensor
+	*/
 	bool IsSensor();
+	/**
+	* \brief Return the userData
+	*/
 	void* GetUserData();
 private:
 	void* userData;

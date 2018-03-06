@@ -34,24 +34,48 @@ namespace sfge
 {
 
 /**
- * \brief Python abstraction of Component
+ * \brief Python abstraction of Component, used to be overloaded by a python script
  */
 class PyComponent : public Component
 {
 public:
 	using Component::Component;
 	~PyComponent();
-
+	/**
+	* \brief Initialize the PyComponent to avoid crash because of overrided constructor
+	*/
 	void Init() override;
+	/**
+	* \brief Called each frame
+	*/
 	void Update(float dt) override;
+	/**
+	* \brief Factory method to import a python script 
+	*/
 	static PyComponent* LoadPythonScript(Engine& engine, json& componentJson, GameObject* gameObject);
-
+	/**
+	* \brief Can call the python script to receive the Collision Enter event
+	*/
 	void OnCollisionEnter(Collider* collider) override;
+	/**
+	* \brief Can call the python script to receive the Trigger Enter event
+	*/
 	void OnTriggerEnter(Collider * collider) override;
+	/**
+	* \brief Can call the python script to receive the Collision Exit event
+	*/
 	void OnCollisionExit(Collider* collider) override;
+	/**
+	* \brief Can call the python script to receive the Trigger Exit event
+	*/
 	void OnTriggerExit(Collider * collider) override;
-
+	/**
+	* \brief Getter of the Python Script Instance Id
+	*/
 	unsigned int GetInstanceId() const;
+	/**
+	* \brief Setter of the Python Script Instance Id
+	*/
 	void SetInstanceId(unsigned int instanceId = 0U);
 
 private:

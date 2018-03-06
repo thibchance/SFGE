@@ -44,11 +44,12 @@ enum class ComponentType
 	SHAPE,
 	PYCOMPONENT,
 	BODY2D,
-	COLLIDER
+	COLLIDER,
+	SOUND
 };
 
 /**
- * \brief A Component is attached to a GameObject
+ * \brief A Component that is attached to a GameObject
  */
 class Component
 {
@@ -69,24 +70,46 @@ public:
 	 * \return A pointer to the Component created
 	 */
 	static Component* LoadComponent(Engine& engine, json& componentJson, GameObject* gameObject);
+	/**
+	* \brief Initialising method
+	*/
 	virtual void Init() = 0;
 	/**
 	* \brief Update the Component
 	* \param dt Delta time since last frame
 	*/
 	virtual void Update(float dt) = 0;
-
+	/**
+	* \brief Getter of the parent GameObject
+	*/
 	GameObject* GetGameObject();
-
+	/**
+	* \brief Getter of the Component name
+	*/
 	const std::string& GetName();
+	/**
+	* \brief Setter of the Component name
+	*/
 	void SetName(const std::string& name);
-
+	/**
+	* \brief Getter of the Component type
+	*/
 	ComponentType GetComponentType();
-
+	/**
+	* \brief Called by the GameObject when a trigger occurs
+	*/
 	virtual void OnTriggerEnter(Collider* collider);
+	/**
+	* \brief Called by the GameObject when a collision occurs
+	*/
 	virtual void OnCollisionEnter(Collider* collider);
-
+	/**
+	* \brief Called by the GameObject when a trigger exits
+	*/
 	virtual void OnTriggerExit(Collider* collider);
+	/**
+	* \brief Called by the GameObject when a collision exits
+	*/
 	virtual void OnCollisionExit(Collider* collider);
 
 	static unsigned int incrementalComponentId;
@@ -102,6 +125,9 @@ protected:
 
 };
 
+/**
+* \brief Interface for Component with offset
+*/
 class Offsetable
 {
 public:

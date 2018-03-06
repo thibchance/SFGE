@@ -31,9 +31,6 @@ namespace sfge
 
 const float PhysicsManager::pixelPerMeter = 100.0f;
 
-PhysicsManager::~PhysicsManager()
-{
-}
 
 void PhysicsManager::Init()
 {
@@ -63,6 +60,12 @@ void PhysicsManager::Destroy()
 	if (m_World)
 	{
 		delete(m_World);
+		m_World = nullptr;
+	}
+	if(m_ContactListener)
+	{
+		delete(m_ContactListener);
+		m_ContactListener = nullptr;
 	}
 
 	for (Body2d* body : m_Bodies)
@@ -84,7 +87,7 @@ void PhysicsManager::Reset()
 	Init();
 }
 
-void PhysicsManager::Reload()
+void PhysicsManager::Collect()
 {
 }
 
@@ -94,14 +97,14 @@ void ContactListener::BeginContact(p2Contact* contact)
 	Collider* secondCollider = nullptr;
 
 	void* colliderUserData = contact->GetColliderA()->GetUserData();
-	if (colliderUserData)
+	if (colliderUserData != nullptr) 
 	{
 		firstCollider = static_cast<Collider*>(colliderUserData);
 	}
 
 	
 	colliderUserData = contact->GetColliderB()->GetUserData();
-	if (colliderUserData)
+	if (colliderUserData != nullptr)
 	{
 		secondCollider = static_cast<Collider*>(colliderUserData);
 	}
@@ -121,14 +124,14 @@ void ContactListener::EndContact(p2Contact* contact)
 	Collider* secondCollider = nullptr;
 
 	void* colliderUserData = contact->GetColliderA()->GetUserData();
-	if (colliderUserData)
+	if (colliderUserData != nullptr)
 	{
 		firstCollider = static_cast<Collider*>(colliderUserData);
 	}
 
 
 	colliderUserData = contact->GetColliderB()->GetUserData();
-	if (colliderUserData)
+	if (colliderUserData != nullptr)
 	{
 		secondCollider = static_cast<Collider*>(colliderUserData);
 	}
@@ -144,7 +147,7 @@ void ContactListener::EndContact(p2Contact* contact)
 
 float pixel2meter(float pixel)
 {
-	return pixel/PhysicsManager::pixelPerMeter;
+	return pixel / PhysicsManager::pixelPerMeter;
 }
 
 float pixel2meter(int pixel)
@@ -164,7 +167,7 @@ p2Vec2 pixel2meter(sf::Vector2i pixel)
 
 float meter2pixel(float meter)
 {
-	return meter*PhysicsManager::pixelPerMeter;
+	return meter * PhysicsManager::pixelPerMeter;
 }
 
 sf::Vector2f meter2pixel(p2Vec2 meter)

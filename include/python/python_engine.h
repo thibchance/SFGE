@@ -28,6 +28,8 @@
 #include <engine/engine.h>
 #include <engine/component.h>
 #include <utility/python_utility.h>
+#include <pybind11/functional.h>
+
 namespace sfge
 {
 class PyComponent;
@@ -52,9 +54,14 @@ public:
 	* \brief Finalize the python interpreter
 	*/
 	void Destroy() override;
-
-	void Reload() override;
+	/**
+	* \brief Called before the loading of a new scene
+	*/
 	void Reset() override;
+	/**
+	* \brief Called at the end of the loading frame
+	*/
+	void Collect() override;
 	/**
 	 * \brief Load a python script and return a python object of it
 	 * \param script_name

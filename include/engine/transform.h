@@ -13,21 +13,48 @@
 namespace sfge
 {
 
-
+/**
+* \brief Mandatory Component of a GameObject, showing its geometric characteristics
+*/
 class Transform : public Component
 {
 public:
 	using Component::Component;
-	~Transform();
+	/**
+	* \brief Factory method to create the Transform Component
+	*/
 	static Transform* LoadTransform(json& componentJson, GameObject* gameObject);
+	/**
+	* \brief Initialize the Transform
+	*/
 	void Init() override;
+	/**
+	* \brief Called each frame
+	*/
 	void Update(float dt) override;
-
+	/**
+	* \brief Getter of the euler angle
+	*/
 	const float GetEulerAngle();
+	/**
+	* \brief Setter of the euleur angle
+	*/
 	void SetEulerAngle(float eulerAngle);
+	/**
+	* \brief Getter of the position
+	*/
 	const sf::Vector2f GetPosition();
+	/**
+	* \brief Setter of the position
+	*/
 	void SetPosition(sf::Vector2f position);
+	/**
+	* \brief Getter of the scale
+	*/
 	const sf::Vector2f GetScale();
+	/**
+	* \brief Setter of the scale
+	*/
 	void SetScale(sf::Vector2f scale);
 
 private:

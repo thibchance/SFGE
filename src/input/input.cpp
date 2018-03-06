@@ -36,6 +36,7 @@ InputManager::InputManager(Engine & engine, bool enable): Module(engine,enable)
 	enable = m_Enable;
 }
 
+
 KeyboardManager* InputManager::GetKeyboardManager()
 {
 	return m_KeyboardManager;
@@ -67,7 +68,7 @@ void InputManager::Reset()
 {
 }
 
-void InputManager::Reload()
+void InputManager::Collect()
 {
 }
 
@@ -93,6 +94,7 @@ bool KeyboardManager::IsKeyUp(sf::Keyboard::Key key)
 {
 	return !keyPressedStatusArray[(int)key].keyPressed && keyPressedStatusArray[(int)key].previousKeyPressed;
 }
+
 sf::Vector2i MouseManager::localPosition(sf::Window& window)
 {
 	return sf::Mouse::getPosition(window);

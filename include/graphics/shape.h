@@ -44,48 +44,93 @@ enum class ShapeType
 	CONVEX,
 };
 
+/**
+* \brief Graphic representation of a shape as Component
+*/
 class Shape : public Component, public Offsetable
 {
 public:
 	Shape(GameObject* gameObject);
 	void Init() override;
+	/**
+	* \brief Update the position of the SFML shape to the position  of the GameObject Transform
+	*/
 	void Update(float time) override;
+	/**
+	* \brief Draw  the SFML shape to the screen
+	*/
 	void Draw(sf::RenderWindow& window);
+	/**
+	* \brief Change the Fill Color of the shape
+	*/
+	void SetFillColor(sf::Color color);
+	/**
+	* \brief Factory method of a Shape Component
+	*/
 	static Shape* LoadShape(Engine& engine, json& componentJson, GameObject* gameObject);
 protected:
 	std::shared_ptr<sf::Shape> m_Shape = nullptr;
 };
 
+/**
+* \brief Graphic representation of a circle as Component
+*/
 class Circle : public Shape
 {
 public:
 	Circle(GameObject* gameObject,  float radius);
+	/**
+	* \brief Update the position of the SFML circle shape to the position  of the GameObject Transform
+	*/
 	void Update(float dt) override;
+	/**
+	* \brief Factory method of a Circle Component
+	*/
 	static Circle* LoadCircle(json& componentJson, GameObject* gameObject);
 protected:
 	float m_Radius;
 };
 
+/**
+* \brief Graphic representation of a rectangle as Component
+*/
 class Rectangle : public Shape
 {
 public:
 	Rectangle(GameObject* gameObject, sf::Vector2f size);
+	/**
+	* \brief Update the position of the SFML rectangle shape to the position  of the GameObject Transform
+	*/
 	void Update(float time) override;
+	/**
+	* \brief Factory method of a Circle Component
+	*/
 	static Rectangle* LoadRectangle(json& componentJson, GameObject* gameObject);
 protected:
 	sf::Vector2f m_Size;
 
 };
 
+/**
+* \brief Graphic Manager part loading and managing the Shapes components
+*/
 class ShapeManager
 {
 
 public:
 	ShapeManager(GraphicsManager& graphicsManager);
 	void AddShape(Shape* shape);
+	/**
+	* \brief Draw all the shapes
+	*/
 	void Draw(sf::RenderWindow& window);
-
+	/**
+	* \brief Called before the new Scene is loaded
+	*/
 	void Reset();
+	/**
+	* \brief Called at the end of the loading frame
+	*/
 	void Reload();
 protected:
 	std::list<Shape*> m_Shapes;

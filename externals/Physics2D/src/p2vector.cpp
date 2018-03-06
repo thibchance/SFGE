@@ -56,3 +56,27 @@ p2Vec2 p2Vec2::operator/(float f)
 {
 	return p2Vec2();
 }
+
+p2Vec2 p2Vec2::operator*(float f)
+{
+	return p2Vec2();
+}
+
+float p2Vec2::Dot(p2Vec2 v1, p2Vec2 v2)
+{
+	return 0.0f;
+}
+
+float p2Vec2::GetMagnitude()
+{
+	return 0.0f;
+}
+
+p2Vec2 p2Vec2::Normalized()
+{
+	return p2Vec2();
+}
+
+void p2Vec2::Normalize()
+{
+}

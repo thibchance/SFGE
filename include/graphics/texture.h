@@ -55,18 +55,22 @@ public:
 	* \param text_id The texture id striclty positive
 	* \return The pointer to the texture in memory
 	*/
-	std::shared_ptr<sf::Texture> GetTexture(unsigned int text_id);
-	
+	sf::Texture* GetTexture(unsigned int text_id);
+	/**
+	* \brief Called before the new Scene is loaded
+	*/
 	void Reset();
-
-	void Reload();
+	/**
+	* \brief Called at the end of the loading frame
+	*/
+	void Collect();
 
 private:
 
 	std::map<std::string, unsigned int> nameIdsMap;
-	std::map<unsigned int, std::string> idsNameMap;
-	std::map<unsigned int, std::shared_ptr<sf::Texture>> texturesMap;
-	unsigned int increment_id = 0;
+	std::map<unsigned int, unsigned int> idsRefCountMap;
+	std::map<unsigned int, sf::Texture*> texturesMap;
+	unsigned int incrementId = 0;
 
 };
 }

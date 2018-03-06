@@ -32,11 +32,29 @@ using json = nlohmann::json;
 
 namespace sfge
 {
-	bool IsJsonValueNumeric(const json::value_type& jsonValue);
-	bool CheckJsonExists(const json& jsonObject, std::string parameterName);
-	bool CheckJsonParameter(const json& jsonObject, std::string parameterName, json::value_t expectedType);
-	bool CheckJsonNumber(const json& jsonObject, std::string parameterName);
-	sf::Vector2f GetVectorFromJson(const json& jsonObject, std::string parameterName);
-	std::unique_ptr<json> LoadJson(std::string jsonPath);
+/**
+* \brief Function that checks if the given json value is a number
+*/
+bool IsJsonValueNumeric(const json::value_type& jsonValue);
+/**
+* \brief Function that checks if the given parameter exists in the json
+*/
+bool CheckJsonExists(const json& jsonObject, std::string parameterName);
+/**
+* \brief Function that checks if the parameter exists and is of expected type
+*/
+bool CheckJsonParameter(const json& jsonObject, std::string parameterName, json::value_t expectedType);
+/**
+* \brief Function that checks if the parameters exists and is a number
+*/
+bool CheckJsonNumber(const json& jsonObject, std::string parameterName);
+/**
+* \brief Function that gets the Vector from an array or an object in the json
+*/
+sf::Vector2f GetVectorFromJson(const json& jsonObject, std::string parameterName);
+/**
+* \brief Function that loads a json file and returns a json object
+*/
+std::unique_ptr<json> LoadJson(std::string jsonPath);
 }
 #endif

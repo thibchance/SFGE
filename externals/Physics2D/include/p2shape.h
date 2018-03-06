@@ -27,19 +27,31 @@ SOFTWARE.
 
 #include <p2vector.h>
 
+/**
+* \brief Abstract representation of a shape
+*/
 class p2Shape
 {
 
 };
 
+/**
+* \brief Representation of a circle
+*/
 class p2CircleShape : public p2Shape
 {
 public:
+	/**
+	* \brief Setter for the radius
+	*/
 	void SetRadius(float radius);
 private:
 	float m_Radius;
 };
 
+/** 
+* \brief Representation of a rectangle
+*/
 class p2RectShape : public p2Shape
 {
 public:

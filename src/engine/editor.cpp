@@ -68,12 +68,15 @@ void Editor::Update(sf::Time dt)
 		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(150.0f, m_Engine.GetConfig()->screenResolution.y), ImGuiCond_FirstUseEver);
 		ImGui::Begin("GameObjects");
-		if (m_SceneManager->GetCurrentScene() != nullptr)
-		{
+		if (m_SceneManager->GetCurrentScene() != nullptr && !m_SceneManager->IsSwitching())
+		{  
+
 			static int selected = -1;
 			int n = 0;
+			
 			for (auto gameObject : m_SceneManager->GetCurrentScene()->GetGameObjects())
 			{
+
 				if (ImGui::Selectable(gameObject->GetName().c_str(), selected == n))
 				{
 					selected = n;
@@ -81,10 +84,12 @@ void Editor::Update(sf::Time dt)
 				}
 				n++;
 			}
+			
 		}
 		else
 		{
 			Log::GetInstance()->Error("No Current Scene for editor");
+			selectedGameObject = nullptr;
 		}
 		ImGui::End();
 		//Component inspector window
@@ -93,7 +98,7 @@ void Editor::Update(sf::Time dt)
 		ImGui::Begin("Inspector");
 		if (selectedGameObject != nullptr)
 		{
-			for (auto component : selectedGameObject->GetComponents())
+			for (auto component : selectedGameObject->GetAllComponents())
 			{
 				if (ImGui::CollapsingHeader(component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
@@ -185,7 +190,7 @@ void Editor::Destroy()
 	}
 }
 
-void Editor::Reload()
+void Editor::Collect()
 {
 }
 

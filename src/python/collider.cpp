@@ -106,6 +106,7 @@ Collider* Collider::LoadCollider(Engine & engine, GameObject * gameObject, json 
 		{
 			colliderDef.isSensor = componentJson["sensor"];
 		}
+		
 		collider->m_PhysicsCollider = body2d->GetBody()->CreateCollider(&colliderDef);
 		if (shape != nullptr)
 		{

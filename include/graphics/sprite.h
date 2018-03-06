@@ -44,23 +44,40 @@ class Sprite : public Component, Offsetable
 {
 public:
 	using Component::Component;
+	/**
+	* \brief Initialise the Sprite Component
+	*/
 	void Init() override;
 	/**
 	* \brief Update the Component
 	* \param dt Delta time since last frame
 	*/
-	virtual void Update(float dt) override;
-	
+	void Update(float dt) override;
+	/**
+	* \brief Draw the SFML sprite on the RenderWindow
+	*/
 	void Draw(sf::RenderWindow& window);
 
+	/**
+	* \brief Factory method to create a Sprite Component
+	*/
 	static Sprite* LoadSprite(Engine& engine, json& componentJson, GameObject* gameObject);
 
-	void SetTexture(std::shared_ptr<sf::Texture> newTexture);
-
+	/**
+	* \brief Setter the Sprite Texture
+	*/
+	void SetTexture(sf::Texture* newTexture);
+	/**
+	* \brief Setter the Sprite Texture Id
+	*/
 	void SetTextureId(unsigned int textureId);
-
+	/**
+	* \brief Setter the Sprite layer
+	*/
 	void SetLayer(int layer);
-
+	/**
+	* \brief Sprite layer Comparator, used to sort the sprites when drawing
+	*/
 	static bool SpriteLayerComp(Sprite* s1, Sprite* s2);
 protected:
 	sf::Vector2f offset = sf::Vector2f();
@@ -77,12 +94,26 @@ class SpriteManager
 {
 public:
 	SpriteManager(GraphicsManager& graphicsManager);
+	/**
+	* \brief Called each frame to sort the sprites 
+	*/
 	void Update(sf::Time dt);
+	/**
+	* \brief Draw all the sprites on the RenderWindow
+	*/
 	void Draw(sf::RenderWindow& window);
+	/**
+	* \brief Create a Sprite and load it in its maps
+	*/
 	void LoadSprite(json& componentJson, Sprite* sprite);
-
+	/**
+	* \brief Called before the new Scene is loaded
+	*/
 	void Reset();
-	void Reload();
+	/**
+	* \brief Called 
+	*/
+	void Collect();
 protected:
 	std::list<Sprite*> m_Sprites;
 	GraphicsManager& m_GraphicsManager;

@@ -33,20 +33,37 @@ SOFTWARE.
 
 namespace sfge
 {
+class Collider;
 
+/**
+* \brief Rigidbody Component
+*/
 class Body2d : public Component
 {
 public:
 	using Component::Component;
+	/**
+	* \brief Initialisation of the Component
+	*/
 	void Init() override;
+	/**
+	* \brief Callled every frame, update the Transform of the parent GameObject
+	*/
 	void Update(float dt) override;
-
+	/**
+	* \brief Getter of the Physics2D body
+	* \return the Physics2D of the the Body2d Component
+	*/
 	p2Body* GetBody();
 
-
+	/**
+	* \brief Factory method that creates a Body2d Component
+	* \return Body2d ptr that will be attached to the GameObject and will be destroyed by the PhysicsManager
+	*/
 	static Body2d* LoadBody2d(Engine& engine, GameObject* gameObject, json& componentJson);
 protected:
 	p2Body * m_Body = nullptr;
+	std::list<Collider*> m_Colliders;
 };
 
 }

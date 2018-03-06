@@ -21,19 +21,27 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
+
+#include <engine/log.h>
+#include <input/input.h>
+#include <python/python_engine.h>
+
 #include <engine/scene.h>
 #include <engine/game_object.h>
 #include <engine/component.h>
 #include <engine/transform.h>
 #include <physics/collider.h>
-#include <engine/log.h>
-#include <input/input.h>
-#include <python/python_engine.h>
 #include <python/pycomponent.h>
+#include <graphics/shape.h>
+#include <graphics/sprite.h>
+
 #include <utility/file_utility.h>
 #include <utility/time_utility.h>
 
+#include <audio/audio.h>
+
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 
 
 
@@ -70,8 +78,11 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	game_object
 		.def(py::init<>())
 		.def_property_readonly("transform", &GameObject::GetTransform, py::return_value_policy::reference)
-		.def_property_readonly("name", &GameObject::GetName, py::return_value_policy::reference);
-
+		.def_property_readonly("name", &GameObject::GetName, py::return_value_policy::reference)
+		.def("get_component", &GameObject::GetComponentFromType, py::return_value_policy::reference)
+		.def("get_component", &GameObject::GetPyComponentFromType, py::return_value_policy::reference)
+		.def("get_components", &GameObject::GetComponentsFromType, py::return_value_policy::reference);
+	
 	py::class_<Component, PyComponent> component(m, "Component");
 	component
 		.def(py::init<GameObject*>(), py::return_value_policy::reference)
@@ -83,6 +94,10 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def("on_collision_enter", &Component::OnCollisionEnter)
 		.def("on_trigger_exit", &Component::OnTriggerExit)
 		.def("on_collision_exit", &Component::OnCollisionExit);
+	py::enum_<ComponentType>(component, "ComponentType")
+		.value("PyComponent", ComponentType::PYCOMPONENT)
+		.value("Shape", ComponentType::SHAPE)
+		.export_values();
 	py::class_<Transform, Component> transform(m, "Transform");
 	transform
 		.def("get_euler_angle", &Transform::GetEulerAngle)
@@ -92,10 +107,30 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def("get_scale", &Transform::GetScale)
 		.def("set_scale",&Transform::SetScale);
 	py::class_<Collider, Component> collider(m, "Collider");
-	
+	py::class_<Sound, Component> sound(m, "Sound");
+	sound
+		.def("play", &Sound::Play);
+	py::class_<Shape, Component> shape(m, "Shape");
+	shape
+		.def("set_fill_color", &Shape::SetFillColor);
 	//Utility
+	py::class_<sf::Color> color(m, "Color");
+	color
+		.def_readwrite("r", &sf::Color::r)
+		.def_readwrite("g", &sf::Color::g)
+		.def_readwrite("b", &sf::Color::b)
+		.def_readwrite("a", &sf::Color::a)
+		.def_readonly_static("Black", &sf::Color::Black)
+		.def_readonly_static("White", &sf::Color::White)
+		.def_readonly_static("Red", &sf::Color::Red)
+		.def_readonly_static("Green", &sf::Color::Green)
+		.def_readonly_static("Blue", &sf::Color::Blue)
+		.def_readonly_static("Yellow", &sf::Color::Yellow)
+		.def_readonly_static("Magenta", &sf::Color::Magenta)
+		.def_readonly_static("Cyan", &sf::Color::Cyan)
+		.def_readonly_static("Transparent", &sf::Color::Transparent);
 	py::class_<Timer> timer(m, "Timer");
-	timer
+	timer 
 		.def(py::init<float, float>())
 		.def("update", &Timer::Update)
 		.def("reset", &Timer::Reset)
@@ -145,7 +180,7 @@ void PythonManager::Reset()
 {
 	pythonInstanceMap.clear();
 }
-void PythonManager::Reload()
+void PythonManager::Collect()
 {
 }
 
@@ -154,7 +189,7 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObj
 {
 	fs::path p = script_path;
 	std::string module_name = p.filename().replace_extension("").string();
-	std::string class_name = module2class(module_name);
+	std::string class_name = module2component(module_name);
 	if(fs::is_regular_file(p))
 	{
 		if(pythonModuleIdMap.find(script_path) != pythonModuleIdMap.end())
@@ -177,6 +212,7 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObj
 				{
 					pythonInstanceMap[incrementalInstanceId] = pythonModuleObjectMap[scriptId]
 						.attr(class_name.c_str())(gameObject);
+					
 					incrementalInstanceId++;
 					return incrementalInstanceId-1;
 				}
@@ -203,7 +239,11 @@ unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObj
 
 				pythonModuleObjectMap[incrementalScriptId] = import(module_name, script_path, globals);
 				pythonModuleIdMap[script_path] = incrementalScriptId;
-
+				for (auto& moduleObj : pythonModuleObjectMap)
+				{
+					moduleObj.second.attr(class_name.c_str()) = pythonModuleObjectMap[incrementalScriptId]
+						.attr(class_name.c_str());
+				}
 				pythonInstanceMap[incrementalInstanceId] = pythonModuleObjectMap[incrementalScriptId].attr(class_name.c_str())(gameObject);
 
 

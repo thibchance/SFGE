@@ -26,10 +26,17 @@
 #include <engine/component.h>
 #include <engine/transform.h>
 #include <engine/log.h>
-#include <python/pycomponent.h>
 #include <python/python_engine.h>
-
+#include <pybind11/stl.h>
+#include <pybind11/pytypes.h>
 #include <memory>
+
+#include <graphics/sprite.h>
+#include <python/pycomponent.h>
+#include <graphics/shape.h>
+#include <physics/body2d.h>
+#include <physics/collider.h>
+#include <audio/audio.h>
 
 namespace sfge
 {
@@ -85,7 +92,7 @@ GameObject* GameObject::LoadGameObject(Engine& engine, json& gameObjectJson)
 	{
 		Log::GetInstance()->Error("There are no Component attached to the GameObject");
 	}
-
+	gameObject->Init();
 	//if there is no transform, it is always at the beginning of the list
 	if(gameObject->m_Transform == nullptr)
 	{
@@ -113,13 +120,76 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	delete(m_Transform);
 	{
-		Log::GetInstance()->Error("DESTROY GAME OBJECT "+m_Name);
+		Log::GetInstance()->Error("DESTROY GAME OBJECT " + m_Name);
+	}
+	m_Components.clear();
+	delete(m_Transform);
+	m_Transform = nullptr;
+	
+}
+
+void GameObject::Init()
+{
+	for (auto comp : m_Components)
+	{
+		comp->Init();
 	}
 }
 
-std::list<Component*>& GameObject::GetComponents()
+py::object GameObject::GetComponentFromType(ComponentType componentType)
+{
+	switch (componentType)
+	{
+	case ComponentType::SPRITE:
+		return py::cast(GetComponent<Sprite>());
+	case ComponentType::PYCOMPONENT:
+		return py::cast(GetComponent<PyComponent>());
+	case ComponentType::SHAPE:
+		return py::cast(GetComponent<Shape>());
+	case ComponentType::BODY2D:
+		return py::cast(GetComponent<Body2d>());
+	case ComponentType::COLLIDER:
+		return py::cast(GetComponent<Collider>());
+	case ComponentType::SOUND:
+		return py::cast(GetComponent<Sound>());
+	}
+	return py::none();
+}
+
+py::object GameObject::GetPyComponentFromType(py::handle pycomponentType)
+{
+	for (PyComponent* pyComponent : GetComponents<PyComponent>())
+	{
+		if (py::cast(pyComponent).get_type().is(pycomponentType))
+		{
+			return py::cast(pyComponent);
+		}
+	}
+	return py::none();
+}
+
+py::object GameObject::GetComponentsFromType(ComponentType componentType)
+{
+	switch (componentType)
+	{
+	case ComponentType::SPRITE:
+		return py::cast(GetComponents<Sprite>());
+	case ComponentType::PYCOMPONENT:
+		return py::cast(GetComponents<PyComponent>());
+	case ComponentType::SHAPE:
+		return py::cast(GetComponents<Shape>());
+	case ComponentType::BODY2D:
+		return py::cast(GetComponents<Body2d>());
+	case ComponentType::COLLIDER:
+		return py::cast(GetComponents<Collider>());
+	case ComponentType::SOUND:
+		return py::cast(GetComponents<Sound>());
+	}
+	return py::none();
+}
+
+std::list<Component*>& GameObject::GetAllComponents()
 {
 	return m_Components;
 }

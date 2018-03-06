@@ -28,6 +28,7 @@ SOFTWARE.
 #include <engine/engine.h>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <SFML/System/Time.hpp>
 
 namespace sfge
 {
@@ -51,12 +52,25 @@ public:
 	 * \param dt Delta time since last frame
 	 */
 	void Update(sf::Time dt) override;
+	/**
+	* \brief Called at the end of the program
+	*/
 	void Destroy() override;
-
+	/**
+	* \brief Called before the loading of a new Scene
+	*/
 	void Reset() override;
-	void Reload() override;
-
+	/**
+	* \brief Called at the end of the loading frame
+	*/
+	void Collect() override;
+	/**
+	* \brief Getter of the KeyboardManager
+	*/
 	KeyboardManager* GetKeyboardManager();
+	/**
+	* \brief Getter of the MouseManager
+	*/
 	MouseManager* GetMouseManager();
 
 private:
@@ -66,14 +80,32 @@ protected:
 	MouseManager* m_MouseManager = nullptr;
 };
 
+/**
+* \brief Struct used to retireve the Keyboard Key status
+*/
 struct KeyPressedStatus { bool previousKeyPressed; bool keyPressed; };
 
+/**
+* \brief Manage the state of the Keyboard
+*/
 class KeyboardManager
 {
 public:
+	/**
+	* \brief Called each frame to update the keyboard status
+	*/
 	void Update(sf::Time dt);
+	/**
+	* \brief Get if the key is held 
+	*/
 	bool IsKeyHeld(sf::Keyboard::Key key);
+	/**
+	* \brief Get if the key is down
+	*/
 	bool IsKeyDown(sf::Keyboard::Key key);
+	/**
+	* \brief Get if the key is up 
+	*/
 	bool IsKeyUp(sf::Keyboard::Key key);
 
 protected:
@@ -83,12 +115,13 @@ private:
 	KeyPressedStatus keyPressedStatusArray[sf::Keyboard::Key::KeyCount] ={};
 };
 
+/**
+* \brief Manage the mouse position status
+*/
 class MouseManager
 {
 public:
 	sf::Vector2i localPosition(sf::Window& window);
-private:
-
 };
 
 }

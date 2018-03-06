@@ -37,8 +37,8 @@ SOFTWARE.
 int main()
 {
 	sfge::Engine engine;
-
 	engine.Init(true);
+
 	json gameObjectJson;
 	json spriteJson;
 	spriteJson["path"] = "data/sprites/boss_01_dialog_pose_001_b.png";
@@ -46,6 +46,7 @@ int main()
 	gameObjectJson["components"] = json::array({ spriteJson });
 
 	sfge::GameObject* gameObject = sfge::GameObject::LoadGameObject(engine, gameObjectJson);
+
 	auto sprite = gameObject->GetComponent<sfge::Sprite>();
 	if (sprite != nullptr)
 	{

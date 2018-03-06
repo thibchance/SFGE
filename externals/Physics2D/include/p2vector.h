@@ -25,15 +25,37 @@ SOFTWARE.
 #ifndef SFGE_P2VECTOR_H
 #define SFGE_P2VECTOR_H
 
+/**
+* \brief Vector class
+*/
 struct p2Vec2
 {
 	p2Vec2();
+
 	p2Vec2(float x, float y);
+
 	p2Vec2 operator+(p2Vec2 v);
 	p2Vec2 operator+=(p2Vec2 v);
 	p2Vec2 operator-(p2Vec2 v);
 	p2Vec2 operator-=(p2Vec2 v);
 	p2Vec2 operator /(float f);
+	p2Vec2 operator *(float f);
+	/**
+	* \brief Dot product of two vectors
+	*/
+	static float Dot(p2Vec2 v1, p2Vec2 v2);
+	/**
+	* \brief Calculate the magnitude of the p2Vec2
+	*/
+	float GetMagnitude();
+	/**
+	* \brief Calculate a normalized version of the p2Vec2
+	*/
+	p2Vec2 Normalized();
+	/**
+	* \brief Normalize the p2Vec2
+	*/
+	void Normalize();
 
 	float x = 0.0f;
 	float y = 0.0f;

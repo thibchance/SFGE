@@ -44,11 +44,10 @@ py::object import(const std::string& module, const std::string& path, py::object
         "new_module = imp.load_module(module_name, open(path), path, ('py', 'U', imp.PY_SOURCE))\n",
         globals,
         locals);
-
     return locals["new_module"];
 }
 
-std::string module2class(std::string& module_name)
+std::string module2component(std::string& module_name)
 {
 
 	std::istringstream iss(module_name);

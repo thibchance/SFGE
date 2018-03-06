@@ -30,6 +30,9 @@ namespace fs = std::experimental::filesystem;
 
 namespace sfge
 {
+/**
+* \brief Check if the given filename exists
+*/
 	bool FileExists(std::string& filename);
 }
 

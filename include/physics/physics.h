@@ -35,6 +35,8 @@ SOFTWARE.
 
 namespace sfge
 {
+	
+class Body2d;
 
 float pixel2meter(float pixel);
 float pixel2meter(int pixel);
@@ -44,6 +46,9 @@ p2Vec2 pixel2meter(sf::Vector2i pixel);
 float meter2pixel(float meter);
 sf::Vector2f meter2pixel(p2Vec2 meter);
 
+/**
+* \brief Child of the Physics2d p2ContactListener use to retrieve contacts between Body2d
+*/
 class ContactListener : public p2ContactListener
 {
 
@@ -60,7 +65,6 @@ class PhysicsManager : public Module
 public:
 	using Module::Module;
 
-	~PhysicsManager();
 	/**
 	 * \brief Initialize the Physics Manager, but do not create a b2World
 	 */
@@ -76,12 +80,17 @@ public:
 	 */
 	void Update(sf::Time dt) override;
 	/**
-	* \brief Called at the end of the program to Destroy a b2World, if it sill exists
+	* \brief Called at the end of the program to Destroy the b2World, if it sill exists
 	*/
 	void Destroy() override;
-
+	/**
+	* \brief Called before the loading of a new scene, destroy the currentWorld and create a new one
+	*/
 	void Reset() override;
-	void Reload() override;
+	/**
+	* \brief Mandatory method
+	*/
+	void Collect() override;
 
 	const static float pixelPerMeter;
 private:

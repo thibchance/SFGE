@@ -84,11 +84,14 @@ public:
 	 * \brief Destroy all the modules
 	 */
 	void Destroy();
+	/**
+	* \brief Reset all the modules before loading a new Scene
+	*/
 	void Reset();
 	/**
-	* \brief Reload is used after loading a new scene
+	* \brief Collect all the unused assets at the end of the loading frame
 	*/
-	void Reload();
+	void Collect();
 
 	~Engine();
 	/**
@@ -148,7 +151,7 @@ public:
 	/**
 	* \brief Called after we load a scene
 	*/
-	virtual void Reload() = 0;
+	virtual void Collect() = 0;
 
 	void SetEnable(bool enable);
 	bool GetEnable();

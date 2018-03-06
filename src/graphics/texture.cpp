@@ -28,6 +28,7 @@ SOFTWARE.
 
 //STL
 #include <sstream>
+#include <list>
 
 
 namespace sfge
@@ -42,36 +43,39 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 	}
 	if (nameIdsMap.find(filename) != nameIdsMap.end())
 	{
-		auto text_id = nameIdsMap[filename];
+		auto textureId = nameIdsMap[filename];
 		//Check if the texture was destroyed
-		auto checkTexture = texturesMap.find(text_id);
+		auto checkTexture = texturesMap.find(textureId);
 		if (checkTexture != texturesMap.end())
 		{
-			return nameIdsMap[filename];
+			auto textureId = nameIdsMap[filename];
+			idsRefCountMap[textureId]++;
+			return textureId;
 		}
 		else
 		{
-			std::shared_ptr<sf::Texture> texture = std::make_shared<sf::Texture>();
+			sf::Texture* texture = new sf::Texture();
 			if (!texture->loadFromFile(filename))
 				return 0U;
-			nameIdsMap[filename] = increment_id;
-			idsNameMap[increment_id] = filename;
-			texturesMap[increment_id] = texture;
-			return increment_id;
+			incrementId++;
+			nameIdsMap[filename] = incrementId;
+			idsRefCountMap[incrementId] = 1U;
+			texturesMap[incrementId] = texture;
+			return incrementId;
 		}
 	}
 	else
 	{
 		if (FileExists(filename))
 		{
-			increment_id++;
-			auto texture = std::make_shared<sf::Texture>();
+			incrementId++;
+			auto texture = new sf::Texture();
 			if (!texture->loadFromFile(filename))
 				return 0U;
-			nameIdsMap[filename] = increment_id;
-			idsNameMap[increment_id] = filename;
-			texturesMap[increment_id] = texture;
-			return increment_id;
+			nameIdsMap[filename] = incrementId;
+			idsRefCountMap[incrementId] = 1U;
+			texturesMap[incrementId] = texture;
+			return incrementId;
 		}
 	}
 	return 0U;
@@ -82,7 +86,7 @@ unsigned int TextureManager::LoadTexture(std::string filename)
 
 
 
-std::shared_ptr<sf::Texture> TextureManager::GetTexture(unsigned int text_id)
+sf::Texture* TextureManager::GetTexture(unsigned int text_id)
 {
 	if (texturesMap.find(text_id) != texturesMap.end())
 	{
@@ -93,21 +97,25 @@ std::shared_ptr<sf::Texture> TextureManager::GetTexture(unsigned int text_id)
 
 void TextureManager::Reset()
 {
-	idsNameMap.clear();
+	for (auto idRefCountPair : idsRefCountMap)
+	{
+		idsRefCountMap[idRefCountPair.first] = 0U;
+	}
 }
 
-void TextureManager::Reload()
+void TextureManager::Collect()
 {
 	std::list<unsigned int> unusedTextureIds;
-	for (auto nameIdPair : nameIdsMap)
+	for (auto idRefCountPair : idsRefCountMap)
 	{
-		if (idsNameMap.find(nameIdPair.second) == idsNameMap.end())
+		if (idRefCountPair.second == 0U)
 		{
-			unusedTextureIds.push_back(nameIdPair.second);
+			unusedTextureIds.push_back(idRefCountPair.first);
 		}
 	}
 	for (auto unusedTextureId : unusedTextureIds)
 	{
+		delete(texturesMap[unusedTextureId]);
 		texturesMap.erase(unusedTextureId);
 	}
 }

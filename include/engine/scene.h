@@ -58,6 +58,9 @@ public:
 	* \brief Finalize and delete everything created in the SceneManager
 	*/
 	void Destroy() override;
+	/**
+	* \brief Load a Scene from a path
+	*/
 	void LoadScene(std::string sceneName);
 	/**
 	* \brief Load a Scene and create all its GameObject
@@ -71,19 +74,36 @@ public:
 	* \return the heap Scene that is automatically destroyed when not used
 	*/
 	std::shared_ptr<Scene> LoadSceneFromJson(json& sceneJson);
-
+	/**
+	* \brief Load and change the current Scene to a loaded one at the scenePath
+	*/
 	void SetCurrentScene(std::string sceneName);
-
+	/**
+	* \brief Change the current scene to the one given in parameter
+	*/
 	void SetCurrentScene(std::shared_ptr<Scene> scene);
-
+	/**
+	* \brief Called before the loading of a new Scene
+	*/
 	void Reset() override;
-	void Reload() override;
-
+	/**
+	* \brief Called at the end of the frame before the Editor 
+	*/
+	void Collect() override;
+	/**
+	* \brief Check if the Scene is switching
+	*/
+	bool IsSwitching();
+	/**
+	* \brief Getter of the current Scene
+	*/
 	std::shared_ptr<Scene> GetCurrentScene();
 private:
-
+	std::shared_ptr<Scene> m_PreviousScene = nullptr;
 	std::shared_ptr<Scene> m_CurrentScene = nullptr;
-	std::list<std::shared_ptr<Scene>> m_Scenes;
+	//std::list<std::shared_ptr<Scene>> m_Scenes;
+
+	bool m_Switching = false;
 };
 
 /**
@@ -93,6 +113,7 @@ private:
 class Scene
 {
 public:
+	Scene(SceneManager* sceneManager);
 	/**
 	* \brief Update the Scene, mostly updating the GameObjects and doing the transition when needed
 	* \param dt Delta time since last frame
@@ -107,6 +128,7 @@ public:
 protected:
 	std::string name;
 	std::list<GameObject*> m_GameObjects;
+	SceneManager* m_SceneManager;
 	friend class SceneManager;
 };
 }

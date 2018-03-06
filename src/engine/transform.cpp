@@ -118,9 +118,5 @@ void Transform::SetScale(sf::Vector2f scale)
 	this->m_Scale = scale;
 }
 
-Transform::~Transform()
-{
-
-}
 
 }
