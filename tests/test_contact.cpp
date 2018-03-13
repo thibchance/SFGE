@@ -22,36 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef SFGE_BODY2D_H
-#define SFGE_BODY2D_G
+#include <engine/engine.h>
+#include <engine/scene.h>
 
-#include <engine/log.h>
-#include <engine/component.h>
-#include <utility/json_utility.h>
-
-#include <Box2D/Box2D.h>
-
-namespace sfge
+int main()
 {
+	sfge::Engine engine;
+	engine.Init(false, true);
 
-class Body2d : public Component
-{
-public:
-	using Component::Component;
-	void Init() override;
-	void Update(float dt) override;
+	engine.GetSceneManager()->SetCurrentScene("data/scenes/test_contact.scene");
 
-	b2Body* GetBody();
-
-	void SetVelocity(b2Vec2 v);
-	b2Vec2 GetVelocity();
-
-
-	static Body2d* LoadBody2d(Engine& engine, GameObject* gameObject, json& componentJson);
-protected:
-	b2Body * m_Body = nullptr;
-};
-
-}
-
+	engine.Start();
+#if WIN32
+	system("pause");
 #endif
+	return EXIT_SUCCESS;
+}

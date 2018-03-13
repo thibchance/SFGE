@@ -48,11 +48,11 @@ void Collider::OnColliderExit(Collider * collider)
 {
 	if (collider->m_Fixture->IsSensor() or m_Fixture->IsSensor())
 	{
-		m_GameObject->OnTriggerEnter(collider);
+		m_GameObject->OnTriggerExit(collider);
 	}
 	else
 	{
-		m_GameObject->OnCollisionEnter(collider);
+		m_GameObject->OnCollisionExit(collider);
 	}
 }
 
