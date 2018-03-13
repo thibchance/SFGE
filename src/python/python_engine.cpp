@@ -221,7 +221,7 @@ void PythonManager::Collect()
 unsigned int PythonManager::LoadPyComponentFile(std::string script_path, GameObject* gameObject)
 {
     auto folderLastIndex = script_path.find_last_of("/");
-    std::string filename = script_path.substr(folderLastIndex, script_path.size());
+    std::string filename = script_path.substr(folderLastIndex+1, script_path.size());
     auto filenameExtensionIndex = filename.find_last_of(".");
 	std::string module_name = filename.substr(0,filenameExtensionIndex);
 	std::string class_name = module2class(module_name);
