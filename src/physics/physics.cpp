@@ -111,6 +111,7 @@ void ContactListener::BeginContact(p2Contact* contact)
 
 	if (firstCollider and secondCollider)
 	{
+		Log::GetInstance()->Msg("CONTACT ENTER");
 		firstCollider->OnColliderEnter(secondCollider);
 		secondCollider->OnColliderEnter(firstCollider);
 	}
@@ -138,6 +139,8 @@ void ContactListener::EndContact(p2Contact* contact)
 
 	if (firstCollider and secondCollider)
 	{
+
+		Log::GetInstance()->Msg("CONTACT EXIT");
 		firstCollider->OnColliderExit(secondCollider);
 		secondCollider->OnColliderExit(firstCollider);
 	}

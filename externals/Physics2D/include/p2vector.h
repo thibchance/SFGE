@@ -25,6 +25,8 @@ SOFTWARE.
 #ifndef SFGE_P2VECTOR_H
 #define SFGE_P2VECTOR_H
 
+struct p2Vec3;
+
 /**
 * \brief Vector class
 */
@@ -45,6 +47,10 @@ struct p2Vec2
 	*/
 	static float Dot(p2Vec2 v1, p2Vec2 v2);
 	/**
+	* \brief Cross product of two vectors
+	*/
+	static p2Vec3 Cross(p2Vec2 v1, p2Vec2 v2);
+	/**
 	* \brief Calculate the magnitude of the p2Vec2
 	*/
 	float GetMagnitude();
@@ -57,9 +63,31 @@ struct p2Vec2
 	*/
 	void Normalize();
 
+	/**
+	* \brief 
+	*/
+	p2Vec3 to3();
+
 	float x = 0.0f;
 	float y = 0.0f;
 
+};
+
+struct p2Vec3
+{
+	p2Vec3();
+	p2Vec3(float x, float y, float z);
+	/**
+	* \brief Dot product of two vectors
+	*/
+	static float Dot(p2Vec3 v1, p2Vec3 v2);
+	/**
+	* \brief Cross product of two vectors
+	*/
+	static p2Vec3 Cross(p2Vec3 v1, p2Vec3 v2);
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
 };
 
 #endif

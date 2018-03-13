@@ -46,6 +46,27 @@ p2Body * Body2d::GetBody()
 	return m_Body;
 }
 
+
+void Body2d::SetVelocity(p2Vec2 v)
+{
+	if (m_Body)
+	{
+		m_Body->SetLinearVelocity(v);
+	}
+
+}
+
+p2Vec2 Body2d::GetVelocity()
+{
+	if (m_Body != nullptr)
+	{
+		return m_Body->GetLinearVelocity();
+	}
+	return p2Vec2();
+}
+
+
+
 Body2d * Body2d::LoadBody2d(Engine & engine, GameObject * gameObject, json& componentJson)
 {
 	auto physicsManager = engine.GetPhysicsManager();
@@ -69,6 +90,10 @@ Body2d * Body2d::LoadBody2d(Engine & engine, GameObject * gameObject, json& comp
 		{
 			bodyDef.position += pixel2meter(sf::Vector2f(componentJson["offset"]["x"], componentJson["offset"]["y"]));
 		}
+	}
+	if (CheckJsonNumber(componentJson, "gravity_scale"))
+	{
+		bodyDef.gravityScale = componentJson["gravity_scale"];
 	}
 
 	p2Body* body = world->CreateBody(&bodyDef);

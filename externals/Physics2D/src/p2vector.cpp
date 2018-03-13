@@ -80,3 +80,26 @@ p2Vec2 p2Vec2::Normalized()
 void p2Vec2::Normalize()
 {
 }
+
+p2Vec3 p2Vec2::to3()
+{
+	return p2Vec3();
+}
+
+p2Vec3::p2Vec3()
+{
+}
+
+p2Vec3::p2Vec3(float x, float y, float z)
+{
+}
+
+float p2Vec3::Dot(p2Vec3 v1, p2Vec3 v2)
+{
+	return 0.0f;
+}
+
+p2Vec3 p2Vec3::Cross(p2Vec3 v1, p2Vec3 v2)
+{
+	return p2Vec3();
+}
