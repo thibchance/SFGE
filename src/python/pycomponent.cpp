@@ -141,7 +141,7 @@ void PyComponent::OnTriggerEnter(Collider * collider)
 		PYBIND11_OVERLOAD_PURE_NAME(
 			void,
 			Component,
-			"on_collision_enter",
+			"on_trigger_enter",
 			OnTriggerEnter,
 			collider
 		);

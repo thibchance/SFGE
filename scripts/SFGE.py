@@ -1,8 +1,11 @@
-
 print("Python SFGE")
 
+
 class Vector2f:
-    pass
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+
 
 class Timer:
     def __init__(self, time, period):
@@ -22,6 +25,7 @@ class Timer:
     
     def is_over(self):
         pass
+
 
 class Module:
     def init(self):
@@ -68,5 +72,21 @@ class Transform(Component):
     def __init__(self, game_object):
         pass
 
+
+class KeyboardManager:
+
+    def is_key_held(self, key):
+        pass
+
+    def is_key_down(self, key):
+        pass
+
+    def is_key_up(self, key):
+        pass
+
+class InputManager:
+    keyboard = KeyboardManager()
+
 engine = Engine()
+input_manager = InputManager()
     
