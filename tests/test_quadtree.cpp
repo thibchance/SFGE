@@ -33,6 +33,8 @@ SOFTWARE.
 #include <cstdlib>     /* srand, rand */
 #include <ctime>       /* time */
 
+
+
 struct Object
 {
 	Object(b2Vec2 position, b2Vec2 extends, b2Vec2 speed)
@@ -63,6 +65,12 @@ struct Object
 	b2Vec2 position;
 	b2Vec2 extends;
 	b2Vec2 speed;
+};
+
+struct Contact
+{
+	Object* o1;
+	Object* o2;
 };
 
 class QuadTree
@@ -188,9 +196,56 @@ public:
 			}
 		}
 	}
-	void Retrieve()
+	std::list<Contact> Retrieve()
 	{
+		std::list<Contact> contacts;
+		if (nodes[0] == nullptr)
+		{
+			if (m_Objects.size() > 1)
+			{
+				auto objItr = m_Objects.begin();
+				auto objSecondItr = m_Objects.begin();
+				while (objItr != m_Objects.end())
+				{
+					objSecondItr = objItr;
+					objSecondItr++;
+					while (objSecondItr != m_Objects.end())
+					{
+						if ((*objItr)->aabb.Contains((*objSecondItr)->aabb))
+						{
+							contacts.push_back({ (*objItr), (*objSecondItr) }); //Create contact struct
+						}
+						objSecondItr++;
+					}
+					objItr++;
+				}
+			}
+		}
+		else
+		{
+			//Add children contacts
+			for (int i = 0; i < CHILD_TREE_NMB; i++)
+			{
+				auto childContacts = nodes[i]->Retrieve();
+				contacts.insert(contacts.end(), childContacts.begin(), childContacts.end());
+			}
+			//Retrieve all parents objects
+			for (auto objItr = m_Objects.begin(); objItr != m_Objects.end(); objItr++)
+			{
+				for (int i = 0; i < CHILD_TREE_NMB; i++)
+				{
+					for (auto childObjItr = nodes[i]->m_Objects.begin(); childObjItr != nodes[i]->m_Objects.end(); childObjItr++)
+					{
+						if ((*objItr)->aabb.Contains((*childObjItr)->aabb))
+						{
+							contacts.push_back({ (*objItr), (*childObjItr) }); //Create contact struct
+						}
+					}
+				}
+			}
+		}
 
+		return contacts;
 	}
 	void Update(float dt)
 	{
@@ -226,7 +281,7 @@ private:
 	b2Vec2 extends;
 	sf::RectangleShape rectangle;
 	static const int MAX_OBJECTS = 10;
-	static const int MAX_LEVELS = 5;
+	static const int MAX_LEVELS = 10;
 	static const int CHILD_TREE_NMB = 4;
 	int m_NodeLevel = 0;
 	QuadTree* nodes[CHILD_TREE_NMB] = {nullptr};
@@ -242,7 +297,7 @@ int main()
 	srand(time(NULL));
 
 	std::list<Object> objectsList;
-	const int objNmb = 1000;
+	const int objNmb = 10000;
 	for (int i = 0; i < objNmb; i++)
 	{
 		objectsList.push_back({
@@ -267,15 +322,7 @@ int main()
 		}
 		ImGui::SFML::Update(window, dt);
 
-		ImGui::Begin("Stats");
-		{
-			std::ostringstream oss;
-			oss << "FPS: " << 1.0f / dt.asSeconds();
-
-			ImGui::Text(oss.str().c_str());
-		}
-
-		ImGui::End();
+		
 
 		quad.Clear();
 		for (auto& obj : objectsList)
@@ -300,7 +347,16 @@ int main()
 			}
 			quad.Insert(&obj);
 		}
+		auto contacts = quad.Retrieve();
+		ImGui::Begin("Stats");
+		{
+			std::ostringstream oss;
+			oss << "FPS: " << 1.0f / dt.asSeconds()<<"\n"<<"Contact numbers: "<<contacts.size();
 
+			ImGui::Text(oss.str().c_str());
+		}
+
+		ImGui::End();
 		window.clear(sf::Color::Black);
 
 		for (auto& obj : objectsList)
