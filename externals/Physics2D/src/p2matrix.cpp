@@ -23,99 +23,127 @@ SOFTWARE.
 */
 
 #include <p2matrix.h>
+#include <cmath>
 
 p2Mat22::p2Mat22()
 {
 }
 
-p2Mat22::p2Mat22(p2Vec2 r1, p2Vec2 r2)
+p2Mat22::p2Mat22(p2Vec2 r1, p2Vec2 r2): r1(r1), r2(r2)
 {
 }
 
 p2Mat22 p2Mat22::operator+(p2Mat22 m1)
 {
-	return p2Mat22();
+	return p2Mat22(r1 + m1.r1, r2 + m1.r2);
 }
 
 p2Mat22 p2Mat22::operator-(p2Mat22 m1)
 {
-	return p2Mat22();
+	return p2Mat22(r1 - m1.r1, r2 - m1.r2);
 }
 
 p2Mat22 p2Mat22::operator*(p2Mat22 m1)
 {
-	return p2Mat22();
+	return p2Mat22(p2Vec2(r1.x*m1.r1.x + r2.x*m1.r1.y, r1.y*m1.r1.x + r2.y * m1.r1.y),
+		p2Vec2(r1.x*m1.r1.x + r2.x*m1.r1.y, r1.y*m1.r1.x + r2.y * m1.r1.y));
 }
 
 p2Vec2 p2Mat22::operator*(p2Vec2 v)
 {
-	return p2Vec2();
+	return p2Vec2(r1.x*v.x + r2.x*v.y, r1.y*v.x + r2.y * v.y);
 }
 
 p2Mat22 p2Mat22::operator*(float f)
 {
-	return p2Mat22();
+	return p2Mat22(r1*f,r2*f);
 }
 
 p2Mat22 p2Mat22::operator/(float f)
 {
-	return p2Mat22();
+	return p2Mat22(r1/f,r2/f);
+}
+
+p2Mat22 p2Mat22::RotationMatix(float angle)
+{
+	return p2Mat22(p2Vec2(cos(angle), sin(angle)),
+		p2Vec2(-sin(angle), cos(angle)));
 }
 
 p2Mat22 p2Mat22::Invert()
 {
-	return p2Mat22();
+	if (GetDeterminant() != 0)
+	{
+		return p2Mat22(p2Vec2((1 / GetDeterminant())*r2.y, (1 / GetDeterminant())*-r2.x),
+			p2Vec2((1 / GetDeterminant())*-r1.y, (1 / GetDeterminant())*r1.x));
+	}
+	
 }
 
 float p2Mat22::GetDeterminant()
 {
-	return 0.0f;
+	float Determinant = (r1.x*r2.y) - (r2.x*r1.y);
+	return Determinant;
 }
 
 p2Mat33::p2Mat33()
 {
 }
 
-p2Mat33::p2Mat33(p2Vec3 r1, p2Vec3 r2, p2Vec3 r3)
+p2Mat33::p2Mat33(p2Vec3 r1, p2Vec3 r2, p2Vec3 r3): r1(r1),r2(r2),r3(r3)
 {
 }
 
 p2Mat33 p2Mat33::operator+(p2Mat33 m1)
 {
-	return p2Mat33();
+	return p2Mat33(r1 + m1.r1, r2 + m1.r2, r3+m1.r3);
 }
 
 p2Mat33 p2Mat33::operator-(p2Mat33 m1)
 {
-	return p2Mat33();
+	return p2Mat33(r1 - m1.r1, r2 - m1.r2, r3 - m1.r3);
 }
 
 p2Mat33 p2Mat33::operator*(p2Mat33 m1)
 {
-	return p2Mat33();
+	return p2Mat33(p2Vec3(r1.x*m1.r1.x + r2.x*m1.r1.y + r3.x*m1.r1.z,
+		r1.y*m1.r1.x + r2.y * m1.r1.y + r3.y*m1.r1.z,
+		r1.z*m1.r1.x + r2.z*m1.r1.y + r3.z*m1.r1.z),
+		p2Vec3(r1.x*m1.r1.x + r2.x*m1.r1.y + r3.x*m1.r1.z, r1.y*m1.r1.x + r2.y * m1.r1.y + r3.y*m1.r1.z,
+			r1.z*m1.r1.x + r2.z*m1.r1.y + r3.z*m1.r1.z),
+		p2Vec3(r1.x*m1.r1.x + r2.x*m1.r1.y + r3.x*m1.r1.z, r1.y*m1.r1.x + r2.y * m1.r1.y + r3.y*m1.r1.z,
+				r1.z*m1.r1.x + r2.z*m1.r1.y + r3.z*m1.r1.z));
 }
 
-p2Vec3 p2Mat33::operator*(p2Vec3)
+p2Vec3 p2Mat33::operator*(p2Vec3 v)
 {
-	return p2Vec3();
+	return p2Vec3(r1.x*v.x + r2.x*v.y +r3.x*v.z, r1.y*v.x + r2.y * v.y+ r3.y*v.z, 
+		r1.z*v.x+r2.z*v.y+r3.z*v.z);
 }
 
 p2Mat33 p2Mat33::operator*(float f)
 {
-	return p2Mat33();
+	return p2Mat33(r1*f,r2*f,r3*f);
 }
 
 p2Mat33 p2Mat33::operator/(float f)
 {
-	return p2Mat33();
+	return p2Mat33(r1/f, r2/f, r3/f);
 }
 
 p2Mat33 p2Mat33::Invert()
 {
-	return p2Mat33();
+	if (GetDeterminant() != 0)
+	{
+		return p2Mat33();
+	}
+	
 }
 
 float p2Mat33::GetDeterminant()
 {
-	return 0.0f;
+	//methode de sarrus
+	float Determinant = (r1.x*r2.y*r3.z+r1.y*r2.z*r3.x+r1.z*r2.x*r3.y)-
+		(r3.x*r2.y*r1.z+r3.y*r2.z*r1.x+r3.z*r2.x*r1.y);
+	return Determinant;
 }

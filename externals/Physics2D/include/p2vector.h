@@ -43,11 +43,11 @@ struct p2Vec2
 	p2Vec2 operator /(float f);
 	p2Vec2 operator *(float f);
 	/**
-	* \brief Dot product of two vectors
+	* \brief Dot product of two vectors/
 	*/
 	static float Dot(p2Vec2 v1, p2Vec2 v2);
 	/**
-	* \brief Cross product of two vectors
+	* \brief Cross product of two vectors/
 	*/
 	static p2Vec3 Cross(p2Vec2 v1, p2Vec2 v2);
 	/**
@@ -77,6 +77,12 @@ struct p2Vec3
 {
 	p2Vec3();
 	p2Vec3(float x, float y, float z);
+
+	p2Vec3 operator+(p2Vec3 v);
+	p2Vec3 operator-(p2Vec3 v);
+	p2Vec3 operator*(p2Vec3 v);
+	p2Vec3 operator*(float);
+	p2Vec3 operator/(float f);
 	/**
 	* \brief Dot product of two vectors
 	*/

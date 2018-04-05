@@ -41,10 +41,14 @@ struct p2Mat22
 	/**
 	* \brief Calculate the invert of the 2x2 matrix
 	*/
+	static p2Mat22 RotationMatix(float angle);
 	p2Mat22 Invert();
 	float GetDeterminant();
 
 	p2Vec2 rows[2] = {};
+private:
+	p2Vec2 r1;
+	p2Vec2 r2;
 };
 
 struct p2Mat33
@@ -55,9 +59,10 @@ struct p2Mat33
 	p2Mat33 operator+(p2Mat33 m1);
 	p2Mat33 operator-(p2Mat33 m1);
 	p2Mat33 operator*(p2Mat33 m1);
-	p2Vec3 operator*(p2Vec3);
+	p2Vec3 operator*(p2Vec3 v);
 	p2Mat33 operator*(float f);
 	p2Mat33 operator/(float f);
+	
 	/**
 	* \brief Calculate the invert of the 3x3 matrix
 	*/
@@ -68,6 +73,10 @@ struct p2Mat33
 	float GetDeterminant();
 
 	p2Vec3 rows[3] = {};
+private:
+	p2Vec3 r1;
+	p2Vec3 r2;
+	p2Vec3 r3;
 };
 
 #endif
