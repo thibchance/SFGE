@@ -297,7 +297,8 @@ int main()
 	srand(time(NULL));
 
 	std::list<Object> objectsList;
-	const int objNmb = 10000;
+	//const int objNmb = 100;
+	const int objNmb = 1000;
 	for (int i = 0; i < objNmb; i++)
 	{
 		objectsList.push_back({
