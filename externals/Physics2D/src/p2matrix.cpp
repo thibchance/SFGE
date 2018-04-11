@@ -137,13 +137,13 @@ p2Mat33 p2Mat33::Invert()
 	{
 		return p2Mat33(
 			p2Vec3(1/GetDeterminant()*(r2.y*r3.z-r3.y*r2.z),
-			       1/GetDeterminant()*-(r3.x*r2.y-r2.x*r3.z),
-			       1/GetDeterminant()*(r2.x*r3.y-r3.x*r2.y)),
-			p2Vec3(1/GetDeterminant()*-(r3.y*r1.z-r3.z*r1.y),
+			       1/GetDeterminant()*-(r3.y*r1.z - r3.z*r1.y),
+			       1/GetDeterminant()*(r1.z*r2.y - r2.z*r1.y)),
+			p2Vec3(1/GetDeterminant()* -(r3.x*r2.y - r2.x*r3.z),
 				   1/GetDeterminant()*(r1.x*r3.z-r3.x*r1.z),
-				   1/GetDeterminant()*-(r3.x*r1.y-r1.x*r3.y)),
-			p2Vec3(1/GetDeterminant()*(r1.z*r2.y-r2.z*r1.y),
-				   1/GetDeterminant()*-(r2.x*r1.z-r2.z*r1.x),
+				   1/GetDeterminant()*-(r2.x*r1.z - r2.z*r1.x)),
+			p2Vec3(1/GetDeterminant()*(r2.x*r3.y - r3.x*r2.y),
+				   1/GetDeterminant()* - (r3.x*r1.y - r1.x*r3.y),
 				   1/GetDeterminant()*(r1.x*r2.y-r2.x*r1.y)));
 	}
 	

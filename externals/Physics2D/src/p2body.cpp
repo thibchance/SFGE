@@ -30,7 +30,7 @@ p2Vec2 p2Body::GetLinearVelocity()
 
 void p2Body::SetLinearVelocity(p2Vec2 velocity)
 {
-
+	//velocity = d / t;
 }
 float p2Body::GetAngularVelocity()
 {
