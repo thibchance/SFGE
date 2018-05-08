@@ -61,6 +61,10 @@ public:
 
 	float GetAngularVelocity();
 	
+	p2Body();
+
+	p2Body(p2BodyDef* data);
+
 	p2Vec2 GetPosition();
 	/**
 	* \brief Factory method creating a p2Collider
@@ -68,6 +72,9 @@ public:
 	* \return p2Collider collider attached to the p2Body
 	*/
 	p2Collider* CreateCollider(p2ColliderDef* colliderDef);
+
+	void setPosition(p2Vec2 vec);
+	virtual void update(float dt);
 private:
 	p2AABB aabb;
 	p2Vec2 position;

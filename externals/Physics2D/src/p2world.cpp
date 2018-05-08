@@ -22,19 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include <p2world.h>
+#include <iostream>
 
 
-p2World::p2World(p2Vec2 gravity)
+p2World::p2World(p2Vec2 gravity): m_Gravity(gravity)
 {
+	this->bodies = std::vector<p2Body*>();
 }
 
 void p2World::Step(float dt)
 {
+	for (size_t i = 0; i < this->bodies.size(); i++) {
+		this->bodies[i]->update(dt);
+	}
 }
 
 p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
 {
-	return nullptr;
+	p2Body* body = new p2Body(bodyDef);
+	this->bodies.push_back(body);
+	return body;
+}
+
+void p2World::addBody(p2Body* body) {
+	this->bodies.push_back(body);
 }
 
 void p2World::SetContactListener(p2ContactListener * contactListener)

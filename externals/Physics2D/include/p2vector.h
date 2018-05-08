@@ -71,6 +71,7 @@ struct p2Vec2
 	float x = 0.0f;
 	float y = 0.0f;
 
+	float distanceTo(p2Vec2 other);
 };
 
 struct p2Vec3

@@ -35,4 +35,21 @@ SOFTWARE.
 #include <p2world.h>
 
 
+//class Planet
+//{
+//public:
+//	MyClass();
+//	~MyClass();
+//
+//private:
+//
+//};
+//
+//MyClass::MyClass()
+//{
+//}
+//
+//MyClass::~MyClass()
+//{
+//}
 #endif
